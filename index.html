@@ -406,6 +406,122 @@
   ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+  /* ── MODULE SELECTOR (start page) ── */
+  .mode-tabs {
+    display: flex; gap: 6px; margin-bottom: 20px;
+    background: var(--surface2); border-radius: 10px; padding: 4px;
+    border: 1px solid var(--border);
+  }
+  .mode-tab {
+    flex: 1; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600;
+    font-size: 0.78rem; padding: 8px; border-radius: 7px; border: none;
+    cursor: pointer; transition: all 0.15s;
+    background: transparent; color: var(--muted);
+  }
+  .mode-tab.active { background: var(--surface); color: var(--accent); box-shadow: var(--shadow-sm); }
+  .mod-selector { display: none; margin-bottom: 20px; }
+  .mod-selector.visible { display: block; }
+  .mod-selector-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; margin-bottom: 12px;
+  }
+  .mod-sel-btn {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; font-weight: 500;
+    padding: 8px 4px; border-radius: 8px; border: 1.5px solid var(--border2);
+    background: var(--surface2); color: var(--text2); cursor: pointer;
+    transition: all 0.12s; text-align: center; line-height: 1.3;
+  }
+  .mod-sel-btn span { display: block; font-size: 0.58rem; color: var(--muted); margin-top: 2px; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 400; }
+  .mod-sel-btn.selected { background: var(--accent-light); color: var(--accent); border-color: var(--accent); }
+  .mod-sel-actions { display: flex; gap: 8px; margin-bottom: 12px; }
+  .mod-sel-action { font-size: 0.72rem; color: var(--accent); background: none; border: none; cursor: pointer; padding: 2px; text-decoration: underline; }
+  .mod-sel-count { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--muted); text-align: center; margin-bottom: 6px; }
+
+  /* ── FINISH BUTTON ── */
+  .btn-finish {
+    font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 500; font-size: 0.78rem;
+    padding: 8px 12px; border-radius: 8px;
+    border: 1.5px solid var(--wrong-border);
+    background: var(--wrong-light); color: var(--wrong);
+    cursor: pointer; transition: all 0.12s;
+    white-space: nowrap;
+  }
+  .btn-finish:hover { background: var(--wrong); color: #fff; border-color: var(--wrong); }
+
+  /* ── REVIEW PAGE ── */
+  #review-page {
+    display: none;
+    height: 100vh; height: 100dvh;
+    flex-direction: column;
+  }
+  #review-page.active { display: flex; }
+  .review-header {
+    flex-shrink: 0;
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    padding: 12px 16px;
+    display: flex; align-items: center; gap: 12px;
+    box-shadow: var(--shadow-sm);
+  }
+  .btn-review-back {
+    font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.82rem;
+    padding: 7px 14px; border-radius: 8px;
+    border: 1.5px solid var(--border2);
+    background: var(--surface); color: var(--text2);
+    cursor: pointer; transition: all 0.12s; flex-shrink: 0;
+  }
+  .btn-review-back:hover { border-color: var(--accent); color: var(--accent); }
+  .review-header-title { font-weight: 700; font-size: 0.9rem; color: var(--text); }
+  .review-header-sub { font-size: 0.72rem; color: var(--muted); margin-top: 1px; }
+  .review-mod-tabs {
+    flex-shrink: 0;
+    display: flex; gap: 5px; flex-wrap: nowrap; overflow-x: auto;
+    padding: 8px 16px; background: var(--surface);
+    border-bottom: 1px solid var(--border); scrollbar-width: none;
+  }
+  .review-mod-tabs::-webkit-scrollbar { display: none; }
+  .review-tab {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 500;
+    padding: 4px 10px; border-radius: 6px; border: 1.5px solid var(--border2);
+    background: var(--surface2); color: var(--text2); cursor: pointer;
+    transition: all 0.15s; white-space: nowrap; flex-shrink: 0;
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+  }
+  .review-tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .review-tab .rtab-score { font-size: 0.5rem; opacity: 0.8; }
+  .review-tab.all-correct { border-color: var(--correct-border); color: var(--correct); background: var(--correct-light); }
+  .review-tab.all-correct.active { background: var(--correct); color: #fff; border-color: var(--correct); }
+  .review-tab.has-wrong { border-color: var(--wrong-border); color: var(--wrong); background: var(--wrong-light); }
+  .review-tab.has-wrong.active { background: var(--wrong); color: #fff; border-color: var(--wrong); }
+  .review-scroll { flex: 1; overflow-y: auto; padding: 14px 16px 24px; -webkit-overflow-scrolling: touch; }
+  .review-q-card {
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: 12px; overflow: hidden; margin-bottom: 12px;
+    box-shadow: var(--shadow-sm);
+  }
+  .review-q-card.was-correct { border-color: var(--correct-border); }
+  .review-q-card.was-wrong   { border-color: var(--wrong-border); }
+  .rq-top {
+    padding: 8px 14px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+  }
+  .rq-top.correct-bg { background: var(--correct-light); }
+  .rq-top.wrong-bg   { background: var(--wrong-light); }
+  .rq-num { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: var(--muted); }
+  .rq-result { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; font-weight: 600; }
+  .rq-result.c { color: var(--correct); }
+  .rq-result.w { color: var(--wrong); }
+  .rq-q { padding: 12px 14px 8px; font-size: 0.84rem; font-weight: 600; color: var(--text); line-height: 1.55; }
+  .rq-opts { padding: 0 12px 12px; display: flex; flex-direction: column; gap: 5px; }
+  .rq-opt {
+    padding: 8px 12px; border-radius: 8px; font-size: 0.78rem; line-height: 1.45;
+    border: 1px solid var(--border); background: var(--surface2); color: var(--text2);
+    display: flex; align-items: flex-start; gap: 8px;
+  }
+  .rq-opt.correct { background: var(--correct-light); border-color: var(--correct-border); color: var(--correct); font-weight: 500; }
+  .rq-opt.wrong   { background: var(--wrong-light);   border-color: var(--wrong-border);   color: var(--wrong);   font-weight: 500; }
+  .rq-opt.missed  { background: var(--correct-light); border-color: var(--correct-border); color: var(--correct); font-weight: 500; opacity: 0.65; }
+  .rq-opt-icon { flex-shrink: 0; font-size: 0.7rem; margin-top: 1px; }
 </style>
 </head>
 <body>
@@ -416,12 +532,24 @@
     <div class="start-eyebrow">AWS Cloud Architect</div>
     <div class="start-title">Mock Test<br>Modules 2–14</div>
     <div class="start-sub">Modules 2, 3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14<br>(Module 9 excluded)</div>
+    <div class="mode-tabs">
+      <button class="mode-tab active" onclick="setMode('all',this)">All Modules</button>
+      <button class="mode-tab" onclick="setMode('select',this)">Select Modules</button>
+    </div>
+    <div class="mod-selector" id="mod-selector">
+      <div class="mod-sel-actions">
+        <button class="mod-sel-action" onclick="selAll()">Select all</button>
+        <button class="mod-sel-action" onclick="selNone()">Clear</button>
+      </div>
+      <div class="mod-selector-grid" id="mod-selector-grid"></div>
+      <div class="mod-sel-count" id="mod-sel-count"></div>
+    </div>
     <div class="start-stats">
       <div class="start-stat"><div class="start-stat-num" id="total-q-count">—</div><div class="start-stat-label">Questions</div></div>
-      <div class="start-stat"><div class="start-stat-num">12</div><div class="start-stat-label">Modules</div></div>
+      <div class="start-stat"><div class="start-stat-num" id="mod-count-display">12</div><div class="start-stat-label">Modules</div></div>
       <div class="start-stat"><div class="start-stat-num">∞</div><div class="start-stat-label">Attempts</div></div>
     </div>
-    <button class="start-btn" onclick="startQuiz()">Begin Test →</button>
+    <button class="start-btn" id="start-btn" onclick="startQuiz()">Begin Test →</button>
   </div>
 </div>
 
@@ -432,17 +560,20 @@
       <div class="progress-nums" id="prog-label">0 / 0</div>
       <div class="progress-bar-outer"><div class="progress-bar-inner" id="prog-bar" style="width:0%"></div></div>
     </div>
-    <div class="timer-pill" id="timer">00:00</div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <div class="timer-pill" id="timer">00:00</div>
+      <button class="btn-finish" onclick="confirmFinish()">Finish</button>
+    </div>
   </div>
   <div class="module-tabs" id="module-tabs"></div>
-  <div class="mscore-strip" id="mscore-strip">
+  <div class="mscore-strip">
     <div class="mscore-left">
       <span class="mscore-chip" id="ms-chip"></span>
       <span class="mscore-subtitle" id="ms-subtitle"></span>
     </div>
     <div class="mscore-right" id="ms-right"></div>
   </div>
-  <div class="q-scroll" id="quiz-main"></div>
+  <div class="q-scroll" id="q-scroll"></div>
   <div class="q-nav" id="q-nav"></div>
 </div>
 
@@ -459,10 +590,22 @@
   </div>
   <div style="text-align:center;margin-bottom:16px"><div class="grade-badge" id="score-grade"></div></div>
   <div class="breakdown-section">
-    <div class="breakdown-section-title">Module Breakdown</div>
+    <div class="breakdown-section-title">Module Breakdown — tap to review</div>
     <div id="mod-cards"></div>
   </div>
   <button class="restart-btn" onclick="restartQuiz()">↺ Restart Test</button>
+</div>
+
+<div id="review-page">
+  <div class="review-header">
+    <button class="btn-review-back" onclick="closeReview()">← Back</button>
+    <div>
+      <div class="review-header-title" id="review-title">Review</div>
+      <div class="review-header-sub" id="review-sub"></div>
+    </div>
+  </div>
+  <div class="review-mod-tabs" id="review-mod-tabs"></div>
+  <div class="review-scroll" id="review-scroll"></div>
 </div>
 
 <script>
@@ -614,13 +757,59 @@ const MODULES = [
 ];
 
 // ── STATE ──
+let quizModules = [];
 let state = { currentModule:0, moduleQ:{}, answers:{}, submitted:{}, timerInterval:null, elapsed:0 };
-// moduleQ: { mi: currentQIndex } — remembers position per module
-const allQ = MODULES.flatMap((m,mi) => m.questions.map((q,qi) => ({mi,qi,q})));
-document.getElementById('total-q-count').textContent = allQ.length;
+let selectMode = 'all';
+let selectedMods = new Set(MODULES.map((_,i)=>i));
+
+const fmt = s => `${Math.floor(s/60).toString().padStart(2,'0')}:${(s%60).toString().padStart(2,'0')}`;
+function arrEq(a,b){ return a.length===b.length&&a.every((v,i)=>v===b[i]); }
+
+// ── INIT START PAGE ──
+function initStartPage(){
+  const grid = document.getElementById('mod-selector-grid');
+  grid.innerHTML = MODULES.map((m,i)=>`
+    <button class="mod-sel-btn ${selectedMods.has(i)?'selected':''}" onclick="toggleMod(${i})" id="msel-${i}">
+      M${m.id}<span>${m.subtitle.split(' ').slice(0,2).join(' ')}</span>
+    </button>`).join('');
+  updateStartStats();
+}
+
+function setMode(mode, btn){
+  selectMode = mode;
+  document.querySelectorAll('.mode-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  const sel = document.getElementById('mod-selector');
+  if(mode==='select'){ sel.classList.add('visible'); }
+  else { sel.classList.remove('visible'); selectedMods=new Set(MODULES.map((_,i)=>i)); }
+  updateStartStats();
+}
+
+function toggleMod(i){
+  if(selectedMods.has(i)) selectedMods.delete(i); else selectedMods.add(i);
+  const btn = document.getElementById(`msel-${i}`);
+  btn.classList.toggle('selected', selectedMods.has(i));
+  updateStartStats();
+}
+
+function selAll(){ MODULES.forEach((_,i)=>{ selectedMods.add(i); document.getElementById(`msel-${i}`).classList.add('selected'); }); updateStartStats(); }
+function selNone(){ selectedMods.clear(); MODULES.forEach((_,i)=>document.getElementById(`msel-${i}`).classList.remove('selected')); updateStartStats(); }
+
+function updateStartStats(){
+  const mods = selectMode==='all' ? MODULES : MODULES.filter((_,i)=>selectedMods.has(i));
+  const qCount = mods.reduce((s,m)=>s+m.questions.length,0);
+  document.getElementById('total-q-count').textContent = qCount||'—';
+  document.getElementById('mod-count-display').textContent = mods.length||'—';
+  if(document.getElementById('mod-sel-count'))
+    document.getElementById('mod-sel-count').textContent = `${mods.length} module${mods.length!==1?'s':''} · ${qCount} questions`;
+  const btn = document.getElementById('start-btn');
+  btn.disabled = qCount===0;
+  btn.style.opacity = qCount===0 ? '0.4' : '1';
+}
+
+initStartPage();
 
 // ── TIMER ──
-const fmt = s => `${Math.floor(s/60).toString().padStart(2,'0')}:${(s%60).toString().padStart(2,'0')}`;
 function startTimer(){
   state.elapsed=0;
   state.timerInterval=setInterval(()=>{
@@ -633,36 +822,48 @@ function stopTimer(){clearInterval(state.timerInterval);}
 
 // ── START ──
 function startQuiz(){
+  quizModules = selectMode==='all' ? MODULES : MODULES.filter((_,i)=>selectedMods.has(i));
+  if(!quizModules.length) return;
+  state={currentModule:0,moduleQ:{},answers:{},submitted:{},timerInterval:null,elapsed:0};
   document.getElementById('start-page').style.display='none';
   document.getElementById('quiz-page').classList.add('active');
   renderTabs(); renderQ(); startTimer();
 }
 
+// ── FINISH EARLY ──
+function confirmFinish(){
+  const done=Object.keys(state.submitted).length;
+  const total=quizModules.reduce((s,m)=>s+m.questions.length,0);
+  const msg = done===0
+    ? 'No questions answered yet. Exit the test?'
+    : `Answered ${done} / ${total} questions.\nFinish and see results?`;
+  if(confirm(msg)) showScore();
+}
+
 // ── TABS ──
 function renderTabs(){
-  document.getElementById('module-tabs').innerHTML=MODULES.map((m,i)=>{
+  document.getElementById('module-tabs').innerHTML=quizModules.map((m,i)=>{
     let c='tab-btn';
     if(i===state.currentModule)c+=' active';
     else if(isDone(i))c+=' done';
     return `<button class="${c}" onclick="switchMod(${i})">M${m.id}</button>`;
   }).join('');
 }
-function isDone(mi){ return MODULES[mi].questions.every((_,qi)=>state.submitted[`${mi}-${qi}`]); }
-function switchMod(mi){ state.currentModule=mi; renderTabs(); renderQ(); document.getElementById('q-scroll').scrollTop=0; }
+function isDone(mi){ return quizModules[mi].questions.every((_,qi)=>state.submitted[`${mi}-${qi}`]); }
+function switchMod(mi){ state.currentModule=mi; renderTabs(); renderQ(); const qs=document.getElementById('q-scroll'); if(qs) qs.scrollTop=0; }
 
 // ── RENDER QUESTION ──
 function renderQ(){
   const mi=state.currentModule;
   const qi=state.moduleQ[mi]||0;
-  const mod=MODULES[mi], q=mod.questions[qi], key=`${mi}-${qi}`;
+  const mod=quizModules[mi], q=mod.questions[qi], key=`${mi}-${qi}`;
   const done=!!state.submitted[key], sel=state.answers[key]||[];
 
-  // global progress bar
+  const totalQ=quizModules.reduce((s,m)=>s+m.questions.length,0);
   const answered=Object.keys(state.submitted).length;
-  document.getElementById('prog-label').textContent=`${answered} / ${allQ.length}`;
-  document.getElementById('prog-bar').style.width=`${(answered/allQ.length)*100}%`;
+  document.getElementById('prog-label').textContent=`${answered} / ${totalQ}`;
+  document.getElementById('prog-bar').style.width=`${(answered/totalQ)*100}%`;
 
-  // module score strip
   let modCorrect=0, modWrong=0;
   mod.questions.forEach((_,i)=>{
     const k=`${mi}-${i}`;
@@ -674,20 +875,17 @@ function renderQ(){
   document.getElementById('ms-chip').textContent=mod.title;
   document.getElementById('ms-subtitle').textContent=mod.subtitle;
   document.getElementById('ms-right').innerHTML=`
-    <span class="mscore-c">✓ ${modCorrect}</span>
-    <span class="mscore-dot">·</span>
-    <span class="mscore-w">✗ ${modWrong}</span>
-    <span class="mscore-dot">·</span>
+    <span class="mscore-c">\u2713 ${modCorrect}</span>
+    <span class="mscore-dot">\u00b7</span>
+    <span class="mscore-w">\u2717 ${modWrong}</span>
+    <span class="mscore-dot">\u00b7</span>
     <span class="mscore-q">${qi+1}/${mod.questions.length}</span>`;
 
-  // global index
-  let gIdx=0; for(let i=0;i<mi;i++) gIdx+=MODULES[i].questions.length; gIdx+=qi+1;
+  let gIdx=0; for(let i=0;i<mi;i++) gIdx+=quizModules[i].questions.length; gIdx+=qi+1;
 
-  // card border
   let cardCls='question-card';
   if(done){ const ok=arrEq(sel.slice().sort((a,b)=>a-b),q.answer.slice().sort((a,b)=>a-b)); cardCls+=ok?' result-correct':' result-wrong'; }
 
-  // options
   let optsHtml='';
   q.options.forEach((opt,oi)=>{
     const isSel=sel.includes(oi), isAns=q.answer.includes(oi);
@@ -697,7 +895,7 @@ function renderQ(){
     optsHtml+=`<label class="${lc}"><input type="${q.type}" name="q${key}" value="${oi}" ${isSel?'checked':''} ${done?'disabled':''} onchange="pick('${key}',${oi},'${q.type}')">${opt}</label>`;
   });
 
-  document.getElementById('quiz-main').innerHTML=`
+  document.getElementById('q-scroll').innerHTML=`
     <div class="${cardCls}">
       <div class="q-meta">
         <span class="q-counter">#${gIdx} overall</span>
@@ -707,17 +905,15 @@ function renderQ(){
       <div class="options-list">${optsHtml}</div>
     </div>`;
 
-  // sticky nav
-  const allDone=Object.keys(state.submitted).length===allQ.length;
+  const allDone=answered===totalQ;
   const isLast=qi===mod.questions.length-1;
   let navHtml=`<button class="btn-back" onclick="prev()" ${qi===0?'disabled':''}>← Back</button><div style="display:flex;gap:8px;align-items:center">`;
   if(!done){
     navHtml+=`<button class="btn-primary" id="btnck-${key}" onclick="check('${key}',${mi},${qi})">Check →</button>`;
   } else {
     const ok=arrEq(sel.slice().sort((a,b)=>a-b),q.answer.slice().sort((a,b)=>a-b));
-    navHtml+=`<span class="result-pill ${ok?'correct':'wrong'}">${ok?'✓ Correct':'✗ Wrong'}</span>`;
-    const nextLabel=allDone?'Results →':'Next →';
-    if(!isLast||allDone) navHtml+=`<button class="btn-primary" onclick="next()">${nextLabel}</button>`;
+    navHtml+=`<span class="result-pill ${ok?'correct':'wrong'}">${ok?'\u2713 Correct':'\u2717 Wrong'}</span>`;
+    navHtml+=`<button class="btn-primary" onclick="next()">${allDone?'Results →':'Next →'}</button>`;
   }
   navHtml+='</div>';
   document.getElementById('q-nav').innerHTML=navHtml;
@@ -740,93 +936,157 @@ function check(key,mi,qi){
     return;
   }
   state.submitted[key]=true; renderTabs();
-  const mod=MODULES[mi];
-  const isLast=qi===mod.questions.length-1;
-  if(isLast){
-    renderQ();
-    setTimeout(()=>next(), 1000);
-  } else {
-    renderQ();
-  }
+  const totalQ=quizModules.reduce((s,m)=>s+m.questions.length,0);
+  const allDone=Object.keys(state.submitted).length===totalQ;
+  const isLast=qi===quizModules[mi].questions.length-1;
+  if(isLast&&allDone){ renderQ(); setTimeout(()=>showScore(),1200); }
+  else { renderQ(); }
 }
 
 function next(){
-  const mi=state.currentModule, mod=MODULES[mi];
+  const mi=state.currentModule, mod=quizModules[mi];
   const qi=state.moduleQ[mi]||0;
   if(qi<mod.questions.length-1){ state.moduleQ[mi]=qi+1; renderQ(); }
   else {
-    const allDone=Object.keys(state.submitted).length===allQ.length;
-    if(allDone){ showScore(); return; }
+    const totalQ=quizModules.reduce((s,m)=>s+m.questions.length,0);
+    if(Object.keys(state.submitted).length===totalQ){ showScore(); return; }
     let nmi=mi+1;
-    while(nmi<MODULES.length&&isDone(nmi)) nmi++;
-    if(nmi<MODULES.length) switchMod(nmi); else { showScore(); return; }
+    while(nmi<quizModules.length&&isDone(nmi)) nmi++;
+    if(nmi<quizModules.length) switchMod(nmi); else { showScore(); return; }
   }
   const qs=document.getElementById('q-scroll'); if(qs) qs.scrollTop=0;
 }
 
 function prev(){
-  const mi=state.currentModule;
-  const qi=state.moduleQ[mi]||0;
-  if(qi>0){ state.moduleQ[mi]=qi-1; renderQ(); document.getElementById('q-scroll').scrollTop=0; }
+  const mi=state.currentModule, qi=state.moduleQ[mi]||0;
+  if(qi>0){ state.moduleQ[mi]=qi-1; renderQ(); const qs=document.getElementById('q-scroll'); if(qs) qs.scrollTop=0; }
 }
-
-function arrEq(a,b){ return a.length===b.length&&a.every((v,i)=>v===b[i]); }
 
 // ── SCORE ──
 function showScore(){
   stopTimer();
   document.getElementById('quiz-page').classList.remove('active');
   document.getElementById('score-page').style.display='block';
+  const totalQ=quizModules.reduce((s,m)=>s+m.questions.length,0);
   let correct=0;
-  allQ.forEach(({mi,qi,q})=>{ const k=`${mi}-${qi}`,sel=(state.answers[k]||[]).slice().sort((a,b)=>a-b); if(arrEq(sel,q.answer.slice().sort((a,b)=>a-b))) correct++; });
-  const total=allQ.length, pct=Math.round(correct/total*100);
+  quizModules.forEach((mod,mi)=>{ mod.questions.forEach((q,qi)=>{
+    const k=`${mi}-${qi}`,sel=(state.answers[k]||[]).slice().sort((a,b)=>a-b);
+    if(arrEq(sel,q.answer.slice().sort((a,b)=>a-b))) correct++;
+  }); });
+  const pct=totalQ>0?Math.round(correct/totalQ*100):0;
   document.getElementById('score-pct').textContent=`${pct}%`;
-  document.getElementById('score-fraction').textContent=`${correct} / ${total} correct`;
+  document.getElementById('score-fraction').textContent=`${correct} / ${totalQ} correct`;
   document.getElementById('score-correct').textContent=correct;
-  document.getElementById('score-wrong').textContent=total-correct;
+  document.getElementById('score-wrong').textContent=totalQ-correct;
   document.getElementById('score-time').textContent=fmt(state.elapsed);
-  let g,t; if(pct>=90){g='A';t='Excellent — AWS Ready! 🏆';}else if(pct>=75){g='B';t='Good — Keep Practicing! 💪';}else if(pct>=60){g='C';t='Fair — Review the Material 📖';}else{g='D';t='Needs Work — Study More! 📚';}
+  let g,t; if(pct>=90){g='A';t='Excellent — AWS Ready! \ud83c\udfc6';}else if(pct>=75){g='B';t='Good — Keep Practicing! \ud83d\udcaa';}else if(pct>=60){g='C';t='Fair — Review the Material \ud83d\udcd6';}else{g='D';t='Needs Work — Study More! \ud83d\udcda';}
   const el=document.getElementById('score-grade'); el.className=`grade-badge ${g}`; el.textContent=t;
 
-  // per-module cards
   const mins=Math.floor(state.elapsed/60), secs=state.elapsed%60;
-  const timeStr=state.elapsed<60?`${state.elapsed}s`:`${mins}m ${secs>0?secs+'s':''}`;
+  const timeStr=state.elapsed<60?`${state.elapsed}s`:`${mins}m${secs>0?' '+secs+'s':''}`;
   let cards='';
-  MODULES.forEach((mod,mi)=>{
+  quizModules.forEach((mod,mi)=>{
     let mc=0,mw=0;
     mod.questions.forEach((_,qi)=>{
       const k=`${mi}-${qi}`;
-      if(state.submitted[k]){
-        const s=(state.answers[k]||[]).slice().sort((a,b)=>a-b);
-        if(arrEq(s,mod.questions[qi].answer.slice().sort((a,b)=>a-b))) mc++; else mw++;
-      }
+      if(state.submitted[k]){ const s=(state.answers[k]||[]).slice().sort((a,b)=>a-b); if(arrEq(s,mod.questions[qi].answer.slice().sort((a,b)=>a-b))) mc++; else mw++; }
     });
-    const mt=mod.questions.length, mp=Math.round(mc/mt*100);
-    cards+=`<div class="mod-card">
-      <div class="mc-left">
-        <div class="mc-name">${mod.title}</div>
-        <div class="mc-subtitle">${mod.subtitle}</div>
-      </div>
+    const mt=mod.questions.length, attempted=mc+mw, mp=mt>0?Math.round(mc/mt*100):0;
+    cards+=`<div class="mod-card" onclick="openReview(${mi})" style="cursor:pointer;user-select:none">
+      <div class="mc-left"><div class="mc-name">${mod.title}</div><div class="mc-subtitle">${mod.subtitle}</div></div>
       <div class="mc-right">
-        <span class="mc-pip c">✓ ${mc}</span>
-        <span class="mc-pip w">✗ ${mw}</span>
-        <span class="mc-pip s">${mc}/${mt}</span>
-        <span class="mc-pip p">${mp}%</span>
-      </div>
-    </div>`;
+        <span class="mc-pip c">\u2713 ${mc}</span><span class="mc-pip w">\u2717 ${mw}</span>
+        <span class="mc-pip s">${attempted}/${mt}</span><span class="mc-pip p">${mp}%</span>
+        <span style="color:var(--muted);font-size:0.8rem;padding-left:2px">\u203a</span>
+      </div></div>`;
   });
   cards+=`<div class="mod-card total-row">
     <div class="mc-left"><div class="mc-name">Total</div></div>
     <div class="mc-right">
-      <span class="mc-pip c">✓ ${correct}</span>
-      <span class="mc-pip w">✗ ${total-correct}</span>
-      <span class="mc-pip s">${correct}/${total}</span>
-      <span class="mc-pip p">${pct}%</span>
-    </div>
-  </div>`;
-  cards+=`<div class="time-row">⏱ ${fmt(state.elapsed)} &nbsp;·&nbsp; ${timeStr}</div>`;
+      <span class="mc-pip c">\u2713 ${correct}</span><span class="mc-pip w">\u2717 ${totalQ-correct}</span>
+      <span class="mc-pip s">${correct}/${totalQ}</span><span class="mc-pip p">${pct}%</span>
+    </div></div>`;
+  cards+=`<div class="time-row">\u23f1 ${fmt(state.elapsed)} \u00b7 ${timeStr}</div>`;
   document.getElementById('mod-cards').innerHTML=cards;
   window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── REVIEW ──
+let reviewModIdx=0;
+
+function openReview(mi){
+  reviewModIdx=mi;
+  document.getElementById('score-page').style.display='none';
+  document.getElementById('review-page').classList.add('active');
+  renderReviewTabs();
+  renderReviewQuestions(mi);
+}
+
+function closeReview(){
+  document.getElementById('review-page').classList.remove('active');
+  document.getElementById('score-page').style.display='block';
+}
+
+function renderReviewTabs(){
+  const tabs=quizModules.map((mod,mi)=>{
+    let mc=0,mw=0;
+    mod.questions.forEach((_,qi)=>{
+      const k=`${mi}-${qi}`;
+      if(state.submitted[k]){ const s=(state.answers[k]||[]).slice().sort((a,b)=>a-b); if(arrEq(s,mod.questions[qi].answer.slice().sort((a,b)=>a-b))) mc++; else mw++; }
+    });
+    const attempted=mc+mw;
+    let cls='review-tab';
+    if(mi===reviewModIdx) cls+=' active';
+    else if(attempted>0&&mw===0) cls+=' all-correct';
+    else if(mw>0) cls+=' has-wrong';
+    return `<button class="${cls}" onclick="switchReview(${mi})">M${mod.id}<span class="rtab-score">${mc}/${mod.questions.length}</span></button>`;
+  }).join('');
+  document.getElementById('review-mod-tabs').innerHTML=tabs;
+}
+
+function switchReview(mi){
+  reviewModIdx=mi; renderReviewTabs(); renderReviewQuestions(mi);
+  document.getElementById('review-scroll').scrollTop=0;
+}
+
+function renderReviewQuestions(mi){
+  const mod=quizModules[mi];
+  let mc=0,mw=0,na=0;
+  const html=mod.questions.map((q,qi)=>{
+    const k=`${mi}-${qi}`;
+    const submitted=!!state.submitted[k];
+    const sel=(state.answers[k]||[]).slice().sort((a,b)=>a-b);
+    const isCorrect=submitted&&arrEq(sel,q.answer.slice().sort((a,b)=>a-b));
+    if(submitted){ if(isCorrect) mc++; else mw++; } else na++;
+
+    let gIdx=0; for(let i=0;i<mi;i++) gIdx+=quizModules[i].questions.length; gIdx+=qi+1;
+
+    const cardCls='review-q-card'+(submitted?(isCorrect?' was-correct':' was-wrong'):'');
+    const topCls='rq-top'+(submitted?(isCorrect?' correct-bg':' wrong-bg'):'');
+    const resultLabel=!submitted?'— Not attempted':(isCorrect?'\u2713 Correct':'\u2717 Incorrect');
+    const resultCls=!submitted?'rq-result':(isCorrect?'rq-result c':'rq-result w');
+
+    const opts=q.options.map((opt,oi)=>{
+      const isSel=(state.answers[k]||[]).includes(oi), isAns=q.answer.includes(oi);
+      let cls='rq-opt', icon='';
+      if(submitted){
+        if(isAns&&isSel){cls+=' correct';icon='\u2713';}
+        else if(!isAns&&isSel){cls+=' wrong';icon='\u2717';}
+        else if(isAns&&!isSel){cls+=' missed';icon='\u25cb';}
+      }
+      return `<div class="${cls}"><span class="rq-opt-icon">${icon}</span>${opt}</div>`;
+    }).join('');
+
+    return `<div class="${cardCls}">
+      <div class="${topCls}"><span class="rq-num">#${gIdx}</span><span class="${resultCls}">${resultLabel}</span></div>
+      <div class="rq-q">${q.q}</div>
+      <div class="rq-opts">${opts}</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('review-title').textContent=`Review — ${mod.title}`;
+  document.getElementById('review-sub').textContent=`${mc} correct · ${mw} wrong${na>0?' · '+na+' skipped':''}`;
+  document.getElementById('review-scroll').innerHTML=html;
 }
 
 function restartQuiz(){
@@ -834,6 +1094,7 @@ function restartQuiz(){
   state={currentModule:0,moduleQ:{},answers:{},submitted:{},timerInterval:null,elapsed:0};
   document.getElementById('score-page').style.display='none';
   document.getElementById('start-page').style.display='flex';
+  updateStartStats();
 }
 </script>
 </body>
