@@ -4,213 +4,407 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mock Test AWS Module 2–14 (excl. 9)</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #f0f4f8;
+    --bg: #f5f7fa;
     --surface: #ffffff;
-    --surface2: #f8fafc;
-    --border: #dde3ec;
-    --border2: #c8d3e0;
-    --accent: #2563eb;
-    --accent-light: #eff6ff;
-    --accent-hover: #1d4ed8;
-    --correct: #16a34a;
-    --correct-light: #f0fdf4;
-    --correct-border: #86efac;
-    --wrong: #dc2626;
-    --wrong-light: #fef2f2;
-    --wrong-border: #fca5a5;
-    --text: #1e293b;
-    --text2: #475569;
-    --muted: #94a3b8;
-    --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
-    --shadow-md: 0 4px 16px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.05);
+    --surface2: #f9fafb;
+    --border: #e8ecf0;
+    --border2: #d1d9e0;
+    --accent: #3b5bdb;
+    --accent-light: #eef2ff;
+    --accent-hover: #2f4ac7;
+    --correct: #0f9b57;
+    --correct-light: #edfaf3;
+    --correct-border: #a7f3ca;
+    --wrong: #e03131;
+    --wrong-light: #fff5f5;
+    --wrong-border: #ffc9c9;
+    --text: #1a202c;
+    --text2: #4a5568;
+    --muted: #9aa5b4;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.06);
+    --shadow: 0 2px 8px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.05);
+    --shadow-md: 0 8px 24px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
+    --r: 14px;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html { font-size: 16px; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    min-height: 100vh; min-height: 100dvh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── QUIZ PAGE LAYOUT: full-height, no scroll on answer ── */
+  #quiz-page {
+    display: none;
+    height: 100vh; height: 100dvh;
+    display: none;
+    flex-direction: column;
+  }
+  #quiz-page.active { display: flex; }
 
   /* HEADER */
-  header {
-    position: sticky; top: 0; z-index: 100;
-    background: rgba(255,255,255,0.96); backdrop-filter: blur(12px);
+  .qheader {
+    flex-shrink: 0;
+    background: var(--surface);
     border-bottom: 1px solid var(--border);
-    padding: 10px 24px;
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 16px; flex-wrap: wrap; box-shadow: var(--shadow);
+    padding: 10px 16px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 12px;
+    box-shadow: var(--shadow-sm);
   }
-  .logo { font-family: 'DM Mono', monospace; font-size: 0.82rem; font-weight: 500; color: var(--accent); }
-  .header-right { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
-  .timer-box {
-    font-family: 'DM Mono', monospace; font-size: 1.1rem; font-weight: 500;
-    color: var(--accent); background: var(--accent-light); border: 1px solid #bfdbfe;
-    padding: 5px 14px; border-radius: 8px; min-width: 82px; text-align: center;
+  .logo {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem; font-weight: 500;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+  .progress-center { display: flex; flex-direction: column; gap: 4px; }
+  .progress-nums {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem; color: var(--muted);
+    text-align: center;
+  }
+  .progress-bar-outer {
+    height: 4px; background: var(--border);
+    border-radius: 99px; overflow: hidden;
+  }
+  .progress-bar-inner {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent) 0%, #845ef7 100%);
+    border-radius: 99px; transition: width 0.5s ease;
+  }
+  .timer-pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9rem; font-weight: 500;
+    color: var(--accent);
+    background: var(--accent-light);
+    border: 1px solid #c5d0f7;
+    padding: 4px 10px; border-radius: 8px;
+    min-width: 64px; text-align: center;
     transition: all 0.3s;
+    white-space: nowrap;
   }
-  .timer-box.urgent { color: var(--wrong); background: var(--wrong-light); border-color: var(--wrong-border); animation: pulse 1s infinite; }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.65} }
-  .progress-wrap { display: flex; align-items: center; gap: 10px; }
-  .progress-label { font-family: 'DM Mono', monospace; font-size: 0.75rem; color: var(--text2); white-space: nowrap; }
-  .progress-bar-outer { width: 120px; height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; }
-  .progress-bar-inner { height: 100%; background: linear-gradient(90deg, var(--accent), #7c3aed); border-radius: 99px; transition: width 0.5s ease; }
+  .timer-pill.urgent { color: var(--wrong); background: var(--wrong-light); border-color: var(--wrong-border); animation: pulse 1s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.55} }
 
   /* MODULE TABS */
   .module-tabs {
-    display: flex; gap: 6px; flex-wrap: wrap;
-    padding: 10px 24px; border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    display: flex; gap: 5px; flex-wrap: nowrap;
+    overflow-x: auto; padding: 8px 16px;
     background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    scrollbar-width: none;
   }
+  .module-tabs::-webkit-scrollbar { display: none; }
   .tab-btn {
-    font-family: 'DM Mono', monospace; font-size: 0.7rem; font-weight: 500;
-    padding: 5px 11px; border-radius: 6px;
-    border: 1px solid var(--border2); background: var(--surface2); color: var(--text2);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem; font-weight: 500;
+    padding: 4px 10px; border-radius: 6px;
+    border: 1px solid var(--border2);
+    background: var(--surface2); color: var(--text2);
     cursor: pointer; transition: all 0.15s;
+    white-space: nowrap; flex-shrink: 0;
   }
-  .tab-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
   .tab-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
   .tab-btn.done { border-color: var(--correct-border); color: var(--correct); background: var(--correct-light); }
   .tab-btn.done.active { background: var(--correct); color: #fff; border-color: var(--correct); }
 
-  /* MAIN */
-  main { max-width: 720px; margin: 0 auto; padding: 32px 20px 80px; }
-
-  /* MODULE HEADER */
-  .module-header { display: flex; align-items: center; gap: 10px; margin-bottom: 24px; }
-  .module-chip {
-    font-family: 'DM Mono', monospace; font-size: 0.72rem; font-weight: 500;
-    padding: 4px 10px; border-radius: 6px;
-    background: var(--accent-light); color: var(--accent); border: 1px solid #bfdbfe; white-space: nowrap;
+  /* MODULE SCORE STRIP */
+  .mscore-strip {
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 16px;
+    background: var(--surface); border-bottom: 1px solid var(--border);
   }
-  .module-name { font-size: 0.9rem; color: var(--text2); font-weight: 500; }
+  .mscore-left {
+    display: flex; align-items: center; gap: 6px;
+  }
+  .mscore-chip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem; font-weight: 500;
+    padding: 3px 8px; border-radius: 5px;
+    background: var(--accent-light); color: var(--accent);
+    border: 1px solid #c5d0f7;
+  }
+  .mscore-subtitle {
+    font-size: 0.72rem; color: var(--text2); font-weight: 500;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    max-width: 160px;
+  }
+  .mscore-right {
+    display: flex; align-items: center; gap: 8px;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; font-weight: 500;
+    flex-shrink: 0;
+  }
+  .mscore-c { color: var(--correct); }
+  .mscore-w { color: var(--wrong); }
+  .mscore-q { color: var(--accent); }
+  .mscore-dot { color: var(--border2); }
+
+  /* SCROLL AREA */
+  .q-scroll {
+    flex: 1; overflow-y: auto;
+    padding: 14px 16px 8px;
+    -webkit-overflow-scrolling: touch;
+  }
 
   /* QUESTION CARD */
   .question-card {
-    background: var(--surface); border: 1.5px solid var(--border);
-    border-radius: 16px; overflow: hidden; box-shadow: var(--shadow-md);
-    animation: slideIn 0.22s ease;
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--r);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    animation: qIn 0.2s ease;
   }
-  @keyframes slideIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes qIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
   .question-card.result-correct { border-color: var(--correct-border); }
   .question-card.result-wrong   { border-color: var(--wrong-border); }
 
-  .q-top {
-    padding: 8px 20px; background: var(--surface2); border-bottom: 1px solid var(--border);
+  .q-meta {
     display: flex; align-items: center; justify-content: space-between;
+    padding: 9px 16px;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
   }
-  .q-counter { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--muted); }
-  .q-type-badge {
-    font-family: 'DM Mono', monospace; font-size: 0.65rem;
-    padding: 2px 8px; border-radius: 5px;
-    background: var(--accent-light); color: var(--accent); border: 1px solid #bfdbfe;
+  .q-counter {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem; color: var(--muted);
   }
-  .q-body { padding: 24px 24px 20px; }
-  .q-text { font-size: 1rem; line-height: 1.7; font-weight: 500; color: var(--text); }
+  .q-badge {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.58rem;
+    padding: 2px 7px; border-radius: 4px;
+    background: var(--accent-light); color: var(--accent);
+    border: 1px solid #c5d0f7;
+    letter-spacing: 0.04em;
+  }
+  .q-body { padding: 16px 16px 12px; }
+  .q-text { font-size: 0.93rem; line-height: 1.65; font-weight: 600; color: var(--text); }
 
   /* OPTIONS */
-  .options-list { padding: 0 24px 4px; display: flex; flex-direction: column; gap: 8px; }
+  .options-list { padding: 0 12px 12px; display: flex; flex-direction: column; gap: 7px; }
   .option-label {
-    display: flex; align-items: flex-start; gap: 12px;
-    padding: 12px 16px; border-radius: 10px; border: 1.5px solid var(--border);
-    cursor: pointer; transition: all 0.15s; background: var(--surface2);
-    font-size: 0.9rem; line-height: 1.55; color: var(--text); user-select: none;
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 11px 14px; border-radius: 10px;
+    border: 1.5px solid var(--border);
+    cursor: pointer; transition: border-color 0.12s, background 0.12s;
+    background: var(--surface2);
+    font-size: 0.85rem; line-height: 1.5; color: var(--text2);
+    user-select: none;
   }
-  .option-label:hover:not(.locked) { border-color: var(--accent); background: var(--accent-light); }
-  .option-label.selected:not(.locked) { border-color: var(--accent); background: var(--accent-light); color: var(--accent-hover); }
-  .option-label input { margin-top: 3px; accent-color: var(--accent); flex-shrink: 0; }
-  .option-label.show-correct { border-color: var(--correct-border)!important; background: var(--correct-light)!important; color: var(--correct)!important; }
-  .option-label.show-wrong   { border-color: var(--wrong-border)!important;   background: var(--wrong-light)!important;   color: var(--wrong)!important; }
-  .option-label.show-missed  { border-color: var(--correct-border)!important; background: var(--correct-light)!important; color: var(--correct)!important; opacity: 0.7; }
+  .option-label:hover:not(.locked) { border-color: var(--accent); background: var(--accent-light); color: var(--text); }
+  .option-label.selected:not(.locked) { border-color: var(--accent); background: var(--accent-light); color: var(--accent-hover); font-weight: 500; }
+  .option-label input { margin-top: 2px; accent-color: var(--accent); flex-shrink: 0; }
+  .option-label.show-correct { border-color: var(--correct-border)!important; background: var(--correct-light)!important; color: var(--correct)!important; font-weight: 500; }
+  .option-label.show-wrong   { border-color: var(--wrong-border)!important;   background: var(--wrong-light)!important;   color: var(--wrong)!important; font-weight: 500; }
+  .option-label.show-missed  { border-color: var(--correct-border)!important; background: var(--correct-light)!important; color: var(--correct)!important; opacity: 0.65; }
   .option-label.locked { cursor: default; }
 
-  /* EXPLANATION */
-  .explanation {
-    margin: 12px 24px 4px; padding: 14px 16px;
-    background: #fefce8; border: 1px solid #fde047; border-radius: 10px;
-    font-size: 0.85rem; line-height: 1.6; color: #713f12;
+  /* STICKY FOOTER NAV */
+  .q-nav {
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 16px 16px;
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    gap: 10px;
   }
-  .exp-title { font-weight: 600; color: #92400e; margin-bottom: 4px; }
-
-  /* FOOTER */
-  .q-footer { padding: 20px 24px 24px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-  .footer-left { display: flex; gap: 10px; }
-  .footer-right { display: flex; gap: 10px; align-items: center; }
-
-  .btn-nav {
-    font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 0.85rem;
-    padding: 9px 18px; border-radius: 9px; border: 1.5px solid var(--border2);
-    background: var(--surface); color: var(--text2); cursor: pointer; transition: all 0.15s;
+  .btn-back {
+    font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 500; font-size: 0.83rem;
+    padding: 10px 18px; border-radius: 10px;
+    border: 1.5px solid var(--border2);
+    background: var(--surface); color: var(--text2);
+    cursor: pointer; transition: all 0.12s;
+    display: flex; align-items: center; gap: 6px;
   }
-  .btn-nav:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
-  .btn-nav:disabled { opacity: 0.3; cursor: default; pointer-events: none; }
+  .btn-back:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+  .btn-back:disabled { opacity: 0.3; cursor: default; pointer-events: none; }
 
-  .btn-check {
-    font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.88rem;
-    padding: 10px 24px; border-radius: 9px; border: none;
-    background: var(--accent); color: #fff; cursor: pointer; transition: all 0.15s;
-    box-shadow: 0 2px 8px rgba(37,99,235,0.3);
+  .btn-primary {
+    font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 0.88rem;
+    padding: 11px 26px; border-radius: 10px; border: none;
+    background: var(--accent); color: #fff;
+    cursor: pointer; transition: all 0.12s;
+    box-shadow: 0 3px 10px rgba(59,91,219,0.28);
+    display: flex; align-items: center; gap: 6px;
   }
-  .btn-check:hover { background: var(--accent-hover); transform: translateY(-1px); }
+  .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); box-shadow: 0 5px 14px rgba(59,91,219,0.34); }
+  .btn-primary:active { transform: translateY(0); }
 
-  .btn-next {
-    font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.88rem;
-    padding: 10px 24px; border-radius: 9px; border: none;
-    background: var(--accent); color: #fff; cursor: pointer; transition: all 0.15s;
-    box-shadow: 0 2px 8px rgba(37,99,235,0.3);
+  .result-pill {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 500;
+    padding: 8px 14px; border-radius: 8px;
+    display: flex; align-items: center; gap: 5px;
   }
-  .btn-next:hover { background: var(--accent-hover); transform: translateY(-1px); }
+  .result-pill.correct { background: var(--correct-light); color: var(--correct); border: 1px solid var(--correct-border); }
+  .result-pill.wrong   { background: var(--wrong-light);   color: var(--wrong);   border: 1px solid var(--wrong-border); }
 
-  .result-badge { font-family: 'DM Mono', monospace; font-size: 0.78rem; font-weight: 500; padding: 6px 12px; border-radius: 7px; }
-  .result-badge.correct { background: var(--correct-light); color: var(--correct); border: 1px solid var(--correct-border); }
-  .result-badge.wrong   { background: var(--wrong-light);   color: var(--wrong);   border: 1px solid var(--wrong-border); }
+  /* ── START PAGE ── */
+  #start-page {
+    min-height: 100vh; min-height: 100dvh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px 20px;
+  }
+  .start-card {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    padding: 40px 28px;
+    text-align: center;
+    box-shadow: var(--shadow-md);
+    max-width: 400px; width: 100%;
+  }
+  .start-icon {
+    width: 52px; height: 52px; border-radius: 14px;
+    background: linear-gradient(135deg, var(--accent) 0%, #845ef7 100%);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 20px; font-size: 1.5rem;
+    box-shadow: 0 6px 20px rgba(59,91,219,0.3);
+  }
+  .start-eyebrow {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.65rem;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 8px;
+  }
+  .start-title { font-size: 1.7rem; font-weight: 700; line-height: 1.2; color: var(--text); margin-bottom: 6px; }
+  .start-sub { font-size: 0.82rem; color: var(--muted); margin-bottom: 28px; line-height: 1.6; }
+  .start-stats {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 10px; margin-bottom: 28px;
+  }
+  .start-stat {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 12px 8px;
+  }
+  .start-stat-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.5rem; font-weight: 500; color: var(--accent);
+    line-height: 1;
+  }
+  .start-stat-label { font-size: 0.62rem; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .start-btn {
+    font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 0.95rem;
+    padding: 14px; border-radius: 12px; border: none; width: 100%;
+    background: linear-gradient(135deg, var(--accent) 0%, #5c7cfa 100%);
+    color: #fff; cursor: pointer; transition: all 0.2s;
+    box-shadow: 0 4px 16px rgba(59,91,219,0.32);
+    letter-spacing: 0.01em;
+  }
+  .start-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(59,91,219,0.36); }
+  .start-btn:active { transform: translateY(0); }
 
-  /* SCORE */
-  #score-page { display: none; max-width: 560px; margin: 60px auto; padding: 20px; }
-  .score-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: 20px; padding: 48px 40px; text-align: center; box-shadow: var(--shadow-md); }
-  .score-title { font-family: 'DM Mono', monospace; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 20px; }
-  .score-number { font-family: 'DM Mono', monospace; font-size: 5rem; font-weight: 500; color: var(--accent); line-height: 1; }
-  .score-sub { font-size: 1rem; color: var(--text2); margin-top: 8px; }
-  .score-divider { height: 1px; background: var(--border); margin: 28px 0; }
-  .score-meta { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; margin-bottom: 28px; }
-  .score-stat { text-align: center; }
-  .score-stat-num { font-family: 'DM Mono', monospace; font-size: 1.9rem; font-weight: 500; }
-  .score-stat-num.good { color: var(--correct); }
-  .score-stat-num.bad  { color: var(--wrong); }
-  .score-stat-num.time { color: var(--accent); }
-  .score-stat-label { font-size: 0.72rem; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
-  .score-grade { font-size: 0.9rem; font-weight: 500; padding: 10px 24px; border-radius: 10px; display: inline-block; margin-bottom: 32px; }
-  .score-grade.A { background: var(--correct-light); color: var(--correct); border: 1px solid var(--correct-border); }
-  .score-grade.B { background: var(--accent-light);  color: var(--accent);  border: 1px solid #bfdbfe; }
-  .score-grade.C { background: #fffbeb; color: #d97706; border: 1px solid #fde68a; }
-  .score-grade.D { background: var(--wrong-light);   color: var(--wrong);   border: 1px solid var(--wrong-border); }
+  /* ── SCORE PAGE ── */
+  #score-page {
+    display: none;
+    min-height: 100vh; min-height: 100dvh;
+    padding: 24px 16px 40px;
+    overflow-y: auto;
+  }
+  .score-hero {
+    background: linear-gradient(135deg, var(--accent) 0%, #5c7cfa 100%);
+    border-radius: 18px; padding: 28px 20px 24px;
+    text-align: center; color: #fff;
+    margin-bottom: 16px;
+    box-shadow: 0 8px 28px rgba(59,91,219,0.3);
+  }
+  .score-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.62rem;
+    letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.75; margin-bottom: 8px;
+  }
+  .score-pct {
+    font-family: 'JetBrains Mono', monospace; font-size: 4rem; font-weight: 500;
+    line-height: 1; margin-bottom: 4px;
+  }
+  .score-frac { font-size: 0.85rem; opacity: 0.8; }
+  .score-stats-row {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 10px; margin: 16px 0;
+  }
+  .score-stat-card {
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: 12px; padding: 14px 8px; text-align: center;
+    box-shadow: var(--shadow-sm);
+  }
+  .ssc-num {
+    font-family: 'JetBrains Mono', monospace; font-size: 1.5rem; font-weight: 500; line-height: 1;
+  }
+  .ssc-num.good { color: var(--correct); }
+  .ssc-num.bad  { color: var(--wrong); }
+  .ssc-num.time { color: var(--accent); }
+  .ssc-label { font-size: 0.6rem; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .grade-badge {
+    font-size: 0.82rem; font-weight: 600; padding: 8px 16px;
+    border-radius: 8px; display: inline-block; margin: 4px 0 16px;
+  }
+  .grade-badge.A { background: var(--correct-light); color: var(--correct); border: 1px solid var(--correct-border); }
+  .grade-badge.B { background: var(--accent-light);  color: var(--accent);  border: 1px solid #c5d0f7; }
+  .grade-badge.C { background: #fff9db; color: #c07d00; border: 1px solid #ffe066; }
+  .grade-badge.D { background: var(--wrong-light);   color: var(--wrong);   border: 1px solid var(--wrong-border); }
+
+  /* MODULE BREAKDOWN CARDS */
+  .breakdown-section { margin: 0 0 16px; }
+  .breakdown-section-title {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.62rem;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--muted); margin-bottom: 10px; padding: 0 2px;
+  }
+  .mod-card {
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: 12px; padding: 12px 14px;
+    margin-bottom: 7px; box-shadow: var(--shadow-sm);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center; gap: 10px;
+  }
+  .mc-left {}
+  .mc-name {
+    font-size: 0.78rem; font-weight: 700; color: var(--text); margin-bottom: 2px;
+  }
+  .mc-subtitle { font-size: 0.68rem; color: var(--muted); }
+  .mc-right {
+    display: flex; align-items: center; gap: 8px;
+    flex-shrink: 0;
+  }
+  .mc-pip {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; font-weight: 500;
+    padding: 3px 8px; border-radius: 6px;
+    background: var(--surface2); border: 1px solid var(--border);
+  }
+  .mc-pip.c { background: var(--correct-light); border-color: var(--correct-border); color: var(--correct); }
+  .mc-pip.w { background: var(--wrong-light); border-color: var(--wrong-border); color: var(--wrong); }
+  .mc-pip.s { color: var(--text2); }
+  .mc-pip.p { color: var(--muted); }
+  .mod-card.total-row {
+    background: var(--accent-light); border-color: #c5d0f7;
+  }
+  .mod-card.total-row .mc-name { color: var(--accent); }
+  .time-row {
+    text-align: center; padding: 12px;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text2);
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: 12px; box-shadow: var(--shadow-sm);
+  }
   .restart-btn {
-    font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.9rem;
-    padding: 14px 40px; border-radius: 10px; border: none;
+    font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 0.9rem;
+    padding: 14px; border-radius: 12px; border: none; width: 100%;
     background: var(--accent); color: #fff; cursor: pointer; transition: all 0.2s;
-    box-shadow: 0 4px 14px rgba(37,99,235,0.3);
+    box-shadow: 0 4px 16px rgba(59,91,219,0.3);
+    margin-top: 16px;
   }
   .restart-btn:hover { background: var(--accent-hover); transform: translateY(-2px); }
 
-  /* START */
-  #start-page { max-width: 560px; margin: 80px auto; padding: 20px; }
-  .start-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: 20px; padding: 52px 44px; text-align: center; box-shadow: var(--shadow-md); }
-  .start-eyebrow { font-family: 'DM Mono', monospace; font-size: 0.7rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; }
-  .start-title { font-size: 2rem; font-weight: 600; line-height: 1.25; color: var(--text); margin-bottom: 8px; }
-  .start-sub { font-size: 0.88rem; color: var(--text2); margin-bottom: 36px; line-height: 1.65; }
-  .start-stats { display: flex; justify-content: center; gap: 32px; margin-bottom: 36px; flex-wrap: wrap; }
-  .start-stat { text-align: center; }
-  .start-stat-num { font-family: 'DM Mono', monospace; font-size: 2rem; font-weight: 500; color: var(--accent); }
-  .start-stat-label { font-size: 0.7rem; color: var(--muted); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.06em; }
-  .start-btn {
-    font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.95rem;
-    padding: 15px 52px; border-radius: 10px; border: none;
-    background: var(--accent); color: #fff; cursor: pointer; transition: all 0.2s;
-    box-shadow: 0 4px 14px rgba(37,99,235,0.3);
-  }
-  .start-btn:hover { background: var(--accent-hover); transform: translateY(-2px); }
-
-  #quiz-page { display: none; }
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: var(--bg); }
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
 </style>
 </head>
@@ -218,6 +412,7 @@
 
 <div id="start-page">
   <div class="start-card">
+    <div class="start-icon">☁️</div>
     <div class="start-eyebrow">AWS Cloud Architect</div>
     <div class="start-title">Mock Test<br>Modules 2–14</div>
     <div class="start-sub">Modules 2, 3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14<br>(Module 9 excluded)</div>
@@ -231,34 +426,43 @@
 </div>
 
 <div id="quiz-page">
-  <header>
-    <div class="logo">AWS Mock Test</div>
-    <div class="header-right">
-      <div class="progress-wrap">
-        <div class="progress-label" id="prog-label">0 / 0</div>
-        <div class="progress-bar-outer"><div class="progress-bar-inner" id="prog-bar" style="width:0%"></div></div>
-      </div>
-      <div class="timer-box" id="timer">00:00</div>
+  <div class="qheader">
+    <div class="logo">AWS</div>
+    <div class="progress-center">
+      <div class="progress-nums" id="prog-label">0 / 0</div>
+      <div class="progress-bar-outer"><div class="progress-bar-inner" id="prog-bar" style="width:0%"></div></div>
     </div>
-  </header>
+    <div class="timer-pill" id="timer">00:00</div>
+  </div>
   <div class="module-tabs" id="module-tabs"></div>
-  <main id="quiz-main"></main>
+  <div class="mscore-strip" id="mscore-strip">
+    <div class="mscore-left">
+      <span class="mscore-chip" id="ms-chip"></span>
+      <span class="mscore-subtitle" id="ms-subtitle"></span>
+    </div>
+    <div class="mscore-right" id="ms-right"></div>
+  </div>
+  <div class="q-scroll" id="quiz-main"></div>
+  <div class="q-nav" id="q-nav"></div>
 </div>
 
 <div id="score-page">
-  <div class="score-card">
-    <div class="score-title">Test Complete</div>
-    <div class="score-number" id="score-pct">—%</div>
-    <div class="score-sub" id="score-fraction"></div>
-    <div class="score-divider"></div>
-    <div class="score-meta">
-      <div class="score-stat"><div class="score-stat-num good" id="score-correct">—</div><div class="score-stat-label">Correct</div></div>
-      <div class="score-stat"><div class="score-stat-num bad"  id="score-wrong">—</div><div class="score-stat-label">Wrong</div></div>
-      <div class="score-stat"><div class="score-stat-num time" id="score-time">—</div><div class="score-stat-label">Time</div></div>
-    </div>
-    <div class="score-grade" id="score-grade"></div><br>
-    <button class="restart-btn" onclick="restartQuiz()">↺ Restart Test</button>
+  <div class="score-hero">
+    <div class="score-label">Test Complete</div>
+    <div class="score-pct" id="score-pct">—</div>
+    <div class="score-frac" id="score-fraction"></div>
   </div>
+  <div class="score-stats-row">
+    <div class="score-stat-card"><div class="ssc-num good" id="score-correct">—</div><div class="ssc-label">✓ Correct</div></div>
+    <div class="score-stat-card"><div class="ssc-num bad"  id="score-wrong">—</div><div class="ssc-label">✗ Wrong</div></div>
+    <div class="score-stat-card"><div class="ssc-num time" id="score-time">—</div><div class="ssc-label">Time</div></div>
+  </div>
+  <div style="text-align:center;margin-bottom:16px"><div class="grade-badge" id="score-grade"></div></div>
+  <div class="breakdown-section">
+    <div class="breakdown-section-title">Module Breakdown</div>
+    <div id="mod-cards"></div>
+  </div>
+  <button class="restart-btn" onclick="restartQuiz()">↺ Restart Test</button>
 </div>
 
 <script>
@@ -430,7 +634,7 @@ function stopTimer(){clearInterval(state.timerInterval);}
 // ── START ──
 function startQuiz(){
   document.getElementById('start-page').style.display='none';
-  document.getElementById('quiz-page').style.display='block';
+  document.getElementById('quiz-page').classList.add('active');
   renderTabs(); renderQ(); startTimer();
 }
 
@@ -444,7 +648,7 @@ function renderTabs(){
   }).join('');
 }
 function isDone(mi){ return MODULES[mi].questions.every((_,qi)=>state.submitted[`${mi}-${qi}`]); }
-function switchMod(mi){ state.currentModule=mi; renderTabs(); renderQ(); window.scrollTo({top:0,behavior:'smooth'}); }
+function switchMod(mi){ state.currentModule=mi; renderTabs(); renderQ(); document.getElementById('q-scroll').scrollTop=0; }
 
 // ── RENDER QUESTION ──
 function renderQ(){
@@ -453,10 +657,28 @@ function renderQ(){
   const mod=MODULES[mi], q=mod.questions[qi], key=`${mi}-${qi}`;
   const done=!!state.submitted[key], sel=state.answers[key]||[];
 
-  // progress
+  // global progress bar
   const answered=Object.keys(state.submitted).length;
   document.getElementById('prog-label').textContent=`${answered} / ${allQ.length}`;
   document.getElementById('prog-bar').style.width=`${(answered/allQ.length)*100}%`;
+
+  // module score strip
+  let modCorrect=0, modWrong=0;
+  mod.questions.forEach((_,i)=>{
+    const k=`${mi}-${i}`;
+    if(state.submitted[k]){
+      const s=(state.answers[k]||[]).slice().sort((a,b)=>a-b);
+      if(arrEq(s,mod.questions[i].answer.slice().sort((a,b)=>a-b))) modCorrect++; else modWrong++;
+    }
+  });
+  document.getElementById('ms-chip').textContent=mod.title;
+  document.getElementById('ms-subtitle').textContent=mod.subtitle;
+  document.getElementById('ms-right').innerHTML=`
+    <span class="mscore-c">✓ ${modCorrect}</span>
+    <span class="mscore-dot">·</span>
+    <span class="mscore-w">✗ ${modWrong}</span>
+    <span class="mscore-dot">·</span>
+    <span class="mscore-q">${qi+1}/${mod.questions.length}</span>`;
 
   // global index
   let gIdx=0; for(let i=0;i<mi;i++) gIdx+=MODULES[i].questions.length; gIdx+=qi+1;
@@ -475,37 +697,30 @@ function renderQ(){
     optsHtml+=`<label class="${lc}"><input type="${q.type}" name="q${key}" value="${oi}" ${isSel?'checked':''} ${done?'disabled':''} onchange="pick('${key}',${oi},'${q.type}')">${opt}</label>`;
   });
 
-  // explanation
-  let expHtml='';
-  if(done&&!arrEq(sel.slice().sort((a,b)=>a-b),q.answer.slice().sort((a,b)=>a-b))){
-    expHtml=`<div class="explanation"><div class="exp-title">✓ Correct answer</div>${q.answer.map(i=>`<em>${q.options[i]}</em>`).join('<br>')}</div>`;
-  }
-
-  // footer
-  const allDone=Object.keys(state.submitted).length===allQ.length;
-  const isLast=qi===mod.questions.length-1;
-  const nextLabel=allDone?'See Results →':(isLast?'Next Module →':'Next →');
-  let footerHtml=`<div class="q-footer"><div class="footer-left"><button class="btn-nav" onclick="prev()" ${qi===0?'disabled':''}>← Back</button></div><div class="footer-right">`;
-  if(!done){
-    footerHtml+=`<button class="btn-check" id="btnck-${key}" onclick="check('${key}',${mi},${qi})">Check Answer</button>`;
-  } else {
-    const ok=arrEq(sel.slice().sort((a,b)=>a-b),q.answer.slice().sort((a,b)=>a-b));
-    footerHtml+=`<span class="result-badge ${ok?'correct':'wrong'}">${ok?'✓ Correct':'✗ Incorrect'}</span><button class="btn-next" onclick="next()">${nextLabel}</button>`;
-  }
-  footerHtml+=`</div></div>`;
-
   document.getElementById('quiz-main').innerHTML=`
-    <div class="module-header"><div class="module-chip">${mod.title}</div><div class="module-name">${mod.subtitle}</div></div>
     <div class="${cardCls}">
-      <div class="q-top">
-        <span class="q-counter">Question ${qi+1} of ${mod.questions.length} · #${gIdx} overall</span>
-        <span class="q-type-badge">${q.type==='checkbox'?'MULTI-SELECT':'SINGLE'}</span>
+      <div class="q-meta">
+        <span class="q-counter">#${gIdx} overall</span>
+        <span class="q-badge">${q.type==='checkbox'?'MULTI-SELECT':'SINGLE'}</span>
       </div>
       <div class="q-body"><div class="q-text">${q.q}</div></div>
       <div class="options-list">${optsHtml}</div>
-      ${expHtml}
-      ${footerHtml}
     </div>`;
+
+  // sticky nav
+  const allDone=Object.keys(state.submitted).length===allQ.length;
+  const isLast=qi===mod.questions.length-1;
+  let navHtml=`<button class="btn-back" onclick="prev()" ${qi===0?'disabled':''}>← Back</button><div style="display:flex;gap:8px;align-items:center">`;
+  if(!done){
+    navHtml+=`<button class="btn-primary" id="btnck-${key}" onclick="check('${key}',${mi},${qi})">Check →</button>`;
+  } else {
+    const ok=arrEq(sel.slice().sort((a,b)=>a-b),q.answer.slice().sort((a,b)=>a-b));
+    navHtml+=`<span class="result-pill ${ok?'correct':'wrong'}">${ok?'✓ Correct':'✗ Wrong'}</span>`;
+    const nextLabel=allDone?'Results →':'Next →';
+    if(!isLast||allDone) navHtml+=`<button class="btn-primary" onclick="next()">${nextLabel}</button>`;
+  }
+  navHtml+='</div>';
+  document.getElementById('q-nav').innerHTML=navHtml;
 }
 
 // ── INTERACTION ──
@@ -521,10 +736,18 @@ function check(key,mi,qi){
   const sel=state.answers[key]||[];
   if(sel.length===0){
     const b=document.getElementById(`btnck-${key}`);
-    if(b){b.style.background='#dc2626';b.textContent='Please select an answer';setTimeout(()=>{b.style.background='';b.textContent='Check Answer';},900);}
+    if(b){b.style.background='#e03131';b.textContent='Select an answer!';setTimeout(()=>{b.style.background='';b.textContent='Check →';},900);}
     return;
   }
-  state.submitted[key]=true; renderTabs(); renderQ();
+  state.submitted[key]=true; renderTabs();
+  const mod=MODULES[mi];
+  const isLast=qi===mod.questions.length-1;
+  if(isLast){
+    renderQ();
+    setTimeout(()=>next(), 1000);
+  } else {
+    renderQ();
+  }
 }
 
 function next(){
@@ -536,15 +759,15 @@ function next(){
     if(allDone){ showScore(); return; }
     let nmi=mi+1;
     while(nmi<MODULES.length&&isDone(nmi)) nmi++;
-    if(nmi<MODULES.length) switchMod(nmi); else showScore();
+    if(nmi<MODULES.length) switchMod(nmi); else { showScore(); return; }
   }
-  window.scrollTo({top:0,behavior:'smooth'});
+  const qs=document.getElementById('q-scroll'); if(qs) qs.scrollTop=0;
 }
 
 function prev(){
   const mi=state.currentModule;
   const qi=state.moduleQ[mi]||0;
-  if(qi>0){ state.moduleQ[mi]=qi-1; renderQ(); window.scrollTo({top:0,behavior:'smooth'}); }
+  if(qi>0){ state.moduleQ[mi]=qi-1; renderQ(); document.getElementById('q-scroll').scrollTop=0; }
 }
 
 function arrEq(a,b){ return a.length===b.length&&a.every((v,i)=>v===b[i]); }
@@ -552,18 +775,57 @@ function arrEq(a,b){ return a.length===b.length&&a.every((v,i)=>v===b[i]); }
 // ── SCORE ──
 function showScore(){
   stopTimer();
-  document.getElementById('quiz-page').style.display='none';
+  document.getElementById('quiz-page').classList.remove('active');
   document.getElementById('score-page').style.display='block';
   let correct=0;
   allQ.forEach(({mi,qi,q})=>{ const k=`${mi}-${qi}`,sel=(state.answers[k]||[]).slice().sort((a,b)=>a-b); if(arrEq(sel,q.answer.slice().sort((a,b)=>a-b))) correct++; });
   const total=allQ.length, pct=Math.round(correct/total*100);
   document.getElementById('score-pct').textContent=`${pct}%`;
-  document.getElementById('score-fraction').textContent=`${correct} out of ${total} questions correct`;
+  document.getElementById('score-fraction').textContent=`${correct} / ${total} correct`;
   document.getElementById('score-correct').textContent=correct;
   document.getElementById('score-wrong').textContent=total-correct;
   document.getElementById('score-time').textContent=fmt(state.elapsed);
   let g,t; if(pct>=90){g='A';t='Excellent — AWS Ready! 🏆';}else if(pct>=75){g='B';t='Good — Keep Practicing! 💪';}else if(pct>=60){g='C';t='Fair — Review the Material 📖';}else{g='D';t='Needs Work — Study More! 📚';}
-  const el=document.getElementById('score-grade'); el.className=`score-grade ${g}`; el.textContent=t;
+  const el=document.getElementById('score-grade'); el.className=`grade-badge ${g}`; el.textContent=t;
+
+  // per-module cards
+  const mins=Math.floor(state.elapsed/60), secs=state.elapsed%60;
+  const timeStr=state.elapsed<60?`${state.elapsed}s`:`${mins}m ${secs>0?secs+'s':''}`;
+  let cards='';
+  MODULES.forEach((mod,mi)=>{
+    let mc=0,mw=0;
+    mod.questions.forEach((_,qi)=>{
+      const k=`${mi}-${qi}`;
+      if(state.submitted[k]){
+        const s=(state.answers[k]||[]).slice().sort((a,b)=>a-b);
+        if(arrEq(s,mod.questions[qi].answer.slice().sort((a,b)=>a-b))) mc++; else mw++;
+      }
+    });
+    const mt=mod.questions.length, mp=Math.round(mc/mt*100);
+    cards+=`<div class="mod-card">
+      <div class="mc-left">
+        <div class="mc-name">${mod.title}</div>
+        <div class="mc-subtitle">${mod.subtitle}</div>
+      </div>
+      <div class="mc-right">
+        <span class="mc-pip c">✓ ${mc}</span>
+        <span class="mc-pip w">✗ ${mw}</span>
+        <span class="mc-pip s">${mc}/${mt}</span>
+        <span class="mc-pip p">${mp}%</span>
+      </div>
+    </div>`;
+  });
+  cards+=`<div class="mod-card total-row">
+    <div class="mc-left"><div class="mc-name">Total</div></div>
+    <div class="mc-right">
+      <span class="mc-pip c">✓ ${correct}</span>
+      <span class="mc-pip w">✗ ${total-correct}</span>
+      <span class="mc-pip s">${correct}/${total}</span>
+      <span class="mc-pip p">${pct}%</span>
+    </div>
+  </div>`;
+  cards+=`<div class="time-row">⏱ ${fmt(state.elapsed)} &nbsp;·&nbsp; ${timeStr}</div>`;
+  document.getElementById('mod-cards').innerHTML=cards;
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
@@ -571,7 +833,7 @@ function restartQuiz(){
   stopTimer();
   state={currentModule:0,moduleQ:{},answers:{},submitted:{},timerInterval:null,elapsed:0};
   document.getElementById('score-page').style.display='none';
-  document.getElementById('start-page').style.display='block';
+  document.getElementById('start-page').style.display='flex';
 }
 </script>
 </body>
