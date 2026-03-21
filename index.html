@@ -4,2032 +4,574 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mock Test AWS Module 2–14 (excl. 9)</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0a0e1a;
-    --surface: #111827;
-    --surface2: #1a2235;
-    --border: #1e3a5f;
-    --accent: #00d4ff;
-    --accent2: #ff6b35;
-    --correct: #00e676;
-    --wrong: #ff4757;
-    --text: #e8f4fd;
-    --muted: #7a9bb5;
-    --card: #0d1b2e;
+    --bg: #f0f4f8;
+    --surface: #ffffff;
+    --surface2: #f8fafc;
+    --border: #dde3ec;
+    --border2: #c8d3e0;
+    --accent: #2563eb;
+    --accent-light: #eff6ff;
+    --accent-hover: #1d4ed8;
+    --correct: #16a34a;
+    --correct-light: #f0fdf4;
+    --correct-border: #86efac;
+    --wrong: #dc2626;
+    --wrong-light: #fef2f2;
+    --wrong-border: #fca5a5;
+    --text: #1e293b;
+    --text2: #475569;
+    --muted: #94a3b8;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.05);
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'IBM Plex Sans', sans-serif;
-    min-height: 100vh;
-    background-image:
-      radial-gradient(ellipse at 20% 10%, rgba(0,212,255,0.06) 0%, transparent 50%),
-      radial-gradient(ellipse at 80% 90%, rgba(255,107,53,0.05) 0%, transparent 50%);
-  }
-
-  /* ─── HEADER ─── */
+  /* HEADER */
   header {
     position: sticky; top: 0; z-index: 100;
-    background: rgba(10,14,26,0.92);
-    backdrop-filter: blur(12px);
+    background: rgba(255,255,255,0.96); backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
-    padding: 12px 24px;
+    padding: 10px 24px;
     display: flex; align-items: center; justify-content: space-between;
-    gap: 16px; flex-wrap: wrap;
+    gap: 16px; flex-wrap: wrap; box-shadow: var(--shadow);
   }
-  .logo {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.85rem;
-    color: var(--accent);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-  .header-info {
-    display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
-  }
+  .logo { font-family: 'DM Mono', monospace; font-size: 0.82rem; font-weight: 500; color: var(--accent); }
+  .header-right { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
   .timer-box {
-    font-family: 'Space Mono', monospace;
-    font-size: 1.4rem;
-    color: var(--accent);
-    background: rgba(0,212,255,0.07);
-    border: 1px solid rgba(0,212,255,0.25);
-    padding: 6px 16px; border-radius: 6px;
-    min-width: 90px; text-align: center;
-    transition: color 0.3s, border-color 0.3s;
+    font-family: 'DM Mono', monospace; font-size: 1.1rem; font-weight: 500;
+    color: var(--accent); background: var(--accent-light); border: 1px solid #bfdbfe;
+    padding: 5px 14px; border-radius: 8px; min-width: 82px; text-align: center;
+    transition: all 0.3s;
   }
-  .timer-box.urgent { color: var(--wrong); border-color: rgba(255,71,87,0.4); animation: pulse 1s infinite; }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
-
+  .timer-box.urgent { color: var(--wrong); background: var(--wrong-light); border-color: var(--wrong-border); animation: pulse 1s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.65} }
   .progress-wrap { display: flex; align-items: center; gap: 10px; }
-  .progress-label { font-size: 0.78rem; color: var(--muted); font-family: 'Space Mono', monospace; }
-  .progress-bar-outer {
-    width: 140px; height: 6px;
-    background: var(--border); border-radius: 99px; overflow: hidden;
-  }
-  .progress-bar-inner {
-    height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2));
-    border-radius: 99px; transition: width 0.4s ease;
-  }
+  .progress-label { font-family: 'DM Mono', monospace; font-size: 0.75rem; color: var(--text2); white-space: nowrap; }
+  .progress-bar-outer { width: 120px; height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; }
+  .progress-bar-inner { height: 100%; background: linear-gradient(90deg, var(--accent), #7c3aed); border-radius: 99px; transition: width 0.5s ease; }
 
-  /* ─── MODULE TABS ─── */
+  /* MODULE TABS */
   .module-tabs {
-    display: flex; gap: 8px; flex-wrap: wrap;
-    padding: 16px 24px; border-bottom: 1px solid var(--border);
+    display: flex; gap: 6px; flex-wrap: wrap;
+    padding: 10px 24px; border-bottom: 1px solid var(--border);
     background: var(--surface);
   }
   .tab-btn {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.7rem;
-    padding: 5px 12px; border-radius: 4px;
-    border: 1px solid var(--border);
-    background: transparent; color: var(--muted);
-    cursor: pointer; transition: all 0.2s;
-    letter-spacing: 0.05em;
+    font-family: 'DM Mono', monospace; font-size: 0.7rem; font-weight: 500;
+    padding: 5px 11px; border-radius: 6px;
+    border: 1px solid var(--border2); background: var(--surface2); color: var(--text2);
+    cursor: pointer; transition: all 0.15s;
   }
-  .tab-btn:hover { border-color: var(--accent); color: var(--accent); }
-  .tab-btn.active { background: var(--accent); color: #000; border-color: var(--accent); font-weight: 700; }
-  .tab-btn.done { border-color: var(--correct); color: var(--correct); }
-  .tab-btn.done.active { background: var(--correct); color: #000; }
+  .tab-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+  .tab-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .tab-btn.done { border-color: var(--correct-border); color: var(--correct); background: var(--correct-light); }
+  .tab-btn.done.active { background: var(--correct); color: #fff; border-color: var(--correct); }
 
-  /* ─── MAIN LAYOUT ─── */
-  main { max-width: 860px; margin: 0 auto; padding: 32px 20px 80px; }
+  /* MAIN */
+  main { max-width: 720px; margin: 0 auto; padding: 32px 20px 80px; }
 
-  /* ─── MODULE HEADER ─── */
-  .module-header {
-    margin-bottom: 32px;
-    padding: 20px 24px;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-left: 4px solid var(--accent);
-    border-radius: 8px;
+  /* MODULE HEADER */
+  .module-header { display: flex; align-items: center; gap: 10px; margin-bottom: 24px; }
+  .module-chip {
+    font-family: 'DM Mono', monospace; font-size: 0.72rem; font-weight: 500;
+    padding: 4px 10px; border-radius: 6px;
+    background: var(--accent-light); color: var(--accent); border: 1px solid #bfdbfe; white-space: nowrap;
   }
-  .module-title {
-    font-family: 'Space Mono', monospace;
-    font-size: 1.1rem; color: var(--accent);
-    letter-spacing: 0.06em; text-transform: uppercase;
-  }
-  .module-subtitle { font-size: 0.82rem; color: var(--muted); margin-top: 4px; }
+  .module-name { font-size: 0.9rem; color: var(--text2); font-weight: 500; }
 
-  /* ─── QUESTION CARD ─── */
+  /* QUESTION CARD */
   .question-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    margin-bottom: 20px;
-    overflow: hidden;
-    transition: border-color 0.3s;
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: 16px; overflow: hidden; box-shadow: var(--shadow-md);
+    animation: slideIn 0.22s ease;
   }
-  .question-card.answered-correct { border-color: rgba(0,230,118,0.3); }
-  .question-card.answered-wrong { border-color: rgba(255,71,87,0.3); }
+  @keyframes slideIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+  .question-card.result-correct { border-color: var(--correct-border); }
+  .question-card.result-wrong   { border-color: var(--wrong-border); }
 
-  .q-header {
-    display: flex; align-items: flex-start; gap: 14px;
-    padding: 20px 24px 16px;
+  .q-top {
+    padding: 8px 20px; background: var(--surface2); border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
   }
-  .q-num {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.7rem; color: var(--accent2);
-    background: rgba(255,107,53,0.1);
-    border: 1px solid rgba(255,107,53,0.2);
-    padding: 3px 8px; border-radius: 4px;
-    white-space: nowrap; margin-top: 2px;
-    letter-spacing: 0.05em;
-  }
-  .q-text {
-    font-size: 0.95rem; line-height: 1.65;
-    font-weight: 500; flex: 1;
-  }
+  .q-counter { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--muted); }
   .q-type-badge {
-    font-size: 0.65rem; font-family: 'Space Mono', monospace;
-    padding: 3px 7px; border-radius: 4px; white-space: nowrap;
-    margin-top: 3px;
-    background: rgba(0,212,255,0.08); color: var(--accent);
-    border: 1px solid rgba(0,212,255,0.2);
+    font-family: 'DM Mono', monospace; font-size: 0.65rem;
+    padding: 2px 8px; border-radius: 5px;
+    background: var(--accent-light); color: var(--accent); border: 1px solid #bfdbfe;
   }
+  .q-body { padding: 24px 24px 20px; }
+  .q-text { font-size: 1rem; line-height: 1.7; font-weight: 500; color: var(--text); }
 
-  /* ─── OPTIONS ─── */
-  .options-list { padding: 0 24px 20px; display: flex; flex-direction: column; gap: 8px; }
+  /* OPTIONS */
+  .options-list { padding: 0 24px 4px; display: flex; flex-direction: column; gap: 8px; }
   .option-label {
     display: flex; align-items: flex-start; gap: 12px;
-    padding: 11px 14px; border-radius: 7px;
-    border: 1px solid var(--border);
-    cursor: pointer; transition: all 0.18s;
-    background: var(--surface2);
-    font-size: 0.88rem; line-height: 1.55;
+    padding: 12px 16px; border-radius: 10px; border: 1.5px solid var(--border);
+    cursor: pointer; transition: all 0.15s; background: var(--surface2);
+    font-size: 0.9rem; line-height: 1.55; color: var(--text); user-select: none;
   }
-  .option-label:hover { border-color: var(--accent); background: rgba(0,212,255,0.05); }
-  .option-label input { margin-top: 2px; accent-color: var(--accent); flex-shrink: 0; }
+  .option-label:hover:not(.locked) { border-color: var(--accent); background: var(--accent-light); }
+  .option-label.selected:not(.locked) { border-color: var(--accent); background: var(--accent-light); color: var(--accent-hover); }
+  .option-label input { margin-top: 3px; accent-color: var(--accent); flex-shrink: 0; }
+  .option-label.show-correct { border-color: var(--correct-border)!important; background: var(--correct-light)!important; color: var(--correct)!important; }
+  .option-label.show-wrong   { border-color: var(--wrong-border)!important;   background: var(--wrong-light)!important;   color: var(--wrong)!important; }
+  .option-label.show-missed  { border-color: var(--correct-border)!important; background: var(--correct-light)!important; color: var(--correct)!important; opacity: 0.7; }
+  .option-label.locked { cursor: default; }
 
-  .option-label.correct-answer {
-    border-color: var(--correct) !important;
-    background: rgba(0,230,118,0.07) !important;
-    color: var(--correct);
-  }
-  .option-label.wrong-selected {
-    border-color: var(--wrong) !important;
-    background: rgba(255,71,87,0.07) !important;
-    color: var(--wrong);
-  }
-  .option-label.selected-correct {
-    border-color: var(--correct) !important;
-    background: rgba(0,230,118,0.1) !important;
-    color: var(--correct);
-  }
-
-  /* ─── SUBMIT BTN ─── */
-  .q-footer { padding: 0 24px 20px; display: flex; gap: 12px; align-items: center; }
-  .submit-btn {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.75rem; letter-spacing: 0.08em;
-    padding: 9px 20px; border-radius: 6px;
-    border: 1px solid var(--accent);
-    background: transparent; color: var(--accent);
-    cursor: pointer; transition: all 0.2s;
-    text-transform: uppercase;
-  }
-  .submit-btn:hover { background: var(--accent); color: #000; }
-  .submit-btn:disabled { opacity: 0.3; cursor: default; }
-  .submit-btn.submitted { border-color: var(--muted); color: var(--muted); pointer-events: none; }
-
-  .result-badge {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.75rem; padding: 6px 12px;
-    border-radius: 5px; letter-spacing: 0.05em;
-  }
-  .result-badge.correct { background: rgba(0,230,118,0.15); color: var(--correct); border: 1px solid rgba(0,230,118,0.3); }
-  .result-badge.wrong { background: rgba(255,71,87,0.15); color: var(--wrong); border: 1px solid rgba(255,71,87,0.3); }
-
-  /* ─── EXPLANATION ─── */
+  /* EXPLANATION */
   .explanation {
-    margin: 0 24px 20px;
-    padding: 14px 16px;
-    background: rgba(255,107,53,0.06);
-    border: 1px solid rgba(255,107,53,0.2);
-    border-radius: 6px;
-    font-size: 0.83rem; line-height: 1.6; color: #ffb08a;
+    margin: 12px 24px 4px; padding: 14px 16px;
+    background: #fefce8; border: 1px solid #fde047; border-radius: 10px;
+    font-size: 0.85rem; line-height: 1.6; color: #713f12;
   }
-  .explanation strong { color: var(--accent2); }
+  .exp-title { font-weight: 600; color: #92400e; margin-bottom: 4px; }
 
-  /* ─── SCORE PAGE ─── */
-  #score-page {
-    display: none;
-    max-width: 640px; margin: 60px auto;
-    text-align: center; padding: 20px;
+  /* FOOTER */
+  .q-footer { padding: 20px 24px 24px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .footer-left { display: flex; gap: 10px; }
+  .footer-right { display: flex; gap: 10px; align-items: center; }
+
+  .btn-nav {
+    font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 0.85rem;
+    padding: 9px 18px; border-radius: 9px; border: 1.5px solid var(--border2);
+    background: var(--surface); color: var(--text2); cursor: pointer; transition: all 0.15s;
   }
-  .score-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 16px; padding: 48px 40px;
+  .btn-nav:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+  .btn-nav:disabled { opacity: 0.3; cursor: default; pointer-events: none; }
+
+  .btn-check {
+    font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.88rem;
+    padding: 10px 24px; border-radius: 9px; border: none;
+    background: var(--accent); color: #fff; cursor: pointer; transition: all 0.15s;
+    box-shadow: 0 2px 8px rgba(37,99,235,0.3);
   }
-  .score-title {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.85rem; color: var(--accent);
-    letter-spacing: 0.15em; text-transform: uppercase;
-    margin-bottom: 24px;
+  .btn-check:hover { background: var(--accent-hover); transform: translateY(-1px); }
+
+  .btn-next {
+    font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.88rem;
+    padding: 10px 24px; border-radius: 9px; border: none;
+    background: var(--accent); color: #fff; cursor: pointer; transition: all 0.15s;
+    box-shadow: 0 2px 8px rgba(37,99,235,0.3);
   }
-  .score-number {
-    font-family: 'Space Mono', monospace;
-    font-size: 4.5rem; font-weight: 700;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    line-height: 1;
-  }
-  .score-sub { font-size: 1.05rem; color: var(--muted); margin-top: 8px; }
-  .score-meta {
-    display: flex; justify-content: center; gap: 32px;
-    margin: 32px 0; flex-wrap: wrap;
-  }
+  .btn-next:hover { background: var(--accent-hover); transform: translateY(-1px); }
+
+  .result-badge { font-family: 'DM Mono', monospace; font-size: 0.78rem; font-weight: 500; padding: 6px 12px; border-radius: 7px; }
+  .result-badge.correct { background: var(--correct-light); color: var(--correct); border: 1px solid var(--correct-border); }
+  .result-badge.wrong   { background: var(--wrong-light);   color: var(--wrong);   border: 1px solid var(--wrong-border); }
+
+  /* SCORE */
+  #score-page { display: none; max-width: 560px; margin: 60px auto; padding: 20px; }
+  .score-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: 20px; padding: 48px 40px; text-align: center; box-shadow: var(--shadow-md); }
+  .score-title { font-family: 'DM Mono', monospace; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 20px; }
+  .score-number { font-family: 'DM Mono', monospace; font-size: 5rem; font-weight: 500; color: var(--accent); line-height: 1; }
+  .score-sub { font-size: 1rem; color: var(--text2); margin-top: 8px; }
+  .score-divider { height: 1px; background: var(--border); margin: 28px 0; }
+  .score-meta { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; margin-bottom: 28px; }
   .score-stat { text-align: center; }
-  .score-stat-num {
-    font-family: 'Space Mono', monospace; font-size: 1.8rem;
-  }
+  .score-stat-num { font-family: 'DM Mono', monospace; font-size: 1.9rem; font-weight: 500; }
   .score-stat-num.good { color: var(--correct); }
-  .score-stat-num.bad { color: var(--wrong); }
-  .score-stat-label { font-size: 0.75rem; color: var(--muted); margin-top: 4px; }
-
-  .score-grade {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.9rem; padding: 10px 20px;
-    border-radius: 8px; display: inline-block; margin-bottom: 32px;
-  }
-  .score-grade.A { background: rgba(0,230,118,0.1); color: var(--correct); border: 1px solid rgba(0,230,118,0.3); }
-  .score-grade.B { background: rgba(0,212,255,0.1); color: var(--accent); border: 1px solid rgba(0,212,255,0.3); }
-  .score-grade.C { background: rgba(255,107,53,0.1); color: var(--accent2); border: 1px solid rgba(255,107,53,0.3); }
-  .score-grade.D { background: rgba(255,71,87,0.1); color: var(--wrong); border: 1px solid rgba(255,71,87,0.3); }
-
+  .score-stat-num.bad  { color: var(--wrong); }
+  .score-stat-num.time { color: var(--accent); }
+  .score-stat-label { font-size: 0.72rem; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .score-grade { font-size: 0.9rem; font-weight: 500; padding: 10px 24px; border-radius: 10px; display: inline-block; margin-bottom: 32px; }
+  .score-grade.A { background: var(--correct-light); color: var(--correct); border: 1px solid var(--correct-border); }
+  .score-grade.B { background: var(--accent-light);  color: var(--accent);  border: 1px solid #bfdbfe; }
+  .score-grade.C { background: #fffbeb; color: #d97706; border: 1px solid #fde68a; }
+  .score-grade.D { background: var(--wrong-light);   color: var(--wrong);   border: 1px solid var(--wrong-border); }
   .restart-btn {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.85rem; letter-spacing: 0.1em;
-    padding: 14px 36px; border-radius: 8px;
-    border: 2px solid var(--accent);
-    background: transparent; color: var(--accent);
-    cursor: pointer; transition: all 0.2s;
-    text-transform: uppercase;
+    font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.9rem;
+    padding: 14px 40px; border-radius: 10px; border: none;
+    background: var(--accent); color: #fff; cursor: pointer; transition: all 0.2s;
+    box-shadow: 0 4px 14px rgba(37,99,235,0.3);
   }
-  .restart-btn:hover { background: var(--accent); color: #000; transform: translateY(-2px); }
+  .restart-btn:hover { background: var(--accent-hover); transform: translateY(-2px); }
 
-  /* ─── START SCREEN ─── */
-  #start-page {
-    max-width: 640px; margin: 80px auto; text-align: center; padding: 20px;
-  }
-  .start-card {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 16px; padding: 56px 48px;
-  }
-  .start-badge {
-    font-family: 'Space Mono', monospace; font-size: 0.7rem;
-    letter-spacing: 0.2em; color: var(--accent2);
-    text-transform: uppercase; margin-bottom: 20px;
-  }
-  .start-title {
-    font-family: 'Space Mono', monospace; font-size: 1.7rem;
-    line-height: 1.3; margin-bottom: 8px;
-    background: linear-gradient(135deg, var(--text) 0%, var(--accent) 100%);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  }
-  .start-sub { color: var(--muted); font-size: 0.9rem; margin-bottom: 40px; line-height: 1.6; }
-  .start-stats {
-    display: flex; justify-content: center; gap: 32px;
-    margin-bottom: 40px; flex-wrap: wrap;
-  }
+  /* START */
+  #start-page { max-width: 560px; margin: 80px auto; padding: 20px; }
+  .start-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: 20px; padding: 52px 44px; text-align: center; box-shadow: var(--shadow-md); }
+  .start-eyebrow { font-family: 'DM Mono', monospace; font-size: 0.7rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; }
+  .start-title { font-size: 2rem; font-weight: 600; line-height: 1.25; color: var(--text); margin-bottom: 8px; }
+  .start-sub { font-size: 0.88rem; color: var(--text2); margin-bottom: 36px; line-height: 1.65; }
+  .start-stats { display: flex; justify-content: center; gap: 32px; margin-bottom: 36px; flex-wrap: wrap; }
   .start-stat { text-align: center; }
-  .start-stat-num {
-    font-family: 'Space Mono', monospace; font-size: 2rem;
-    color: var(--accent);
-  }
-  .start-stat-label { font-size: 0.72rem; color: var(--muted); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .start-stat-num { font-family: 'DM Mono', monospace; font-size: 2rem; font-weight: 500; color: var(--accent); }
+  .start-stat-label { font-size: 0.7rem; color: var(--muted); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.06em; }
   .start-btn {
-    font-family: 'Space Mono', monospace; font-size: 0.9rem;
-    letter-spacing: 0.12em; padding: 16px 48px; border-radius: 8px;
-    border: 2px solid var(--accent);
-    background: linear-gradient(135deg, rgba(0,212,255,0.15), rgba(255,107,53,0.1));
-    color: var(--accent); cursor: pointer; transition: all 0.25s;
-    text-transform: uppercase;
+    font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.95rem;
+    padding: 15px 52px; border-radius: 10px; border: none;
+    background: var(--accent); color: #fff; cursor: pointer; transition: all 0.2s;
+    box-shadow: 0 4px 14px rgba(37,99,235,0.3);
   }
-  .start-btn:hover {
-    background: linear-gradient(135deg, var(--accent), #0099cc);
-    color: #000; transform: translateY(-3px);
-    box-shadow: 0 8px 32px rgba(0,212,255,0.25);
-  }
+  .start-btn:hover { background: var(--accent-hover); transform: translateY(-2px); }
 
-  /* ─── QUIZ WRAPPER ─── */
   #quiz-page { display: none; }
-
-  /* scrollbar */
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
 </style>
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════════════════════
-     START PAGE
-═══════════════════════════════════════════════════════ -->
 <div id="start-page">
   <div class="start-card">
-    <div class="start-badge">▸ AWS Cloud Architect</div>
-    <div class="start-title">Mock Test<br>AWS Modules 2–14</div>
+    <div class="start-eyebrow">AWS Cloud Architect</div>
+    <div class="start-title">Mock Test<br>Modules 2–14</div>
     <div class="start-sub">Modules 2, 3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14<br>(Module 9 excluded)</div>
     <div class="start-stats">
-      <div class="start-stat">
-        <div class="start-stat-num" id="total-q-count">—</div>
-        <div class="start-stat-label">Questions</div>
-      </div>
-      <div class="start-stat">
-        <div class="start-stat-num">12</div>
-        <div class="start-stat-label">Modules</div>
-      </div>
-      <div class="start-stat">
-        <div class="start-stat-num">∞</div>
-        <div class="start-stat-label">Attempts</div>
-      </div>
+      <div class="start-stat"><div class="start-stat-num" id="total-q-count">—</div><div class="start-stat-label">Questions</div></div>
+      <div class="start-stat"><div class="start-stat-num">12</div><div class="start-stat-label">Modules</div></div>
+      <div class="start-stat"><div class="start-stat-num">∞</div><div class="start-stat-label">Attempts</div></div>
     </div>
-    <button class="start-btn" onclick="startQuiz()">▶ &nbsp;Begin Test</button>
+    <button class="start-btn" onclick="startQuiz()">Begin Test →</button>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════
-     QUIZ PAGE
-═══════════════════════════════════════════════════════ -->
 <div id="quiz-page">
   <header>
-    <div class="logo">▸ AWS Mock Test</div>
-    <div class="header-info">
+    <div class="logo">AWS Mock Test</div>
+    <div class="header-right">
       <div class="progress-wrap">
         <div class="progress-label" id="prog-label">0 / 0</div>
-        <div class="progress-bar-outer">
-          <div class="progress-bar-inner" id="prog-bar" style="width:0%"></div>
-        </div>
+        <div class="progress-bar-outer"><div class="progress-bar-inner" id="prog-bar" style="width:0%"></div></div>
       </div>
       <div class="timer-box" id="timer">00:00</div>
     </div>
   </header>
-
   <div class="module-tabs" id="module-tabs"></div>
-
   <main id="quiz-main"></main>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════
-     SCORE PAGE
-═══════════════════════════════════════════════════════ -->
 <div id="score-page">
   <div class="score-card">
-    <div class="score-title">▸ Test Complete</div>
+    <div class="score-title">Test Complete</div>
     <div class="score-number" id="score-pct">—%</div>
     <div class="score-sub" id="score-fraction"></div>
+    <div class="score-divider"></div>
     <div class="score-meta">
-      <div class="score-stat">
-        <div class="score-stat-num good" id="score-correct">—</div>
-        <div class="score-stat-label">Correct</div>
-      </div>
-      <div class="score-stat">
-        <div class="score-stat-num bad" id="score-wrong">—</div>
-        <div class="score-stat-label">Wrong</div>
-      </div>
-      <div class="score-stat">
-        <div class="score-stat-num" id="score-time" style="color:var(--accent)">—</div>
-        <div class="score-stat-label">Time</div>
-      </div>
+      <div class="score-stat"><div class="score-stat-num good" id="score-correct">—</div><div class="score-stat-label">Correct</div></div>
+      <div class="score-stat"><div class="score-stat-num bad"  id="score-wrong">—</div><div class="score-stat-label">Wrong</div></div>
+      <div class="score-stat"><div class="score-stat-num time" id="score-time">—</div><div class="score-stat-label">Time</div></div>
     </div>
-    <div class="score-grade" id="score-grade"></div><br><br>
-    <button class="restart-btn" onclick="restartQuiz()">↺ &nbsp;Restart Test</button>
+    <div class="score-grade" id="score-grade"></div><br>
+    <button class="restart-btn" onclick="restartQuiz()">↺ Restart Test</button>
   </div>
 </div>
 
 <script>
-// ═══════════════════════════════════════════════════════
-// QUESTION DATA
-// ═══════════════════════════════════════════════════════
 const MODULES = [
-  {
-    id: 2, title: "Module 2", subtitle: "Cloud Architecture & Well-Architected Framework",
-    questions: [
-      {
-        q: "Which is the best definition of cloud architecture?",
-        type: "radio",
-        options: [
-          "Combining frontend and backend software and components to create highly available and scalable web services that meet the needs of an organization",
-          "Relocating traditional on-premises data centers to internet-accessible data centers that a vendor manages",
-          "Designing applications in cloud-based, shared IT infrastructure by using virtual machines and fault-tolerant data stores in the cloud",
-          "Applying cloud characteristics to a solution that uses cloud services and features to meet technical and business requirements"
-        ],
-        answer: [3]
-      },
-      {
-        q: "The AWS Well-Architected Framework has six pillars. Three of the pillars are security, operational excellence, and sustainability. What are two of the other pillars of the Well-Architected Framework? (Select TWO.)",
-        type: "checkbox",
-        options: ["Reliability","Risk management","Governance","Privacy","Cost optimization"],
-        answer: [0,4]
-      },
-      {
-        q: "Which actions are consistent with the operational excellence pillar of the AWS Well-Architected Framework? (Select TWO.)",
-        type: "checkbox",
-        options: [
-          "Review and improve processes and procedures on a continuous cycle.",
-          "Plan and manage the full lifecycle of hardware assets.",
-          "Ensure operations personnel document changes to the infrastructure.",
-          "Evaluate organizational structures and roles to identify skill gaps.",
-          "Apply software engineering principles and methodology to infrastructure as code."
-        ],
-        answer: [0,4]
-      },
-      {
-        q: "A specific application requires a frontend web tier of multiple servers that communicate with a backend application tier of multiple servers. Which design most closely follows AWS best practices?",
-        type: "radio",
-        options: [
-          "Assign a dedicated application server and a dedicated connection to each web server.",
-          "Create a full mesh network between the web and application tiers, so that each web server can communicate directly with every application server.",
-          "Create multiple instances that each combine a web frontend and application backend in the same instance.",
-          "Design the web tier to communicate with the application tier through the Elastic Load Balancing (ELB) service."
-        ],
-        answer: [3]
-      },
-      {
-        q: "A solutions architect is developing a process for handling server failures. Which process most closely follows AWS best practices?",
-        type: "radio",
-        options: [
-          "Amazon CloudWatch detects a system failure. It notifies the systems administrator, who provisions a new server by using the AWS Management Console.",
-          "Amazon CloudWatch detects a system failure. It initiates automation to provision a new server.",
-          "The operations staff detects a system failure. They notify the systems administrator, who provisions a new server by using the AWS Management Console.",
-          "The operations staff detects a system failure. They initiate automation to provision a new server."
-        ],
-        answer: [1]
-      },
-      {
-        q: "A company is considering moving their on-premises data center to the cloud. Their primary motivation is to increase their cost efficiency. Which approach most closely follows AWS best practices?",
-        type: "radio",
-        options: [
-          "Provision the servers that are needed and stop services when they are not being used.",
-          "Provision some of the servers in the cloud and ensure the servers run 24/7.",
-          "Replicate their on-premises data center in the cloud.",
-          "Maintain the on-premises data center as long as possible."
-        ],
-        answer: [0]
-      },
-      {
-        q: "A company stores read-only data in Amazon S3. Most users are in the same country as the company headquarters. Some users are located around the world. Which design decision most closely follows AWS best practices?",
-        type: "radio",
-        options: [
-          "Use a bucket in the AWS Region that is closest to the company headquarters. All users access the data through Amazon CloudFront.",
-          "Use a bucket in the Region closest to the company headquarters.",
-          "Replicate objects across buckets in AWS Regions around the world. Users access the bucket in the Region closest that is to them.",
-          "Use a bucket in the Region that has the lowest average latency for all users."
-        ],
-        answer: [0]
-      },
-      {
-        q: "A consultant must access a large object in an S3 bucket. They need one day to access the file. Which method for granting access most closely follows AWS best practices?",
-        type: "radio",
-        options: [
-          "Create a presigned URL to the object that expires in 24 hours, and give it to the consultant.",
-          "Enable public access on the S3 bucket. Give the object URL to the consultant.",
-          "Create a user account for the consultant. Grant the user account permissions to access the S3 bucket through the AWS Management Console.",
-          "Copy the object to a new S3 bucket. Enable public access on the new bucket. From the new bucket, get the object URL, and give it to the consultant."
-        ],
-        answer: [0]
-      },
-      {
-        q: "Which are main considerations that influence which AWS Regions to use? (Select TWO.)",
-        type: "checkbox",
-        options: [
-          "Application resiliency during system failures",
-          "Security and access control",
-          "Compliance with laws and regulations",
-          "Protection against localized natural disasters",
-          "Latency reduction for end users"
-        ],
-        answer: [2,4]
-      },
-      {
-        q: "Which are main considerations that influence which Availability Zones to use? (Select TWO.)",
-        type: "checkbox",
-        options: [
-          "Compliance with laws and regulations",
-          "Protection against localized natural disasters",
-          "Application resiliency during system failures",
-          "Latency reduction for end users",
-          "Security and access control"
-        ],
-        answer: [1,2]
-      }
-    ]
-  },
-  {
-    id: 3, title: "Module 3", subtitle: "Security & IAM",
-    questions: [
-      {
-        q: "Which statement reflects a design principle of the security pillar of the Well-Architected Framework?",
-        type: "radio",
-        options: [
-          "Ensure that staff are actively monitoring potential risks manually.",
-          "Do not deploy a solution to production until you're certain that no security risks exist.",
-          "Decentralize privilege management.",
-          "Apply security at all layers of an architecture."
-        ],
-        answer: [3]
-      },
-      {
-        q: "Which statements about responsibility are accurate based on the AWS shared responsibility model? (Select TWO.)",
-        type: "checkbox",
-        options: [
-          "AWS is responsible for host-based firewall configurations.",
-          "AWS is responsible for the configuration of security groups.",
-          "Customers are responsible for managing their user data.",
-          "Customers are responsible for the installation, maintenance, and decommissioning of the hardware that they use in the AWS data center.",
-          "AWS is responsible for the physical security of data centers."
-        ],
-        answer: [2,4]
-      },
-      {
-        q: "Which options are characteristics of the principle of least privilege? (Select TWO.)",
-        type: "checkbox",
-        options: [
-          "Monitor actions and changes.",
-          "Craft security policies that limit access to specific tasks.",
-          "Grant access only as needed.",
-          "Use encryption.",
-          "Always use groups."
-        ],
-        answer: [1,2]
-      },
-      {
-        q: "Which statement about AWS Identity and Access Management (IAM) is true?",
-        type: "radio",
-        options: [
-          "IAM provides an extra layer of security by offering anomaly detection on resources.",
-          "IAM provides an audit trail of who performed an action, what action they performed, and when they performed it.",
-          "With IAM, you can grant principals granular access to resources.",
-          "With IAM, you can manage encryption for items that require encryption at rest."
-        ],
-        answer: [2]
-      },
-      {
-        q: "Which statements describe AWS Identity and Access Management (IAM) roles? (Select TWO.)",
-        type: "checkbox",
-        options: [
-          "They can only be used by accounts that are associated to the person who creates the role.",
-          "They provide temporary security credentials.",
-          "They provide permanent security credentials.",
-          "They are uniquely associated to an individual.",
-          "Individuals, applications, and services can assume roles."
-        ],
-        answer: [1,4]
-      },
-      {
-        q: "Which statement reflects a best practice for the root user on an AWS account?",
-        type: "radio",
-        options: [
-          "Remove unneeded permissions from the root user account.",
-          "Create an admin user and perform most admin tasks with this user instead of the root user.",
-          "Create two root users with separate credentials and distribute them to two different individuals.",
-          "To avoid getting locked out of the account, do not enable multi-factor authentication (MFA) on the root account."
-        ],
-        answer: [1]
-      },
-      {
-        q: "How does AWS Identity and Access Management (IAM) evaluate a policy?",
-        type: "radio",
-        options: [
-          "An explicit deny statement does not override an explicit allow statement.",
-          "It checks for explicit allow statements before it checks for explicit deny statements.",
-          "If the policy doesn't have any explicit deny statements or explicit allow statements, users have access by default.",
-          "It checks for explicit deny statements before it checks for explicit allow statements."
-        ],
-        answer: [3]
-      },
-      {
-        q: "Which statement about AWS Identity and Access Management (IAM) policies is accurate?",
-        type: "radio",
-        options: [
-          "Resource-based policies are attached to a user, group, or role.",
-          "Resource-based policies allow access by default.",
-          "Identity-based policies are attached to a user, group, or role.",
-          "Identity-based policies can only be attached to a single entity."
-        ],
-        answer: [2]
-      },
-      {
-        q: "Which AWS Identity and Access Management (IAM) policy element includes information about whether to allow or deny a request?",
-        type: "radio",
-        options: ["Principal","Condition","Effect","Action"],
-        answer: [2]
-      },
-      {
-        q: "Which option accurately describes the statement element in an AWS Identity and Access Management (IAM) policy?",
-        type: "radio",
-        options: [
-          "The statement element is an optional part of an IAM policy.",
-          "The statement element contains other elements that together define what is allowed or denied.",
-          "A policy can only have one statement element.",
-          "The statement element does not apply to identity-based policies."
-        ],
-        answer: [1]
-      }
-    ]
-  },
-  {
-    id: 4, title: "Module 4", subtitle: "Amazon S3 & Storage",
-    questions: [
-      {
-        q: "Due to a company merger, a data engineer needs to increase their object storage capacity. They are not sure how much storage they will need. They want a highly scalable service that can store unstructured, semistructured, and structured data. Which service would be the most cost effective to accomplish this task?",
-        type: "radio",
-        options: ["Amazon RDS","AWS Storage Gateway","Amazon S3","Amazon Elastic Block Store (Amazon EBS)"],
-        answer: [2]
-      },
-      {
-        q: "Amazon S3 provides a good solution for which use case?",
-        type: "radio",
-        options: [
-          "Hourly storage of frequently accessed temporary files",
-          "An internet-accessible storage location for video files that an external website can access",
-          "A data warehouse for business intelligence",
-          "Ledger data that is updated and accessed frequently"
-        ],
-        answer: [1]
-      },
-      {
-        q: "A company is interested in using Amazon S3 to host their website instead of a traditional web server. Which types of content does Amazon S3 support for static web hosting? (Select THREE.)",
-        type: "checkbox",
-        options: [
-          "Server-side scripts",
-          "Dynamic HTML files",
-          "Database engine",
-          "Client-side scripts",
-          "HTML files and image files",
-          "Video and sound files"
-        ],
-        answer: [3,4,5]
-      },
-      {
-        q: "A company wants to use an S3 bucket to store sensitive data. Which actions can they take to protect their data? (Select TWO.)",
-        type: "checkbox",
-        options: [
-          "Uploading unencrypted files to Amazon S3 because Amazon S3 encrypts the files by default",
-          "Using client-side encryption to protect data in transit before it is sent to Amazon S3",
-          "Using Secure File Transfer Protocol (SFTP) to connect directly to Amazon S3",
-          "Enabling server-side encryption on the S3 bucket before uploading sensitive data",
-          "Enabling server-side encryption on the S3 bucket after uploading sensitive data"
-        ],
-        answer: [1,3]
-      },
-      {
-        q: "A company must create a common place to store shared files. Which requirements does Amazon S3 support? (Select TWO.)",
-        type: "checkbox",
-        options: [
-          "Lock a file so that only one person at a time can edit it.",
-          "Attach comments to files.",
-          "Maintain different versions of files.",
-          "Compare file contents between files.",
-          "Recover deleted files."
-        ],
-        answer: [2,4]
-      },
-      {
-        q: "A customer service team accesses case data daily for up to 30 days. Cases can be reopened and require immediate access for 1 year after they are closed. Reopened cases require 2 days to process. Which solution meets the requirements and is the most cost efficient?",
-        type: "radio",
-        options: [
-          "Store all case data in S3 Standard so that it is available whenever it is needed.",
-          "Store case data in S3 Intelligent-Tiering to automatically move data between tiers based on access frequency.",
-          "Store case data in S3 Standard. Use a lifecycle policy to move the data into S3 Standard-Infrequent Access (S3 Standard-IA) after 30 days.",
-          "Store case data in S3 Standard. Use a lifecycle policy to move the data into Amazon S3 Glacier Flexible Retrieval after 30 days."
-        ],
-        answer: [2]
-      },
-      {
-        q: "Which option takes advantage of edge locations in Amazon CloudFront to transfer files over long distances to an S3 bucket?",
-        type: "radio",
-        options: [
-          "Amazon S3 Transfer Acceleration",
-          "AWS SDKs",
-          "AWS Transfer Family",
-          "Amazon S3 REST API"
-        ],
-        answer: [0]
-      },
-      {
-        q: "A video producer must regularly transfer several video files to Amazon S3. The files range from 100–700 MB. The internet connection has been unreliable, causing some uploads to fail. Which solution provides the fastest, most reliable, and most cost-effective way to transfer these files to Amazon S3?",
-        type: "radio",
-        options: [
-          "Amazon S3 multipart uploads",
-          "Amazon S3 Transfer Acceleration",
-          "AWS Management Console",
-          "AWS Transfer Family"
-        ],
-        answer: [0]
-      },
-      {
-        q: "Which Amazon S3 storage class is designed for backup copies of on-premises data or easily re-creatable data?",
-        type: "radio",
-        options: [
-          "S3 One Zone-Infrequent Access (S3 One Zone-IA)",
-          "S3 Standard-Infrequent Access (S3 Standard-IA)",
-          "S3 Intelligent-Tiering",
-          "S3 Glacier Instant Retrieval"
-        ],
-        answer: [0]
-      },
-      {
-        q: "A company needs to retain records for regulatory purposes for a 7-year period. These records are rarely accessed (once or twice a year). What is the lowest-cost storage class for Amazon S3?",
-        type: "radio",
-        options: [
-          "S3 Standard-Infrequent Access (S3 Standard-IA)",
-          "S3 Intelligent-Tiering",
-          "S3 Glacier Deep Archive",
-          "S3 One Zone-Infrequent Access (S3 One Zone-IA)"
-        ],
-        answer: [2]
-      }
-    ]
-  },
-  {
-    id: 5, title: "Module 5", subtitle: "Amazon EC2 & Compute",
-    questions: [
-      {
-        q: "Which attributes are reasons to choose Amazon EC2? (Select TWO.)",
-        type: "checkbox",
-        options: [
-          "AWS management of operating system (OS) security",
-          "AWS management of operating system (OS) patches",
-          "Ability to run serverless applications",
-          "Ability to run any type of workload",
-          "Complete control of computing resources"
-        ],
-        answer: [3,4]
-      },
-      {
-        q: "What are the benefits of using an Amazon Machine Image (AMI)? (Select THREE.)",
-        type: "checkbox",
-        options: [
-          "Using an AMI as a server backup for Amazon EC2 instances",
-          "Selling or sharing software solutions packaged as an AMI",
-          "Updating systems by patching their AMI",
-          "Launching instances with the same configuration",
-          "Automating security group settings for instances",
-          "Migrating data from on premises to Amazon EC2 instances"
-        ],
-        answer: [0,1,3]
-      },
-      {
-        q: "A system administrator must change the instance types of multiple running Amazon EC2 instances. The instances were launched with a mix of Amazon Elastic Block Store (Amazon EBS) backed Amazon Machine Images (AMIs) and instance-store-backed AMIs. Which method is a valid way to change the instance type?",
-        type: "radio",
-        options: [
-          "Stop an instance-store-backed instance, change its instance type, and start the instance.",
-          "Stop an Amazon EBS backed instance, change its instance type, and start the instance.",
-          "Change the instance type of an Amazon EBS backed instance without stopping it.",
-          "Change the instance type of an instance-store-backed instance without stopping it."
-        ],
-        answer: [1]
-      },
-      {
-        q: "A workload requires high read/write access to large local datasets. Which instance types would perform BEST for this workload? (Select TWO.)",
-        type: "checkbox",
-        options: [
-          "Storage optimized",
-          "Accelerated computing",
-          "Compute optimized",
-          "Memory optimized",
-          "General purpose"
-        ],
-        answer: [0,3]
-      },
-      {
-        q: "An application requires the media access control (MAC) address of the host Amazon EC2 instance. The architecture uses an AWS Auto Scaling group to dynamically launch and terminate instances. What is the BEST way for the application to obtain the MAC address?",
-        type: "radio",
-        options: [
-          "Include the MAC address in a custom AMI for each instance in the AWS Auto Scaling group.",
-          "Use the user data of each instance to access the MAC address through the instance metadata.",
-          "Write the MAC address in the application configuration file of each instance.",
-          "Include the MAC address in the Amazon Machine Image (AMI) that is used to launch all of the instances in the AWS Auto Scaling group."
-        ],
-        answer: [1]
-      },
-      {
-        q: "Which statements about user data are correct? (Select TWO.)",
-        type: "checkbox",
-        options: [
-          "The cloud architect must run the /var/lib/cloud/instance/scripts/part-001 command for the user data script to run again.",
-          "By default, user data runs only once, when an instance is launched.",
-          "By default, user data runs after every instance restart.",
-          "The cloud architect must remove the config_user_scripts file to rerun the user data scripts.",
-          "User data cannot be run while the instance is stopped."
-        ],
-        answer: [0,1]
-      },
-      {
-        q: "A transactional workload on an Amazon EC2 instance performs high amounts of frequent read and write operations. Which Amazon Elastic Block Store (Amazon EBS) volume type is BEST for this workload?",
-        type: "radio",
-        options: [
-          "Throughput Optimized hard disk drive (HDD)",
-          "Provisioned IOPS solid state drive (SSD)",
-          "General Purpose solid state drive (SSD)",
-          "Cold hard disk drive (HDD)"
-        ],
-        answer: [1]
-      },
-      {
-        q: "It is possible to create an NFS share on an Amazon Elastic Block Store (Amazon EBS) backed Linux instance by installing and configuring an NFS server on the instance. In this way, multiple Linux systems can share the file system of that instance. Which advantages does Amazon Elastic File System (Amazon EFS) provide compared to this solution? (Select TWO.)",
-        type: "checkbox",
-        options: [
-          "File locking",
-          "High availability",
-          "No need for backups",
-          "Strong consistency",
-          "Automatic scaling"
-        ],
-        answer: [1,4]
-      },
-      {
-        q: "Which feature does Amazon FSx for Windows File Server provide?",
-        type: "radio",
-        options: [
-          "Backup solution for on-premises Windows file servers",
-          "Microsoft Active Directory server for Windows file servers",
-          "Amazon management agent for Windows file servers",
-          "Fully managed Windows file servers"
-        ],
-        answer: [3]
-      },
-      {
-        q: "Which descriptions of Amazon EC2 pricing options are correct? (Select TWO.)",
-        type: "checkbox",
-        options: [
-          "Spot Instances offer spare compute capacity at discounted prices and can be interrupted.",
-          "Reserved Instances are physical servers that are reserved exclusively for customer use.",
-          "Dedicated Hosts are servers that are dedicated to one purpose, such as a firewall.",
-          "Savings Plans are budgeting tools that help customers manage Amazon EC2 costs.",
-          "With On-Demand Instances, customers can pay for compute capacity by usage time with no long-term commitments."
-        ],
-        answer: [0,4]
-      }
-    ]
-  },
-  {
-    id: 6, title: "Module 6", subtitle: "Databases",
-    questions: [
-      {
-        q: "Which statement that compares a database service that AWS manages with a database on an Amazon EC2 instance is true?",
-        type: "radio",
-        options: [
-          "Configuring backups for a database on a managed database service isn't needed.",
-          "Configuring backups for a database on an EC2 instance isn't needed.",
-          "AWS manages database patches for a database on a managed database service.",
-          "AWS manages operating system (OS) patches for a database on an EC2 instance."
-        ],
-        answer: [2]
-      },
-      {
-        q: "A small startup company is deciding which database service to use for an enrollment system for their online training website. Which requirements might lead them to select Amazon RDS rather than Amazon DynamoDB? (Select TWO.)",
-        type: "checkbox",
-        options: [
-          "Data and transactions must be encrypted to protect personal information.",
-          "The data is highly structured.",
-          "Data must be backed up in case of disasters.",
-          "Student, course, and registration data are stored in many different tables.",
-          "The enrollment system must be highly available."
-        ],
-        answer: [1,3]
-      },
-      {
-        q: "A startup company is building an order inventory system with a web frontend and is looking for a real-time transactional database. Which service would best meet their needs?",
-        type: "radio",
-        options: ["Amazon DynamoDB","Amazon Neptune","Amazon Redshift","Amazon DocumentDB (with MongoDB compatibility)"],
-        answer: [0]
-      },
-      {
-        q: "A small game company is designing an online game, where thousands of players can create their own in-game objects. The current design uses a MySQL database in Amazon RDS to store data for player-created objects. Which proposed online game object features could make Amazon DynamoDB a better solution? (Select TWO.)",
-        type: "checkbox",
-        options: [
-          "A set of common object attributes for player-created objects",
-          "Unpredictable object attributes for player-created objects",
-          "A high amount of read activity on player-created objects and a low amount of writes",
-          "Game data items that include binary data and might exceed 700 MB",
-          "Game items that can be modified using data contained in other tables"
-        ],
-        answer: [1,2]
-      },
-      {
-        q: "An organization is concerned about an increase in fraud. Which service could help with building real-time graph database queries for fraud detection?",
-        type: "radio",
-        options: ["Amazon RDS","Amazon DynamoDB","Amazon Redshift","Amazon Neptune"],
-        answer: [3]
-      },
-      {
-        q: "A data engineer must host a new Microsoft SQL Server database in AWS for a project. Which service could they use to accomplish this task?",
-        type: "radio",
-        options: [
-          "Amazon DynamoDB",
-          "Amazon Neptune",
-          "Amazon Aurora",
-          "Amazon DocumentDB (with MongoDB compatibility)"
-        ],
-        answer: [2]
-      },
-      {
-        q: "Which techniques should be used to secure an Amazon RDS database? (Select THREE.)",
-        type: "checkbox",
-        options: [
-          "AWS Identity and Access Management (IAM) policies to define access at the table, row, and column levels",
-          "A virtual private gateway (VGW) to filter traffic from restricted networks",
-          "An Amazon Virtual Private Cloud (Amazon VPC) gateway endpoint to prevent traffic from traversing the internet",
-          "A virtual private cloud (VPC) to provide instance isolation",
-          "Security groups to control network access to individual RDS instances",
-          "Encryption both at rest and in transit to protect sensitive data"
-        ],
-        answer: [3,4,5]
-      },
-      {
-        q: "Which techniques should be used to secure Amazon DynamoDB? (Select THREE.)",
-        type: "checkbox",
-        options: [
-          "AWS Identity and Access Management (IAM) policies to define access at the table, item, or attribute level",
-          "A virtual private cloud (VPC) to provide instance isolation and firewall protection",
-          "Encryption to protect sensitive data",
-          "A virtual private gateway (VGW) to filter traffic from restricted networks",
-          "Security groups to control network access to individual instances",
-          "An Amazon Virtual Private Cloud (Amazon VPC) gateway endpoint to prevent traffic from traversing the internet"
-        ],
-        answer: [0,2,5]
-      },
-      {
-        q: "A company wants to migrate their on-premises Oracle database to Amazon Aurora MySQL. Which process describes the high-level steps most accurately?",
-        type: "radio",
-        options: [
-          "Use AWS Schema Conversion Tool (AWS SCT) to synchronously convert the schema and migrate the data.",
-          "Use AWS Database Migration Service (AWS DMS) to migrate the data, and then use AWS Schema Conversion Tool (AWS SCT) to convert the schema.",
-          "Use AWS Schema Conversion Tool (AWS SCT) to convert the schema, and then use AWS Database Migration Service (AWS DMS) to migrate the data.",
-          "Use AWS Database Migration Service (AWS DMS) to directly migrate from the Oracle database to Amazon Aurora MySQL."
-        ],
-        answer: [2]
-      },
-      {
-        q: "A cloud architect is setting up an application to use an Amazon RDS MySQL DB instance. The database must be architected for high availability across Availability Zones and AWS Regions with minimal downtime. How should they meet this requirement?",
-        type: "radio",
-        options: [
-          "Set up an RDS MySQL Single-AZ DB instance. Configure a read replica in a different Region.",
-          "Set up an RDS MySQL Multi-AZ DB instance. Configure a read replica in a different Region.",
-          "Set up an RDS MySQL Multi-AZ DB instance. Configure an appropriate backup window.",
-          "Set up an RDS MySQL Single-AZ DB instance. Copy automated snapshots to at least one other Region."
-        ],
-        answer: [1]
-      }
-    ]
-  },
-  {
-    id: 7, title: "Module 7", subtitle: "Networking — VPC",
-    questions: [
-      {
-        q: "Which definition describes a virtual private cloud (VPC)?",
-        type: "radio",
-        options: [
-          "A logically isolated virtual network that you define in the AWS Cloud",
-          "A fully managed service that extends the AWS Cloud to customer premises",
-          "A virtual private network (VPN) in the AWS Cloud",
-          "An extension of an on-premises network into AWS"
-        ],
-        answer: [0]
-      },
-      {
-        q: "Which component does not have direct access to the internet?",
-        type: "radio",
-        options: [
-          "Network address translation (NAT) gateway inside a public subnet",
-          "EC2 instance inside a public subnet",
-          "Elastic IP address interface",
-          "EC2 instance inside a private subnet"
-        ],
-        answer: [3]
-      },
-      {
-        q: "A company's virtual private cloud (VPC) has the Classless Inter-Domain Routing (CIDR) block 172.16.0.0/21 (2048 addresses). It has two subnets (A and B). Each subnet must support 100 usable addresses now, but this number is expected to rise to at most 254 usable addresses soon. Which subnet addressing scheme meets the requirements and follows AWS best practices?",
-        type: "radio",
-        options: [
-          "Subnet A: 172.16.0.0/24 (256 addresses) Subnet B: 172.16.1.0/24 (256 addresses)",
-          "Subnet A: 172.16.0.0/22 (1024 addresses) Subnet B: 172.16.4.0/22 (1024 addresses)",
-          "Subnet A: 172.16.0.0/23 (512 addresses) Subnet B: 172.16.2.0/23 (512 addresses)",
-          "Subnet A: 172.16.0.0/25 (128 addresses) Subnet B: 172.16.0.128/25 (128 addresses)"
-        ],
-        answer: [2]
-      },
-      {
-        q: "Several EC2 instances launch in a virtual private cloud (VPC) that has internet access. These instances should not be accessible from the internet, but they must be able to download updates from the internet. How should the instances launch?",
-        type: "radio",
-        options: [
-          "With Elastic IP addresses, in a subnet with a default route to an internet gateway",
-          "Without public IP addresses, in a subnet with a default route to an internet gateway",
-          "Without public IP addresses, in a subnet with a default route to a network address translation (NAT) gateway",
-          "With public IP addresses, in a subnet with a default route to an internet gateway"
-        ],
-        answer: [2]
-      },
-      {
-        q: "A group of consultants requires access to an EC2 instance from the internet for 3 consecutive days each week. The instance is shut down the rest of the week. The virtual private cloud (VPC) has internet access. How should you assign one IPv4 address to the instance to give the consultants access?",
-        type: "radio",
-        options: [
-          "Enable automatic address assignment for the subnet.",
-          "Enable automatic address assignment for the EC2 instance.",
-          "Assign the IP address in the operating system (OS) boot configuration.",
-          "Associate an Elastic IP address with the EC2 instance."
-        ],
-        answer: [3]
-      },
-      {
-        q: "An application uses a bastion host to allow access to EC2 instances in a private subnet within a virtual private cloud (VPC). What security group configurations would allow SSH access from the source IP to the EC2 instances? (Select TWO.)",
-        type: "checkbox",
-        options: [
-          "Add a rule to the private subnet EC2 instance security group to allow return traffic to the bastion host security group.",
-          "Add a rule to the bastion host security group to deny all traffic from the internet.",
-          "Add a rule to the bastion host security group to allow return traffic to your source IP address.",
-          "Add a rule to the EC2 instance security group to allow traffic from the bastion host security group on port 22.",
-          "Add a rule to the bastion host security group to allow traffic on port 22 from your source IP address."
-        ],
-        answer: [3,4]
-      },
-      {
-        q: "A solution deployed in a virtual private cloud (VPC) needs a subnet with limited access to specific internet addresses. How can an architect configure the network to limit traffic from and to the EC2 instances in the subnet using a network access control list (ACL)?",
-        type: "radio",
-        options: [
-          "Add rules to the default network ACL to allow traffic from and to allowed internet addresses.",
-          "Add rules to the subnet custom network ACL to allow traffic from and to allowed internet addresses. Deny all other traffic.",
-          "Add rules to the subnet custom network ACL to allow traffic from and to allowed internet addresses.",
-          "Add rules to the default network ACL to allow traffic from and to allowed internet addresses. Deny all other traffic."
-        ],
-        answer: [2]
-      },
-      {
-        q: "Which actions are best practices for designing a virtual private cloud (VPC)? (Select THREE.)",
-        type: "checkbox",
-        options: [
-          "Create one subnet per Availability Zone for each group of hosts that have unique routing requirements.",
-          "Reserve some address space for future use.",
-          "Match the size of the VPC Classless Inter-Domain Routing (CIDR) block to the number of hosts that are required for a workload.",
-          "Use the same Classless Inter-Domain Routing (CIDR) block as your on-premises network.",
-          "Use the same Classless Inter-Domain Routing (CIDR) block for subnets in different Availability Zones that are part of the same AWS Auto Scaling group.",
-          "Divide the VPC network range evenly across all Availability Zones that are available."
-        ],
-        answer: [0,1,5]
-      },
-      {
-        q: "Where can you have VPC flow logs delivered? (Select THREE.)",
-        type: "checkbox",
-        options: [
-          "Amazon S3 bucket",
-          "Amazon CloudWatch",
-          "AWS Management Console",
-          "Amazon Kinesis Data Firehose",
-          "Amazon Athena",
-          "Amazon OpenSearch Service"
-        ],
-        answer: [0,1,3]
-      },
-      {
-        q: "An EC2 instance must connect to an Amazon S3 bucket. What component provides this connectivity with no additional charge and no throughput packet limits?",
-        type: "radio",
-        options: [
-          "Gateway VPC endpoint",
-          "Public region access point",
-          "Gateway Load Balancer endpoint",
-          "Interface VPC endpoint"
-        ],
-        answer: [0]
-      }
-    ]
-  },
-  {
-    id: 8, title: "Module 8", subtitle: "Networking — Connectivity",
-    questions: [
-      {
-        q: "What is the simplest way to connect 100 virtual private clouds (VPCs) together?",
-        type: "radio",
-        options: [
-          "Connect each VPC to all the other VPCs by using VPC peering.",
-          "Create a hub-and-spoke network by using AWS VPN CloudHub.",
-          "Chain VPCs together by using VPC peering.",
-          "Connect the VPCs to AWS Transit Gateway."
-        ],
-        answer: [3]
-      },
-      {
-        q: "A company needs network traffic to flow between an AWS account in one Region to another account in a different Region. What should they set up between the transit gateways in each region?",
-        type: "radio",
-        options: [
-          "AWS Direct Connect",
-          "Transit gateway peering attachment",
-          "AWS Site-to-Site VPN",
-          "AWS PrivateLink"
-        ],
-        answer: [1]
-      },
-      {
-        q: "A company has two virtual private clouds (VPCs). VPC A has a Classless Inter-Domain Routing (CIDR) block of 10.1.0.0/16. VPC B has CIDR block of 10.2.0.0/16. Both VPCs belong to the same AWS account. What is the simplest way to connect the two VPCs so that they can route all traffic between them?",
-        type: "radio",
-        options: [
-          "AWS Site-to-Site VPN",
-          "VPC peering",
-          "AWS Direct Connect",
-          "VPC endpoints"
-        ],
-        answer: [1]
-      },
-      {
-        q: "Systems in a secure subnet in a virtual private cloud (VPC) must access a bucket in Amazon S3. Which solutions stop traffic from crossing the internet? (Select TWO.)",
-        type: "checkbox",
-        options: [
-          "Create a VPC gateway endpoint for Amazon S3.",
-          "Use VPC interface endpoints.",
-          "Use the private IP address of Amazon S3.",
-          "Create a VPC peering connection to Amazon S3.",
-          "Use a private IP address for the system."
-        ],
-        answer: [0,1]
-      },
-      {
-        q: "A company has three virtual private clouds (VPCs). VPCs A, B, and C have Classless Inter-Domain Routing (CIDR) blocks that do not overlap. Both A and C have separate VPC peering connections with B. However, A cannot communicate with C. What is the simplest and most cost-effective way to enable full communication between A and C?",
-        type: "radio",
-        options: [
-          "Add routes to B to enable traffic between A and C through B.",
-          "Add a peering connection between A and C, and route traffic between A and C through the peering connection.",
-          "Link all three VPCs through a transit VPC, and route all traffic through the transit VPC.",
-          "Create VPC endpoints in A and C for the individual hosts that need to communicate with each other."
-        ],
-        answer: [1]
-      },
-      {
-        q: "Because of a natural disaster, a company moved a secondary data center to a temporary facility with internet connectivity. It needs a secure connection to the company's virtual private cloud (VPC) that must be operational as soon as possible. The data center will move again in 2 weeks. Which option meets the requirements?",
-        type: "radio",
-        options: [
-          "AWS Site-to-Site VPN",
-          "AWS Direct Connect",
-          "VPC endpoints",
-          "VPC peering"
-        ],
-        answer: [0]
-      },
-      {
-        q: "A company is concerned about internet disruptions. It wants to efficiently route traffic from their on-premises network to an AWS edge location close to their customer gateway device. What should they use?",
-        type: "radio",
-        options: [
-          "AWS Global Accelerator",
-          "AWS Direct Connect",
-          "AWS Transit Gateway",
-          "AWS VPN CloudHub"
-        ],
-        answer: [0]
-      },
-      {
-        q: "A company is implementing a system to back up on-premises systems to AWS. Which network connectivity method provides a solution with the most consistent performance?",
-        type: "radio",
-        options: [
-          "Virtual private cloud (VPC) peering",
-          "AWS Direct Connect",
-          "AWS Site-to-Site VPN",
-          "Virtual private cloud (VPC) endpoints"
-        ],
-        answer: [1]
-      },
-      {
-        q: "A company uses a single AWS Direct Connect connection between their on-premises network and their virtual private cloud (VPC). They want to ensure that the network connectivity is highly available by adding a backup connection. Which network connectivity method provides the most cost-effective solution for the backup connection?",
-        type: "radio",
-        options: [
-          "Another AWS Direct Connect connection through a different Direct Connect location",
-          "An on-demand AWS Client VPN connection across the internet",
-          "Another AWS Direct Connect connection through the same Direct Connect location",
-          "An on-demand AWS Site-to-Site VPN connection across the internet"
-        ],
-        answer: [3]
-      },
-      {
-        q: "A company is connecting a virtual private cloud (VPC) to multiple on-premises data centers using a virtual private network (VPN). Which implementation ensures resiliency and predictable bandwidth requirements?",
-        type: "radio",
-        options: [
-          "Implement Direct Connect as the primary connection and use the VPN as a secondary failover connection from each data center.",
-          "Implement AWS Transit Gateway to connect to each on-premises data center.",
-          "Use a many-to-many mesh topology, such as Amazon VPC peering.",
-          "Establish multiple Border Gateway Protocol (BGP) sessions for each VPC to create connectivity to multiple VPCs across multiple AWS Regions."
-        ],
-        answer: [0]
-      }
-    ]
-  },
-  {
-    id: 10, title: "Module 10", subtitle: "Auto Scaling & Load Balancing",
-    questions: [
-      {
-        q: "Which statement about Amazon EC2 Auto Scaling is accurate?",
-        type: "radio",
-        options: [
-          "It can launch new Amazon EC2 instances based on a schedule.",
-          "It can launch Amazon EC2 instances in multiple Availability Zones.",
-          "It requires the customer to use Reserved Instances only.",
-          "It can launch Amazon EC2 instances, but customers must terminate instances after they are no longer needed."
-        ],
-        answer: [1]
-      },
-      {
-        q: "A devops engineer detected that the demand on a fleet of Amazon EC2 instances in an Auto Scaling group increases by a set amount on weekend days. Which type of scaling is the MOST appropriate in this case?",
-        type: "radio",
-        options: ["Scheduled","Predictive","Manual","Dynamic"],
-        answer: [0]
-      },
-      {
-        q: "A devops engineer launches a fleet of Amazon EC2 instances in an Auto Scaling group behind an Application Load Balancer. The EC2 instances must maintain 50 percent average CPU utilization. Which type of scaling is appropriate to use based on CPU utilization usage?",
-        type: "radio",
-        options: ["Step scaling","Manual scaling","Target tracking scaling","Simple scaling"],
-        answer: [2]
-      },
-      {
-        q: "How can a user vertically scale an Amazon RDS database?",
-        type: "radio",
-        options: [
-          "By changing the instance class or size",
-          "By creating dedicated read and write nodes",
-          "By sharding the database",
-          "By adding read replicas"
-        ],
-        answer: [0]
-      },
-      {
-        q: "How can an AWS customer horizontally scale an Amazon Aurora database?",
-        type: "radio",
-        options: [
-          "By adding Aurora Replica instances by using Aurora Auto Scaling",
-          "By changing the instance type",
-          "By creating Amazon CloudWatch alarms",
-          "By creating a scaling policy"
-        ],
-        answer: [0]
-      },
-      {
-        q: "How does Amazon DynamoDB perform automatic scaling?",
-        type: "radio",
-        options: [
-          "It adds read replicas in response to increased read demand.",
-          "It adjusts the provisioned throughput capacity in response to traffic patterns.",
-          "It adds and removes database instances in response to changes in traffic.",
-          "It changes the instance type in response to changes in processing load."
-        ],
-        answer: [1]
-      },
-      {
-        q: "A fleet of Amazon EC2 instances is launched in an Amazon EC2 Auto Scaling group. The instances run an application that uses a custom protocol on TCP port 42000. Connections from client systems on the internet must balance across the instances. Which load balancing solution is the best solution?",
-        type: "radio",
-        options: [
-          "Classic Load Balancer",
-          "Application Load Balancer",
-          "Network Load Balancer",
-          "Gateway Load Balancer"
-        ],
-        answer: [2]
-      },
-      {
-        q: "A company must build a highly available website that uses server-side scripts to serve dynamic HTML. Which solution provides the HIGHEST availability for the LEAST cost and complexity?",
-        type: "radio",
-        options: [
-          "The customer deploys a second web server in another Region. Amazon Route 53 uses failover routing for disaster recovery (DR).",
-          "An Auto Scaling group launches Amazon EC2 instances, which are served by a Network Load Balancer. Amazon Route 53 uses latency-based routing.",
-          "Amazon S3 hosts the website. DNS name resolution points to the S3 bucket.",
-          "An Auto Scaling group launches Amazon EC2 instances, which are served by an Application Load Balancer. DNS name resolution points to the load balancer."
-        ],
-        answer: [3]
-      },
-      {
-        q: "Users in location A connect to an application in Region A. Users in location B connect to the same application in Region B. If the application in Region A becomes unhealthy, traffic for location A must be redirected to the application in Region B. Which solution meets this requirement?",
-        type: "radio",
-        options: [
-          "Use latency-based routing in Amazon Route 53 with Amazon CloudWatch alarms.",
-          "Use geoproximity routing and a Network Load Balancer that is attached to both Regions.",
-          "Use an Application Load Balancer with Amazon CloudWatch alarms.",
-          "Use geolocation routing with failover records in Amazon Route 53."
-        ],
-        answer: [3]
-      },
-      {
-        q: "A software engineer has created an AWS account for their own personal development and testing. They want the account to stay within the AWS Free Tier and to not generate unexpected costs. Which approach will work and will require the LEAST effort?",
-        type: "radio",
-        options: [
-          "Create a service control policy (SCP) to restrict all services that are not included in the AWS Free Tier.",
-          "Create an Amazon CloudWatch alarm to send an email message when the account billing exceeds $0.",
-          "Create an Amazon CloudWatch metric to monitor account billing and limit it to $0.",
-          "Sign in to the AWS Management Console each month and check the billing dashboard."
-        ],
-        answer: [1]
-      }
-    ]
-  },
-  {
-    id: 11, title: "Module 11", subtitle: "Automation & IaC",
-    questions: [
-      {
-        q: "Which are reasons to use automation to provision resources? (Select TWO.)",
-        type: "checkbox",
-        options: [
-          "Lack of version control with manual processes",
-          "Automation requirement for high availability",
-          "Greater expense with manual processes",
-          "Automation requirement for creating some resources",
-          "Alignment with the reliability design principle"
-        ],
-        answer: [0,4]
-      },
-      {
-        q: "Which are benefits of using infrastructure as code (IaC) over manual processes? (Select TWO.)",
-        type: "checkbox",
-        options: [
-          "Propagate updates from a single environment to all environments.",
-          "Automate system-wide security scans.",
-          "Protect environments from deletion.",
-          "Manage all account users.",
-          "Deploy environments with configuration consistency."
-        ],
-        answer: [0,4]
-      },
-      {
-        q: "A cloud architect wants to quickly set up a secure implementation of an Amazon FSx for Windows File Server that follows AWS best practices. Which solution should they use?",
-        type: "radio",
-        options: [
-          "AWS CloudFormation Designer",
-          "An AWS CloudFormation template that was downloaded from the internet",
-          "An Amazon Machine Image (AMI) on AWS Marketplace",
-          "An AWS Quick Start"
-        ],
-        answer: [3]
-      },
-      {
-        q: "What is Amazon CodeWhisperer?",
-        type: "radio",
-        options: [
-          "An integrated development environment (IDE)",
-          "A template for rapid application deployment",
-          "A set of automated reference architectures",
-          "An artificial intelligence (AI)-powered coding companion"
-        ],
-        answer: [3]
-      },
-      {
-        q: "Which are reasons to use Amazon CodeWhisperer? (Select TWO.)",
-        type: "checkbox",
-        options: [
-          "Accelerate coding tasks.",
-          "Write compliance tests.",
-          "Enhance application security.",
-          "Share open-source code.",
-          "Automate for high availability."
-        ],
-        answer: [0,2]
-      },
-      {
-        q: "What is AWS CloudFormation?",
-        type: "radio",
-        options: [
-          "An AWS service that you can use to create, model, and manage AWS resources",
-          "A template that describes your infrastructure",
-          "A description of best practices for designing an AWS implementation",
-          "A package of all the information that is needed to launch an Amazon EC2 instance"
-        ],
-        answer: [0]
-      },
-      {
-        q: "What is AWS CloudFormation Designer?",
-        type: "radio",
-        options: [
-          "A collection of reusable templates",
-          "A source code repository for AWS CloudFormation templates",
-          "A graphical design interface for creating AWS CloudFormation templates",
-          "A tool for automating deployments"
-        ],
-        answer: [2]
-      },
-      {
-        q: "Which option can be used to accomplish deployment-specific differences in an AWS CloudFormation template?",
-        type: "radio",
-        options: [
-          "Use conditions.",
-          "Use drift detection.",
-          "Use change sets.",
-          "Use AWS CloudFormation Designer."
-        ],
-        answer: [0]
-      },
-      {
-        q: "Which option is a good way to preview changes before implementing them in AWS CloudFormation Designer?",
-        type: "radio",
-        options: [
-          "Visually inspect the template.",
-          "Run Update Stack.",
-          "Run Detect Drift.",
-          "Create a change set."
-        ],
-        answer: [3]
-      },
-      {
-        q: "Which option is a good way to know which resources in an application environment were manually modified if the environment was created by running an AWS CloudFormation stack?",
-        type: "radio",
-        options: [
-          "Run a comparison in AWS CloudFormation Designer on the stack.",
-          "Run a change set on the stack.",
-          "Run drift detection on the stack.",
-          "Run conditions on the stack."
-        ],
-        answer: [2]
-      }
-    ]
-  },
-  {
-    id: 12, title: "Module 12", subtitle: "Caching & Content Delivery",
-    questions: [
-      {
-        q: "What is caching?",
-        type: "radio",
-        options: [
-          "A global network for content distribution",
-          "A way to store passwords",
-          "An in-memory database",
-          "A high-speed data storage layer"
-        ],
-        answer: [3]
-      },
-      {
-        q: "Which type of data should you cache?",
-        type: "radio",
-        options: [
-          "Data that can be retrieved quickly with simple queries",
-          "Specialized data that is needed by a subset of users",
-          "Dynamically generated web content",
-          "Static data that is frequently accessed"
-        ],
-        answer: [3]
-      },
-      {
-        q: "Which is a benefit of caching?",
-        type: "radio",
-        options: [
-          "Increased application reliability",
-          "Decreased costs",
-          "Load balancing the application",
-          "Reduced response latency"
-        ],
-        answer: [3]
-      },
-      {
-        q: "Which types of content on a web page can be cached using an edge cache? (Select TWO.)",
-        type: "checkbox",
-        options: [
-          "Video files, such as a product demo",
-          "Web objects, such as hyperlinks",
-          "User-generated data, such as search terms entered by user",
-          "Shopping cart filled with a user's item",
-          "Dynamically generated content, such as a user's name"
-        ],
-        answer: [0,1]
-      },
-      {
-        q: "What does Amazon CloudFront enable?",
-        type: "radio",
-        options: [
-          "Transactional processing with an in-memory database",
-          "Automatic creation of a time to live (TTL) value",
-          "Bidirectional caching between users and an origin host",
-          "Multi-tiered and regional caching of content"
-        ],
-        answer: [3]
-      },
-      {
-        q: "How does Amazon CloudFront use edge locations?",
-        type: "radio",
-        options: [
-          "It caches all content from an origin distribution at the edge location and delivers the content to clients through the fastest edge location.",
-          "It caches frequently accessed content at edge locations. It delivers the cached content to clients through the edge location with the lowest latency to those clients.",
-          "It caches local content at edge locations. It delivers the cached content to clients through the edge location that requires the fewest network hops to reach those clients.",
-          "It caches Regional data at Regional edge locations and delivers the content to clients through their Regional edge locations."
-        ],
-        answer: [1]
-      },
-      {
-        q: "Which statement describes an efficient way to deliver on-demand video content?",
-        type: "radio",
-        options: [
-          "Launch an Amazon EC2 instance to host your video content. Then use Amazon CloudFront to deliver the content.",
-          "Use Amazon S3 to store the content. Then use Amazon CloudFront to deliver the content.",
-          "Launch an Amazon EC2 instance to host and serve your video content.",
-          "Use Amazon S3 to store and serve the content."
-        ],
-        answer: [1]
-      },
-      {
-        q: "Which role does Amazon CloudFront play in protecting against distributed denial of service (DDoS) attacks?",
-        type: "radio",
-        options: [
-          "Performs deep packet inspection to detect attacks",
-          "Routes traffic through edge locations",
-          "Controls traffic by the source IP addresses of requests",
-          "Restricts traffic by geography to help block attacks that originate from specific countries"
-        ],
-        answer: [1]
-      },
-      {
-        q: "How can an application use Amazon ElastiCache to improve database read performance? (Select TWO.)",
-        type: "checkbox",
-        options: [
-          "Read data from the database first, and write the most frequently read data to ElastiCache.",
-          "Direct all read requests to the database, and configure it to read from ElastiCache when a cache miss occurs.",
-          "Replicate the database in ElastiCache, and direct all reads to ElastiCache and all writes to the database.",
-          "Write data to ElastiCache whenever the application writes to the database.",
-          "Read data from ElastiCache first, and write to ElastiCache when a cache miss occurs."
-        ],
-        answer: [3,4]
-      },
-      {
-        q: "Which type of caching strategy should be used when there's data that must be updated in real time?",
-        type: "radio",
-        options: ["Lazy loading","Write-through","Time to live (TTL)","Cache-control headers"],
-        answer: [1]
-      }
-    ]
-  },
-  {
-    id: 13, title: "Module 13", subtitle: "Decoupling & Messaging",
-    questions: [
-      {
-        q: "Which statement describes the difference between tightly and loosely coupled architectures?",
-        type: "radio",
-        options: [
-          "Components in a tightly coupled architecture are highly dependent on each other. In a loosely coupled architecture, components aren't highly dependent on each other.",
-          "Tightly coupled architectures are more likely to fail than loosely coupled architectures.",
-          "Loose coupling increases the complexity of scaling. Tight coupling decreases it.",
-          "Loosely coupled architectures must use managed services, and tightly coupled architectures don't have this limitation."
-        ],
-        answer: [0]
-      },
-      {
-        q: "Which statements describe Amazon Simple Queue Service (Amazon SQS)? (Select THREE.)",
-        type: "checkbox",
-        options: [
-          "Stores and optionally encrypts messages until they are processed and deleted",
-          "Enables you to decouple and scale microservices, distributed systems, and serverless applications",
-          "Supports standard queues and topics",
-          "Requires a consumer to poll the queue for messages",
-          "Sends push notifications to consumers",
-          "Supports email and text messaging"
-        ],
-        answer: [0,1,3]
-      },
-      {
-        q: "Which statements are true when using an Amazon Simple Queue Service (Amazon SQS) standard queue? (Select TWO.)",
-        type: "checkbox",
-        options: [
-          "Messages must be processed in the order that they are sent.",
-          "A message might be delivered more than once.",
-          "Messages can be sent in any order.",
-          "A message must be processed only once.",
-          "Messages can be assigned a priority."
-        ],
-        answer: [1,2]
-      },
-      {
-        q: "A fleet of Amazon EC2 instances process videos that users upload. Which function can Amazon Simple Queue Service (Amazon SQS) perform in this application?",
-        type: "radio",
-        options: [
-          "The application places job messages in an SQS queue. EC2 instances with available processing capacity pull the next job message from the queue.",
-          "EC2 instances put edited video files in an SQS queue. The application retrieves the videos from the queue.",
-          "An SQS queue receives messages from the application and notifies all available EC2 instances that videos are available.",
-          "The application writes the video files to an SQS queue. EC2 instances with available processing capacity pull the next video from the queue."
-        ],
-        answer: [0]
-      },
-      {
-        q: "What is Amazon Simple Notification Service (Amazon SNS)?",
-        type: "radio",
-        options: [
-          "A flexible and scalable outbound and inbound marketing communications service that uses email, short message service (SMS), push, or voice communication channels",
-          "A fully managed messaging service for both system-to-system and application-to-person (A2P) communication, which uses publish/subscribe patterns",
-          "A cost-effective, flexible, and scalable email service that enables developers to send email from within any application",
-          "A serverless event bus that enables easy connection of applications by using data from your own applications, integrated software as a service (SaaS) applications, and AWS services"
-        ],
-        answer: [1]
-      },
-      {
-        q: "What are some use cases for Amazon Simple Notification Service (Amazon SNS)? (Select THREE.)",
-        type: "checkbox",
-        options: [
-          "Notify multiple systems that user input is ready for processing.",
-          "Send a text message to systems operators when unusual activity has been detected.",
-          "Hold input until it can be processed in the order that it's received.",
-          "Send a push notification to mobile applications when a new software update is available.",
-          "Gather streaming data from multiple systems.",
-          "Trigger a single AWS Lambda function when an object is created in an Amazon S3 bucket."
-        ],
-        answer: [0,1,3]
-      },
-      {
-        q: "What are some features of Amazon Simple Notification Service (Amazon SNS)? (Select TWO.)",
-        type: "checkbox",
-        options: [
-          "Recall of sent messages",
-          "Message delivery to a URL",
-          "Message delivery to an Amazon Simple Queue Service (Amazon SQS) queue",
-          "Providing strict message ordering with standard topics.",
-          "Guaranteed message delivery even when an endpoint isn't accessible"
-        ],
-        answer: [1,2]
-      },
-      {
-        q: "Two different AWS Lambda functions must simultaneously process PDF files that are uploaded to an Amazon S3 bucket. The S3 event notification allows only one action when the PDF files are uploaded. Which solution provides the least complex way to process messages with both Lambda functions efficiently?",
-        type: "radio",
-        options: [
-          "Send the S3 event to Amazon MQ for distribution to both Lambda functions.",
-          "Upload two copies of each PDF file by using different object key prefixes.",
-          "Send the S3 event to an Amazon Simple Queue Service (Amazon SQS) queue that both Lambda functions poll.",
-          "Send the S3 event to an Amazon Simple Notification Service (Amazon SNS) topic that both Lambda functions subscribe to."
-        ],
-        answer: [3]
-      },
-      {
-        q: "What is Amazon MQ?",
-        type: "radio",
-        options: [
-          "Application monitoring service",
-          "Data migration service",
-          "Message broker service",
-          "Identity broker service"
-        ],
-        answer: [2]
-      },
-      {
-        q: "Which is a common use case for Amazon MQ?",
-        type: "radio",
-        options: [
-          "Connect a virtual private cloud (VPC) to an on-premises network.",
-          "Decouple components in a new cloud-native application.",
-          "Leverage an existing on-premises application that uses Apache ActiveMQ to communicate between microservices.",
-          "Upload a standalone static website to AWS."
-        ],
-        answer: [2]
-      }
-    ]
-  },
-  {
-    id: 14, title: "Module 14", subtitle: "Serverless & Microservices",
-    questions: [
-      {
-        q: "A solutions architect wants to propose a microservice architecture on AWS to management. Which serverless computing benefits should they include in the proposal? (Select THREE.)",
-        type: "checkbox",
-        options: [
-          "Pay-for-value services",
-          "Full control over runtime environment",
-          "Predictable performance",
-          "Lessens amount of server maintenance",
-          "Continuous scaling",
-          "Built-in high availability"
-        ],
-        answer: [0,4,5]
-      },
-      {
-        q: "A developer needs to create and deploy a simple web form to capture employee commute information for the company internal employee website. Which is a serverless solution for creating the simple web form?",
-        type: "radio",
-        options: [
-          "Host website assets in a container in an Amazon Elastic Container Service (Amazon ECS) cluster with EC2 instance nodes, use an Amazon DynamoDB table, and use server-side scripts to interact with the database.",
-          "Host website assets in a container in an Amazon Elastic Container Service (Amazon ECS) cluster with Fargate nodes, use an Amazon RDS database, and use server-side scripts to interact with the database.",
-          "Host static assets in an Amazon S3 bucket, use an Amazon RDS database, and use Amazon API Gateway and AWS Lambda functions to interact with the database.",
-          "Host static assets in an Amazon S3 bucket, use an Amazon DynamoDB table, and use Amazon API Gateway and AWS Lambda functions to interact with the database."
-        ],
-        answer: [3]
-      },
-      {
-        q: "Why would a solutions architect recommend to use a microservice architecture? (Select TWO.)",
-        type: "checkbox",
-        options: [
-          "Solves a specific business problem",
-          "Independent from other components",
-          "HTTP(S) communication",
-          "Open-source code",
-          "Industry-standard interfaces"
-        ],
-        answer: [0,1]
-      },
-      {
-        q: "Which scaling configuration does a team lead need to apply to accomplish Lambda function scaling?",
-        type: "radio",
-        options: [
-          "Configure the auto scaling parameter in the function configuration.",
-          "Launch functions in Auto Scaling groups.",
-          "Provision enough function instances to meet the maximum predicted load.",
-          "None because the AWS Lambda service scales functions automatically."
-        ],
-        answer: [3]
-      },
-      {
-        q: "A solutions architect has to use a custom library in an architecture that uses Lambda functions as the compute option. Which Lambda feature should be used for optimal function deployments?",
-        type: "radio",
-        options: [
-          "Lambda triggers",
-          "Lambda function URLs",
-          "Lambda destinations",
-          "Lambda layers"
-        ],
-        answer: [3]
-      },
-      {
-        q: "Which set of statements is true for software packaged as a container?",
-        type: "radio",
-        options: [
-          "Standardized, portable application code packages that contain code and code dependencies. A container is run by a container engine. A container includes a guest operating system.",
-          "Portable application code packages that contain code and code dependencies. A container is run by a hypervisor. A container includes a guest operating system.",
-          "Standardized, portable application code packages that contain code and code dependencies. A container is run by a container engine. A container does not include a guest operating system.",
-          "Portable application code packages that contain code and code dependencies. A container is run by a hypervisor. A container does not include a guest operating system."
-        ],
-        answer: [2]
-      },
-      {
-        q: "Which is the most effective container deployment using Amazon Elastic Container Service (Amazon ECS) containers when refactoring a monolithic application to use a microservice architecture?",
-        type: "radio",
-        options: [
-          "Create services that each provide a distinct function of the application, and run each service in a separate container that Amazon ECS manages.",
-          "Port the application to a new image, and run it in a container that Amazon ECS manages.",
-          "Create services that each provide a distinct function of the application, and run multiple services in a single container that Amazon ECS manages.",
-          "Refactor the application and centralize common functions to create a smaller code footprint."
-        ],
-        answer: [0]
-      },
-      {
-        q: "An environmental science organization wants to provide HTTPS read-only access to its sensor data Amazon DynamoDB database. The user usage pattern is intermittent with 68 percent idle time per month. Which solution is the most cost efficient with the least amount of operational maintenance?",
-        type: "radio",
-        options: [
-          "Create a microservices architecture by using Amazon Elastic Container Service (Amazon ECS) connecting to the DynamoDB sensor database.",
-          "Create a public interface by using Amazon API Gateway with Lambda functions accessing the DynamoDB sensor database.",
-          "Create web proxy servers on Amazon EC2 instances in an Auto Scaling group connecting to the DynamoDB sensor database, which is served by an Elastic Load Balancing load balancer.",
-          "Create user accounts in the organization's systems to allow direct access to the DynamoDB sensor database."
-        ],
-        answer: [1]
-      },
-      {
-        q: "Which workflows are suitable to implement with AWS Step Functions when the goal is to implement the solution to reduce operational overhead? (Select THREE.)",
-        type: "checkbox",
-        options: [
-          "Implement manual approval in a security incident response workflow.",
-          "Coordinate multi-step analytics and machine learning workflows.",
-          "Send messages to multiple Amazon EC2 instances when a file is created or modified in an Amazon S3 bucket.",
-          "Update inventory and run a shipment workflow when a customer purchases an item on an e-commerce site.",
-          "Deploy different kinds of infrastructure that are based on environment variables.",
-          "Notify a group of email addresses when the costs for an AWS account exceed a threshold."
-        ],
-        answer: [0,1,3]
-      },
-      {
-        q: "A developer wants to implement a manual approval step using an AWS Step Functions state machine. The manual approval state has to pause until a notification of approval or rejection is received from an approver email. Which should be implemented in the Step Functions state machine?",
-        type: "radio",
-        options: [
-          "A task or activity state with an activated wait for callback parameter",
-          "A task or activity state with automated callback parameters",
-          "A map state with an activated wait for callback parameter",
-          "A map state with automated callback parameters"
-        ],
-        answer: [0]
-      }
-    ]
-  }
+  { id:2, title:"Module 2", subtitle:"Cloud Architecture & Well-Architected Framework", questions:[
+    {q:"Which is the best definition of cloud architecture?",type:"radio",options:["Combining frontend and backend software and components to create highly available and scalable web services that meet the needs of an organization","Relocating traditional on-premises data centers to internet-accessible data centers that a vendor manages","Designing applications in cloud-based, shared IT infrastructure by using virtual machines and fault-tolerant data stores in the cloud","Applying cloud characteristics to a solution that uses cloud services and features to meet technical and business requirements"],answer:[3]},
+    {q:"The AWS Well-Architected Framework has six pillars. Three of the pillars are security, operational excellence, and sustainability. What are two of the other pillars of the Well-Architected Framework? (Select TWO.)",type:"checkbox",options:["Reliability","Risk management","Governance","Privacy","Cost optimization"],answer:[0,4]},
+    {q:"Which actions are consistent with the operational excellence pillar of the AWS Well-Architected Framework? (Select TWO.)",type:"checkbox",options:["Review and improve processes and procedures on a continuous cycle.","Plan and manage the full lifecycle of hardware assets.","Ensure operations personnel document changes to the infrastructure.","Evaluate organizational structures and roles to identify skill gaps.","Apply software engineering principles and methodology to infrastructure as code."],answer:[0,4]},
+    {q:"A specific application requires a frontend web tier of multiple servers that communicate with a backend application tier of multiple servers. Which design most closely follows AWS best practices?",type:"radio",options:["Assign a dedicated application server and a dedicated connection to each web server.","Create a full mesh network between the web and application tiers, so that each web server can communicate directly with every application server.","Create multiple instances that each combine a web frontend and application backend in the same instance.","Design the web tier to communicate with the application tier through the Elastic Load Balancing (ELB) service."],answer:[3]},
+    {q:"A solutions architect is developing a process for handling server failures. Which process most closely follows AWS best practices?",type:"radio",options:["Amazon CloudWatch detects a system failure. It notifies the systems administrator, who provisions a new server by using the AWS Management Console.","Amazon CloudWatch detects a system failure. It initiates automation to provision a new server.","The operations staff detects a system failure. They notify the systems administrator, who provisions a new server by using the AWS Management Console.","The operations staff detects a system failure. They initiate automation to provision a new server."],answer:[1]},
+    {q:"A company is considering moving their on-premises data center to the cloud. Their primary motivation is to increase their cost efficiency. Which approach most closely follows AWS best practices?",type:"radio",options:["Provision the servers that are needed and stop services when they are not being used.","Provision some of the servers in the cloud and ensure the servers run 24/7.","Replicate their on-premises data center in the cloud.","Maintain the on-premises data center as long as possible."],answer:[0]},
+    {q:"A company stores read-only data in Amazon S3. Most users are in the same country as the company headquarters. Some users are located around the world. Which design decision most closely follows AWS best practices?",type:"radio",options:["Use a bucket in the AWS Region that is closest to the company headquarters. All users access the data through Amazon CloudFront.","Use a bucket in the Region closest to the company headquarters.","Replicate objects across buckets in AWS Regions around the world. Users access the bucket in the Region closest that is to them.","Use a bucket in the Region that has the lowest average latency for all users."],answer:[0]},
+    {q:"A consultant must access a large object in an S3 bucket. They need one day to access the file. Which method for granting access most closely follows AWS best practices?",type:"radio",options:["Create a presigned URL to the object that expires in 24 hours, and give it to the consultant.","Enable public access on the S3 bucket. Give the object URL to the consultant.","Create a user account for the consultant. Grant the user account permissions to access the S3 bucket through the AWS Management Console.","Copy the object to a new S3 bucket. Enable public access on the new bucket. From the new bucket, get the object URL, and give it to the consultant."],answer:[0]},
+    {q:"Which are main considerations that influence which AWS Regions to use? (Select TWO.)",type:"checkbox",options:["Application resiliency during system failures","Security and access control","Compliance with laws and regulations","Protection against localized natural disasters","Latency reduction for end users"],answer:[2,4]},
+    {q:"Which are main considerations that influence which Availability Zones to use? (Select TWO.)",type:"checkbox",options:["Compliance with laws and regulations","Protection against localized natural disasters","Application resiliency during system failures","Latency reduction for end users","Security and access control"],answer:[1,2]}
+  ]},
+  { id:3, title:"Module 3", subtitle:"Security & IAM", questions:[
+    {q:"Which statement reflects a design principle of the security pillar of the Well-Architected Framework?",type:"radio",options:["Ensure that staff are actively monitoring potential risks manually.","Do not deploy a solution to production until you're certain that no security risks exist.","Decentralize privilege management.","Apply security at all layers of an architecture."],answer:[3]},
+    {q:"Which statements about responsibility are accurate based on the AWS shared responsibility model? (Select TWO.)",type:"checkbox",options:["AWS is responsible for host-based firewall configurations.","AWS is responsible for the configuration of security groups.","Customers are responsible for managing their user data.","Customers are responsible for the installation, maintenance, and decommissioning of the hardware that they use in the AWS data center.","AWS is responsible for the physical security of data centers."],answer:[2,4]},
+    {q:"Which options are characteristics of the principle of least privilege? (Select TWO.)",type:"checkbox",options:["Monitor actions and changes.","Craft security policies that limit access to specific tasks.","Grant access only as needed.","Use encryption.","Always use groups."],answer:[1,2]},
+    {q:"Which statement about AWS Identity and Access Management (IAM) is true?",type:"radio",options:["IAM provides an extra layer of security by offering anomaly detection on resources.","IAM provides an audit trail of who performed an action, what action they performed, and when they performed it.","With IAM, you can grant principals granular access to resources.","With IAM, you can manage encryption for items that require encryption at rest."],answer:[2]},
+    {q:"Which statements describe AWS Identity and Access Management (IAM) roles? (Select TWO.)",type:"checkbox",options:["They can only be used by accounts that are associated to the person who creates the role.","They provide temporary security credentials.","They provide permanent security credentials.","They are uniquely associated to an individual.","Individuals, applications, and services can assume roles."],answer:[1,4]},
+    {q:"Which statement reflects a best practice for the root user on an AWS account?",type:"radio",options:["Remove unneeded permissions from the root user account.","Create an admin user and perform most admin tasks with this user instead of the root user.","Create two root users with separate credentials and distribute them to two different individuals.","To avoid getting locked out of the account, do not enable multi-factor authentication (MFA) on the root account."],answer:[1]},
+    {q:"How does AWS Identity and Access Management (IAM) evaluate a policy?",type:"radio",options:["An explicit deny statement does not override an explicit allow statement.","It checks for explicit allow statements before it checks for explicit deny statements.","If the policy doesn't have any explicit deny statements or explicit allow statements, users have access by default.","It checks for explicit deny statements before it checks for explicit allow statements."],answer:[3]},
+    {q:"Which statement about AWS Identity and Access Management (IAM) policies is accurate?",type:"radio",options:["Resource-based policies are attached to a user, group, or role.","Resource-based policies allow access by default.","Identity-based policies are attached to a user, group, or role.","Identity-based policies can only be attached to a single entity."],answer:[2]},
+    {q:"Which AWS Identity and Access Management (IAM) policy element includes information about whether to allow or deny a request?",type:"radio",options:["Principal","Condition","Effect","Action"],answer:[2]},
+    {q:"Which option accurately describes the statement element in an AWS Identity and Access Management (IAM) policy?",type:"radio",options:["The statement element is an optional part of an IAM policy.","The statement element contains other elements that together define what is allowed or denied.","A policy can only have one statement element.","The statement element does not apply to identity-based policies."],answer:[1]}
+  ]},
+  { id:4, title:"Module 4", subtitle:"Amazon S3 & Storage", questions:[
+    {q:"Due to a company merger, a data engineer needs to increase their object storage capacity. They are not sure how much storage they will need. They want a highly scalable service that can store unstructured, semistructured, and structured data. Which service would be the most cost effective to accomplish this task?",type:"radio",options:["Amazon RDS","AWS Storage Gateway","Amazon S3","Amazon Elastic Block Store (Amazon EBS)"],answer:[2]},
+    {q:"Amazon S3 provides a good solution for which use case?",type:"radio",options:["Hourly storage of frequently accessed temporary files","An internet-accessible storage location for video files that an external website can access","A data warehouse for business intelligence","Ledger data that is updated and accessed frequently"],answer:[1]},
+    {q:"A company is interested in using Amazon S3 to host their website instead of a traditional web server. Which types of content does Amazon S3 support for static web hosting? (Select THREE.)",type:"checkbox",options:["Server-side scripts","Dynamic HTML files","Database engine","Client-side scripts","HTML files and image files","Video and sound files"],answer:[3,4,5]},
+    {q:"A company wants to use an S3 bucket to store sensitive data. Which actions can they take to protect their data? (Select TWO.)",type:"checkbox",options:["Uploading unencrypted files to Amazon S3 because Amazon S3 encrypts the files by default","Using client-side encryption to protect data in transit before it is sent to Amazon S3","Using Secure File Transfer Protocol (SFTP) to connect directly to Amazon S3","Enabling server-side encryption on the S3 bucket before uploading sensitive data","Enabling server-side encryption on the S3 bucket after uploading sensitive data"],answer:[1,3]},
+    {q:"A company must create a common place to store shared files. Which requirements does Amazon S3 support? (Select TWO.)",type:"checkbox",options:["Lock a file so that only one person at a time can edit it.","Attach comments to files.","Maintain different versions of files.","Compare file contents between files.","Recover deleted files."],answer:[2,4]},
+    {q:"A customer service team accesses case data daily for up to 30 days. Cases can be reopened and require immediate access for 1 year after they are closed. Reopened cases require 2 days to process. Which solution meets the requirements and is the most cost efficient?",type:"radio",options:["Store all case data in S3 Standard so that it is available whenever it is needed.","Store case data in S3 Intelligent-Tiering to automatically move data between tiers based on access frequency.","Store case data in S3 Standard. Use a lifecycle policy to move the data into S3 Standard-Infrequent Access (S3 Standard-IA) after 30 days.","Store case data in S3 Standard. Use a lifecycle policy to move the data into Amazon S3 Glacier Flexible Retrieval after 30 days."],answer:[2]},
+    {q:"Which option takes advantage of edge locations in Amazon CloudFront to transfer files over long distances to an S3 bucket?",type:"radio",options:["Amazon S3 Transfer Acceleration","AWS SDKs","AWS Transfer Family","Amazon S3 REST API"],answer:[0]},
+    {q:"A video producer must regularly transfer several video files to Amazon S3. The files range from 100–700 MB. The internet connection has been unreliable, causing some uploads to fail. Which solution provides the fastest, most reliable, and most cost-effective way to transfer these files to Amazon S3?",type:"radio",options:["Amazon S3 multipart uploads","Amazon S3 Transfer Acceleration","AWS Management Console","AWS Transfer Family"],answer:[0]},
+    {q:"Which Amazon S3 storage class is designed for backup copies of on-premises data or easily re-creatable data?",type:"radio",options:["S3 One Zone-Infrequent Access (S3 One Zone-IA)","S3 Standard-Infrequent Access (S3 Standard-IA)","S3 Intelligent-Tiering","S3 Glacier Instant Retrieval"],answer:[0]},
+    {q:"A company needs to retain records for regulatory purposes for a 7-year period. These records are rarely accessed (once or twice a year). What is the lowest-cost storage class for Amazon S3?",type:"radio",options:["S3 Standard-Infrequent Access (S3 Standard-IA)","S3 Intelligent-Tiering","S3 Glacier Deep Archive","S3 One Zone-Infrequent Access (S3 One Zone-IA)"],answer:[2]}
+  ]},
+  { id:5, title:"Module 5", subtitle:"Amazon EC2 & Compute", questions:[
+    {q:"Which attributes are reasons to choose Amazon EC2? (Select TWO.)",type:"checkbox",options:["AWS management of operating system (OS) security","AWS management of operating system (OS) patches","Ability to run serverless applications","Ability to run any type of workload","Complete control of computing resources"],answer:[3,4]},
+    {q:"What are the benefits of using an Amazon Machine Image (AMI)? (Select THREE.)",type:"checkbox",options:["Using an AMI as a server backup for Amazon EC2 instances","Selling or sharing software solutions packaged as an AMI","Updating systems by patching their AMI","Launching instances with the same configuration","Automating security group settings for instances","Migrating data from on premises to Amazon EC2 instances"],answer:[0,1,3]},
+    {q:"A system administrator must change the instance types of multiple running Amazon EC2 instances. The instances were launched with a mix of Amazon Elastic Block Store (Amazon EBS) backed Amazon Machine Images (AMIs) and instance-store-backed AMIs. Which method is a valid way to change the instance type?",type:"radio",options:["Stop an instance-store-backed instance, change its instance type, and start the instance.","Stop an Amazon EBS backed instance, change its instance type, and start the instance.","Change the instance type of an Amazon EBS backed instance without stopping it.","Change the instance type of an instance-store-backed instance without stopping it."],answer:[1]},
+    {q:"A workload requires high read/write access to large local datasets. Which instance types would perform BEST for this workload? (Select TWO.)",type:"checkbox",options:["Storage optimized","Accelerated computing","Compute optimized","Memory optimized","General purpose"],answer:[0,3]},
+    {q:"An application requires the media access control (MAC) address of the host Amazon EC2 instance. The architecture uses an AWS Auto Scaling group to dynamically launch and terminate instances. What is the BEST way for the application to obtain the MAC address?",type:"radio",options:["Include the MAC address in a custom AMI for each instance in the AWS Auto Scaling group.","Use the user data of each instance to access the MAC address through the instance metadata.","Write the MAC address in the application configuration file of each instance.","Include the MAC address in the Amazon Machine Image (AMI) that is used to launch all of the instances in the AWS Auto Scaling group."],answer:[1]},
+    {q:"Which statements about user data are correct? (Select TWO.)",type:"checkbox",options:["The cloud architect must run the /var/lib/cloud/instance/scripts/part-001 command for the user data script to run again.","By default, user data runs only once, when an instance is launched.","By default, user data runs after every instance restart.","The cloud architect must remove the config_user_scripts file to rerun the user data scripts.","User data cannot be run while the instance is stopped."],answer:[0,1]},
+    {q:"A transactional workload on an Amazon EC2 instance performs high amounts of frequent read and write operations. Which Amazon Elastic Block Store (Amazon EBS) volume type is BEST for this workload?",type:"radio",options:["Throughput Optimized hard disk drive (HDD)","Provisioned IOPS solid state drive (SSD)","General Purpose solid state drive (SSD)","Cold hard disk drive (HDD)"],answer:[1]},
+    {q:"It is possible to create an NFS share on an Amazon Elastic Block Store (Amazon EBS) backed Linux instance by installing and configuring an NFS server on the instance. In this way, multiple Linux systems can share the file system of that instance. Which advantages does Amazon Elastic File System (Amazon EFS) provide compared to this solution? (Select TWO.)",type:"checkbox",options:["File locking","High availability","No need for backups","Strong consistency","Automatic scaling"],answer:[1,4]},
+    {q:"Which feature does Amazon FSx for Windows File Server provide?",type:"radio",options:["Backup solution for on-premises Windows file servers","Microsoft Active Directory server for Windows file servers","Amazon management agent for Windows file servers","Fully managed Windows file servers"],answer:[3]},
+    {q:"Which descriptions of Amazon EC2 pricing options are correct? (Select TWO.)",type:"checkbox",options:["Spot Instances offer spare compute capacity at discounted prices and can be interrupted.","Reserved Instances are physical servers that are reserved exclusively for customer use.","Dedicated Hosts are servers that are dedicated to one purpose, such as a firewall.","Savings Plans are budgeting tools that help customers manage Amazon EC2 costs.","With On-Demand Instances, customers can pay for compute capacity by usage time with no long-term commitments."],answer:[0,4]}
+  ]},
+  { id:6, title:"Module 6", subtitle:"Databases", questions:[
+    {q:"Which statement that compares a database service that AWS manages with a database on an Amazon EC2 instance is true?",type:"radio",options:["Configuring backups for a database on a managed database service isn't needed.","Configuring backups for a database on an EC2 instance isn't needed.","AWS manages database patches for a database on a managed database service.","AWS manages operating system (OS) patches for a database on an EC2 instance."],answer:[2]},
+    {q:"A small startup company is deciding which database service to use for an enrollment system for their online training website. Which requirements might lead them to select Amazon RDS rather than Amazon DynamoDB? (Select TWO.)",type:"checkbox",options:["Data and transactions must be encrypted to protect personal information.","The data is highly structured.","Data must be backed up in case of disasters.","Student, course, and registration data are stored in many different tables.","The enrollment system must be highly available."],answer:[1,3]},
+    {q:"A startup company is building an order inventory system with a web frontend and is looking for a real-time transactional database. Which service would best meet their needs?",type:"radio",options:["Amazon DynamoDB","Amazon Neptune","Amazon Redshift","Amazon DocumentDB (with MongoDB compatibility)"],answer:[0]},
+    {q:"A small game company is designing an online game, where thousands of players can create their own in-game objects. The current design uses a MySQL database in Amazon RDS to store data for player-created objects. Which proposed online game object features could make Amazon DynamoDB a better solution? (Select TWO.)",type:"checkbox",options:["A set of common object attributes for player-created objects","Unpredictable object attributes for player-created objects","A high amount of read activity on player-created objects and a low amount of writes","Game data items that include binary data and might exceed 700 MB","Game items that can be modified using data contained in other tables"],answer:[1,2]},
+    {q:"An organization is concerned about an increase in fraud. Which service could help with building real-time graph database queries for fraud detection?",type:"radio",options:["Amazon RDS","Amazon DynamoDB","Amazon Redshift","Amazon Neptune"],answer:[3]},
+    {q:"A data engineer must host a new Microsoft SQL Server database in AWS for a project. Which service could they use to accomplish this task?",type:"radio",options:["Amazon DynamoDB","Amazon Neptune","Amazon Aurora","Amazon DocumentDB (with MongoDB compatibility)"],answer:[2]},
+    {q:"Which techniques should be used to secure an Amazon RDS database? (Select THREE.)",type:"checkbox",options:["AWS Identity and Access Management (IAM) policies to define access at the table, row, and column levels","A virtual private gateway (VGW) to filter traffic from restricted networks","An Amazon Virtual Private Cloud (Amazon VPC) gateway endpoint to prevent traffic from traversing the internet","A virtual private cloud (VPC) to provide instance isolation","Security groups to control network access to individual RDS instances","Encryption both at rest and in transit to protect sensitive data"],answer:[3,4,5]},
+    {q:"Which techniques should be used to secure Amazon DynamoDB? (Select THREE.)",type:"checkbox",options:["AWS Identity and Access Management (IAM) policies to define access at the table, item, or attribute level","A virtual private cloud (VPC) to provide instance isolation and firewall protection","Encryption to protect sensitive data","A virtual private gateway (VGW) to filter traffic from restricted networks","Security groups to control network access to individual instances","An Amazon Virtual Private Cloud (Amazon VPC) gateway endpoint to prevent traffic from traversing the internet"],answer:[0,2,5]},
+    {q:"A company wants to migrate their on-premises Oracle database to Amazon Aurora MySQL. Which process describes the high-level steps most accurately?",type:"radio",options:["Use AWS Schema Conversion Tool (AWS SCT) to synchronously convert the schema and migrate the data.","Use AWS Database Migration Service (AWS DMS) to migrate the data, and then use AWS Schema Conversion Tool (AWS SCT) to convert the schema.","Use AWS Schema Conversion Tool (AWS SCT) to convert the schema, and then use AWS Database Migration Service (AWS DMS) to migrate the data.","Use AWS Database Migration Service (AWS DMS) to directly migrate from the Oracle database to Amazon Aurora MySQL."],answer:[2]},
+    {q:"A cloud architect is setting up an application to use an Amazon RDS MySQL DB instance. The database must be architected for high availability across Availability Zones and AWS Regions with minimal downtime. How should they meet this requirement?",type:"radio",options:["Set up an RDS MySQL Single-AZ DB instance. Configure a read replica in a different Region.","Set up an RDS MySQL Multi-AZ DB instance. Configure a read replica in a different Region.","Set up an RDS MySQL Multi-AZ DB instance. Configure an appropriate backup window.","Set up an RDS MySQL Single-AZ DB instance. Copy automated snapshots to at least one other Region."],answer:[1]}
+  ]},
+  { id:7, title:"Module 7", subtitle:"Networking — VPC", questions:[
+    {q:"Which definition describes a virtual private cloud (VPC)?",type:"radio",options:["A logically isolated virtual network that you define in the AWS Cloud","A fully managed service that extends the AWS Cloud to customer premises","A virtual private network (VPN) in the AWS Cloud","An extension of an on-premises network into AWS"],answer:[0]},
+    {q:"Which component does not have direct access to the internet?",type:"radio",options:["Network address translation (NAT) gateway inside a public subnet","EC2 instance inside a public subnet","Elastic IP address interface","EC2 instance inside a private subnet"],answer:[3]},
+    {q:"A company's virtual private cloud (VPC) has the Classless Inter-Domain Routing (CIDR) block 172.16.0.0/21 (2048 addresses). It has two subnets (A and B). Each subnet must support 100 usable addresses now, but this number is expected to rise to at most 254 usable addresses soon. Which subnet addressing scheme meets the requirements and follows AWS best practices?",type:"radio",options:["Subnet A: 172.16.0.0/24 (256 addresses) Subnet B: 172.16.1.0/24 (256 addresses)","Subnet A: 172.16.0.0/22 (1024 addresses) Subnet B: 172.16.4.0/22 (1024 addresses)","Subnet A: 172.16.0.0/23 (512 addresses) Subnet B: 172.16.2.0/23 (512 addresses)","Subnet A: 172.16.0.0/25 (128 addresses) Subnet B: 172.16.0.128/25 (128 addresses)"],answer:[2]},
+    {q:"Several EC2 instances launch in a virtual private cloud (VPC) that has internet access. These instances should not be accessible from the internet, but they must be able to download updates from the internet. How should the instances launch?",type:"radio",options:["With Elastic IP addresses, in a subnet with a default route to an internet gateway","Without public IP addresses, in a subnet with a default route to an internet gateway","Without public IP addresses, in a subnet with a default route to a network address translation (NAT) gateway","With public IP addresses, in a subnet with a default route to an internet gateway"],answer:[2]},
+    {q:"A group of consultants requires access to an EC2 instance from the internet for 3 consecutive days each week. The instance is shut down the rest of the week. The virtual private cloud (VPC) has internet access. How should you assign one IPv4 address to the instance to give the consultants access?",type:"radio",options:["Enable automatic address assignment for the subnet.","Enable automatic address assignment for the EC2 instance.","Assign the IP address in the operating system (OS) boot configuration.","Associate an Elastic IP address with the EC2 instance."],answer:[3]},
+    {q:"An application uses a bastion host to allow access to EC2 instances in a private subnet within a virtual private cloud (VPC). What security group configurations would allow SSH access from the source IP to the EC2 instances? (Select TWO.)",type:"checkbox",options:["Add a rule to the private subnet EC2 instance security group to allow return traffic to the bastion host security group.","Add a rule to the bastion host security group to deny all traffic from the internet.","Add a rule to the bastion host security group to allow return traffic to your source IP address.","Add a rule to the EC2 instance security group to allow traffic from the bastion host security group on port 22.","Add a rule to the bastion host security group to allow traffic on port 22 from your source IP address."],answer:[3,4]},
+    {q:"A solution deployed in a virtual private cloud (VPC) needs a subnet with limited access to specific internet addresses. How can an architect configure the network to limit traffic from and to the EC2 instances in the subnet using a network access control list (ACL)?",type:"radio",options:["Add rules to the default network ACL to allow traffic from and to allowed internet addresses.","Add rules to the subnet custom network ACL to allow traffic from and to allowed internet addresses. Deny all other traffic.","Add rules to the subnet custom network ACL to allow traffic from and to allowed internet addresses.","Add rules to the default network ACL to allow traffic from and to allowed internet addresses. Deny all other traffic."],answer:[2]},
+    {q:"Which actions are best practices for designing a virtual private cloud (VPC)? (Select THREE.)",type:"checkbox",options:["Create one subnet per Availability Zone for each group of hosts that have unique routing requirements.","Reserve some address space for future use.","Match the size of the VPC Classless Inter-Domain Routing (CIDR) block to the number of hosts that are required for a workload.","Use the same Classless Inter-Domain Routing (CIDR) block as your on-premises network.","Use the same Classless Inter-Domain Routing (CIDR) block for subnets in different Availability Zones that are part of the same AWS Auto Scaling group.","Divide the VPC network range evenly across all Availability Zones that are available."],answer:[0,1,5]},
+    {q:"Where can you have VPC flow logs delivered? (Select THREE.)",type:"checkbox",options:["Amazon S3 bucket","Amazon CloudWatch","AWS Management Console","Amazon Kinesis Data Firehose","Amazon Athena","Amazon OpenSearch Service"],answer:[0,1,3]},
+    {q:"An EC2 instance must connect to an Amazon S3 bucket. What component provides this connectivity with no additional charge and no throughput packet limits?",type:"radio",options:["Gateway VPC endpoint","Public region access point","Gateway Load Balancer endpoint","Interface VPC endpoint"],answer:[0]}
+  ]},
+  { id:8, title:"Module 8", subtitle:"Networking — Connectivity", questions:[
+    {q:"What is the simplest way to connect 100 virtual private clouds (VPCs) together?",type:"radio",options:["Connect each VPC to all the other VPCs by using VPC peering.","Create a hub-and-spoke network by using AWS VPN CloudHub.","Chain VPCs together by using VPC peering.","Connect the VPCs to AWS Transit Gateway."],answer:[3]},
+    {q:"A company needs network traffic to flow between an AWS account in one Region to another account in a different Region. What should they set up between the transit gateways in each region?",type:"radio",options:["AWS Direct Connect","Transit gateway peering attachment","AWS Site-to-Site VPN","AWS PrivateLink"],answer:[1]},
+    {q:"A company has two virtual private clouds (VPCs). VPC A has a Classless Inter-Domain Routing (CIDR) block of 10.1.0.0/16. VPC B has CIDR block of 10.2.0.0/16. Both VPCs belong to the same AWS account. What is the simplest way to connect the two VPCs so that they can route all traffic between them?",type:"radio",options:["AWS Site-to-Site VPN","VPC peering","AWS Direct Connect","VPC endpoints"],answer:[1]},
+    {q:"Systems in a secure subnet in a virtual private cloud (VPC) must access a bucket in Amazon S3. Which solutions stop traffic from crossing the internet? (Select TWO.)",type:"checkbox",options:["Create a VPC gateway endpoint for Amazon S3.","Use VPC interface endpoints.","Use the private IP address of Amazon S3.","Create a VPC peering connection to Amazon S3.","Use a private IP address for the system."],answer:[0,1]},
+    {q:"A company has three virtual private clouds (VPCs). VPCs A, B, and C have Classless Inter-Domain Routing (CIDR) blocks that do not overlap. Both A and C have separate VPC peering connections with B. However, A cannot communicate with C. What is the simplest and most cost-effective way to enable full communication between A and C?",type:"radio",options:["Add routes to B to enable traffic between A and C through B.","Add a peering connection between A and C, and route traffic between A and C through the peering connection.","Link all three VPCs through a transit VPC, and route all traffic through the transit VPC.","Create VPC endpoints in A and C for the individual hosts that need to communicate with each other."],answer:[1]},
+    {q:"Because of a natural disaster, a company moved a secondary data center to a temporary facility with internet connectivity. It needs a secure connection to the company's virtual private cloud (VPC) that must be operational as soon as possible. The data center will move again in 2 weeks. Which option meets the requirements?",type:"radio",options:["AWS Site-to-Site VPN","AWS Direct Connect","VPC endpoints","VPC peering"],answer:[0]},
+    {q:"A company is concerned about internet disruptions. It wants to efficiently route traffic from their on-premises network to an AWS edge location close to their customer gateway device. What should they use?",type:"radio",options:["AWS Global Accelerator","AWS Direct Connect","AWS Transit Gateway","AWS VPN CloudHub"],answer:[0]},
+    {q:"A company is implementing a system to back up on-premises systems to AWS. Which network connectivity method provides a solution with the most consistent performance?",type:"radio",options:["Virtual private cloud (VPC) peering","AWS Direct Connect","AWS Site-to-Site VPN","Virtual private cloud (VPC) endpoints"],answer:[1]},
+    {q:"A company uses a single AWS Direct Connect connection between their on-premises network and their virtual private cloud (VPC). They want to ensure that the network connectivity is highly available by adding a backup connection. Which network connectivity method provides the most cost-effective solution for the backup connection?",type:"radio",options:["Another AWS Direct Connect connection through a different Direct Connect location","An on-demand AWS Client VPN connection across the internet","Another AWS Direct Connect connection through the same Direct Connect location","An on-demand AWS Site-to-Site VPN connection across the internet"],answer:[3]},
+    {q:"A company is connecting a virtual private cloud (VPC) to multiple on-premises data centers using a virtual private network (VPN). Which implementation ensures resiliency and predictable bandwidth requirements?",type:"radio",options:["Implement Direct Connect as the primary connection and use the VPN as a secondary failover connection from each data center.","Implement AWS Transit Gateway to connect to each on-premises data center.","Use a many-to-many mesh topology, such as Amazon VPC peering.","Establish multiple Border Gateway Protocol (BGP) sessions for each VPC to create connectivity to multiple VPCs across multiple AWS Regions."],answer:[0]}
+  ]},
+  { id:10, title:"Module 10", subtitle:"Auto Scaling & Load Balancing", questions:[
+    {q:"Which statement about Amazon EC2 Auto Scaling is accurate?",type:"radio",options:["It can launch new Amazon EC2 instances based on a schedule.","It can launch Amazon EC2 instances in multiple Availability Zones.","It requires the customer to use Reserved Instances only.","It can launch Amazon EC2 instances, but customers must terminate instances after they are no longer needed."],answer:[1]},
+    {q:"A devops engineer detected that the demand on a fleet of Amazon EC2 instances in an Auto Scaling group increases by a set amount on weekend days. Which type of scaling is the MOST appropriate in this case?",type:"radio",options:["Scheduled","Predictive","Manual","Dynamic"],answer:[0]},
+    {q:"A devops engineer launches a fleet of Amazon EC2 instances in an Auto Scaling group behind an Application Load Balancer. The EC2 instances must maintain 50 percent average CPU utilization. Which type of scaling is appropriate to use based on CPU utilization usage?",type:"radio",options:["Step scaling","Manual scaling","Target tracking scaling","Simple scaling"],answer:[2]},
+    {q:"How can a user vertically scale an Amazon RDS database?",type:"radio",options:["By changing the instance class or size","By creating dedicated read and write nodes","By sharding the database","By adding read replicas"],answer:[0]},
+    {q:"How can an AWS customer horizontally scale an Amazon Aurora database?",type:"radio",options:["By adding Aurora Replica instances by using Aurora Auto Scaling","By changing the instance type","By creating Amazon CloudWatch alarms","By creating a scaling policy"],answer:[0]},
+    {q:"How does Amazon DynamoDB perform automatic scaling?",type:"radio",options:["It adds read replicas in response to increased read demand.","It adjusts the provisioned throughput capacity in response to traffic patterns.","It adds and removes database instances in response to changes in traffic.","It changes the instance type in response to changes in processing load."],answer:[1]},
+    {q:"A fleet of Amazon EC2 instances is launched in an Amazon EC2 Auto Scaling group. The instances run an application that uses a custom protocol on TCP port 42000. Connections from client systems on the internet must balance across the instances. Which load balancing solution is the best solution?",type:"radio",options:["Classic Load Balancer","Application Load Balancer","Network Load Balancer","Gateway Load Balancer"],answer:[2]},
+    {q:"A company must build a highly available website that uses server-side scripts to serve dynamic HTML. Which solution provides the HIGHEST availability for the LEAST cost and complexity?",type:"radio",options:["The customer deploys a second web server in another Region. Amazon Route 53 uses failover routing for disaster recovery (DR).","An Auto Scaling group launches Amazon EC2 instances, which are served by a Network Load Balancer. Amazon Route 53 uses latency-based routing.","Amazon S3 hosts the website. DNS name resolution points to the S3 bucket.","An Auto Scaling group launches Amazon EC2 instances, which are served by an Application Load Balancer. DNS name resolution points to the load balancer."],answer:[3]},
+    {q:"Users in location A connect to an application in Region A. Users in location B connect to the same application in Region B. If the application in Region A becomes unhealthy, traffic for location A must be redirected to the application in Region B. Which solution meets this requirement?",type:"radio",options:["Use latency-based routing in Amazon Route 53 with Amazon CloudWatch alarms.","Use geoproximity routing and a Network Load Balancer that is attached to both Regions.","Use an Application Load Balancer with Amazon CloudWatch alarms.","Use geolocation routing with failover records in Amazon Route 53."],answer:[3]},
+    {q:"A software engineer has created an AWS account for their own personal development and testing. They want the account to stay within the AWS Free Tier and to not generate unexpected costs. Which approach will work and will require the LEAST effort?",type:"radio",options:["Create a service control policy (SCP) to restrict all services that are not included in the AWS Free Tier.","Create an Amazon CloudWatch alarm to send an email message when the account billing exceeds $0.","Create an Amazon CloudWatch metric to monitor account billing and limit it to $0.","Sign in to the AWS Management Console each month and check the billing dashboard."],answer:[1]}
+  ]},
+  { id:11, title:"Module 11", subtitle:"Automation & IaC", questions:[
+    {q:"Which are reasons to use automation to provision resources? (Select TWO.)",type:"checkbox",options:["Lack of version control with manual processes","Automation requirement for high availability","Greater expense with manual processes","Automation requirement for creating some resources","Alignment with the reliability design principle"],answer:[0,4]},
+    {q:"Which are benefits of using infrastructure as code (IaC) over manual processes? (Select TWO.)",type:"checkbox",options:["Propagate updates from a single environment to all environments.","Automate system-wide security scans.","Protect environments from deletion.","Manage all account users.","Deploy environments with configuration consistency."],answer:[0,4]},
+    {q:"A cloud architect wants to quickly set up a secure implementation of an Amazon FSx for Windows File Server that follows AWS best practices. Which solution should they use?",type:"radio",options:["AWS CloudFormation Designer","An AWS CloudFormation template that was downloaded from the internet","An Amazon Machine Image (AMI) on AWS Marketplace","An AWS Quick Start"],answer:[3]},
+    {q:"What is Amazon CodeWhisperer?",type:"radio",options:["An integrated development environment (IDE)","A template for rapid application deployment","A set of automated reference architectures","An artificial intelligence (AI)-powered coding companion"],answer:[3]},
+    {q:"Which are reasons to use Amazon CodeWhisperer? (Select TWO.)",type:"checkbox",options:["Accelerate coding tasks.","Write compliance tests.","Enhance application security.","Share open-source code.","Automate for high availability."],answer:[0,2]},
+    {q:"What is AWS CloudFormation?",type:"radio",options:["An AWS service that you can use to create, model, and manage AWS resources","A template that describes your infrastructure","A description of best practices for designing an AWS implementation","A package of all the information that is needed to launch an Amazon EC2 instance"],answer:[0]},
+    {q:"What is AWS CloudFormation Designer?",type:"radio",options:["A collection of reusable templates","A source code repository for AWS CloudFormation templates","A graphical design interface for creating AWS CloudFormation templates","A tool for automating deployments"],answer:[2]},
+    {q:"Which option can be used to accomplish deployment-specific differences in an AWS CloudFormation template?",type:"radio",options:["Use conditions.","Use drift detection.","Use change sets.","Use AWS CloudFormation Designer."],answer:[0]},
+    {q:"Which option is a good way to preview changes before implementing them in AWS CloudFormation Designer?",type:"radio",options:["Visually inspect the template.","Run Update Stack.","Run Detect Drift.","Create a change set."],answer:[3]},
+    {q:"Which option is a good way to know which resources in an application environment were manually modified if the environment was created by running an AWS CloudFormation stack?",type:"radio",options:["Run a comparison in AWS CloudFormation Designer on the stack.","Run a change set on the stack.","Run drift detection on the stack.","Run conditions on the stack."],answer:[2]}
+  ]},
+  { id:12, title:"Module 12", subtitle:"Caching & Content Delivery", questions:[
+    {q:"What is caching?",type:"radio",options:["A global network for content distribution","A way to store passwords","An in-memory database","A high-speed data storage layer"],answer:[3]},
+    {q:"Which type of data should you cache?",type:"radio",options:["Data that can be retrieved quickly with simple queries","Specialized data that is needed by a subset of users","Dynamically generated web content","Static data that is frequently accessed"],answer:[3]},
+    {q:"Which is a benefit of caching?",type:"radio",options:["Increased application reliability","Decreased costs","Load balancing the application","Reduced response latency"],answer:[3]},
+    {q:"Which types of content on a web page can be cached using an edge cache? (Select TWO.)",type:"checkbox",options:["Video files, such as a product demo","Web objects, such as hyperlinks","User-generated data, such as search terms entered by user","Shopping cart filled with a user's item","Dynamically generated content, such as a user's name"],answer:[0,1]},
+    {q:"What does Amazon CloudFront enable?",type:"radio",options:["Transactional processing with an in-memory database","Automatic creation of a time to live (TTL) value","Bidirectional caching between users and an origin host","Multi-tiered and regional caching of content"],answer:[3]},
+    {q:"How does Amazon CloudFront use edge locations?",type:"radio",options:["It caches all content from an origin distribution at the edge location and delivers the content to clients through the fastest edge location.","It caches frequently accessed content at edge locations. It delivers the cached content to clients through the edge location with the lowest latency to those clients.","It caches local content at edge locations. It delivers the cached content to clients through the edge location that requires the fewest network hops to reach those clients.","It caches Regional data at Regional edge locations and delivers the content to clients through their Regional edge locations."],answer:[1]},
+    {q:"Which statement describes an efficient way to deliver on-demand video content?",type:"radio",options:["Launch an Amazon EC2 instance to host your video content. Then use Amazon CloudFront to deliver the content.","Use Amazon S3 to store the content. Then use Amazon CloudFront to deliver the content.","Launch an Amazon EC2 instance to host and serve your video content.","Use Amazon S3 to store and serve the content."],answer:[1]},
+    {q:"Which role does Amazon CloudFront play in protecting against distributed denial of service (DDoS) attacks?",type:"radio",options:["Performs deep packet inspection to detect attacks","Routes traffic through edge locations","Controls traffic by the source IP addresses of requests","Restricts traffic by geography to help block attacks that originate from specific countries"],answer:[1]},
+    {q:"How can an application use Amazon ElastiCache to improve database read performance? (Select TWO.)",type:"checkbox",options:["Read data from the database first, and write the most frequently read data to ElastiCache.","Direct all read requests to the database, and configure it to read from ElastiCache when a cache miss occurs.","Replicate the database in ElastiCache, and direct all reads to ElastiCache and all writes to the database.","Write data to ElastiCache whenever the application writes to the database.","Read data from ElastiCache first, and write to ElastiCache when a cache miss occurs."],answer:[3,4]},
+    {q:"Which type of caching strategy should be used when there's data that must be updated in real time?",type:"radio",options:["Lazy loading","Write-through","Time to live (TTL)","Cache-control headers"],answer:[1]}
+  ]},
+  { id:13, title:"Module 13", subtitle:"Decoupling & Messaging", questions:[
+    {q:"Which statement describes the difference between tightly and loosely coupled architectures?",type:"radio",options:["Components in a tightly coupled architecture are highly dependent on each other. In a loosely coupled architecture, components aren't highly dependent on each other.","Tightly coupled architectures are more likely to fail than loosely coupled architectures.","Loose coupling increases the complexity of scaling. Tight coupling decreases it.","Loosely coupled architectures must use managed services, and tightly coupled architectures don't have this limitation."],answer:[0]},
+    {q:"Which statements describe Amazon Simple Queue Service (Amazon SQS)? (Select THREE.)",type:"checkbox",options:["Stores and optionally encrypts messages until they are processed and deleted","Enables you to decouple and scale microservices, distributed systems, and serverless applications","Supports standard queues and topics","Requires a consumer to poll the queue for messages","Sends push notifications to consumers","Supports email and text messaging"],answer:[0,1,3]},
+    {q:"Which statements are true when using an Amazon Simple Queue Service (Amazon SQS) standard queue? (Select TWO.)",type:"checkbox",options:["Messages must be processed in the order that they are sent.","A message might be delivered more than once.","Messages can be sent in any order.","A message must be processed only once.","Messages can be assigned a priority."],answer:[1,2]},
+    {q:"A fleet of Amazon EC2 instances process videos that users upload. Which function can Amazon Simple Queue Service (Amazon SQS) perform in this application?",type:"radio",options:["The application places job messages in an SQS queue. EC2 instances with available processing capacity pull the next job message from the queue.","EC2 instances put edited video files in an SQS queue. The application retrieves the videos from the queue.","An SQS queue receives messages from the application and notifies all available EC2 instances that videos are available.","The application writes the video files to an SQS queue. EC2 instances with available processing capacity pull the next video from the queue."],answer:[0]},
+    {q:"What is Amazon Simple Notification Service (Amazon SNS)?",type:"radio",options:["A flexible and scalable outbound and inbound marketing communications service that uses email, short message service (SMS), push, or voice communication channels","A fully managed messaging service for both system-to-system and application-to-person (A2P) communication, which uses publish/subscribe patterns","A cost-effective, flexible, and scalable email service that enables developers to send email from within any application","A serverless event bus that enables easy connection of applications by using data from your own applications, integrated software as a service (SaaS) applications, and AWS services"],answer:[1]},
+    {q:"What are some use cases for Amazon Simple Notification Service (Amazon SNS)? (Select THREE.)",type:"checkbox",options:["Notify multiple systems that user input is ready for processing.","Send a text message to systems operators when unusual activity has been detected.","Hold input until it can be processed in the order that it's received.","Send a push notification to mobile applications when a new software update is available.","Gather streaming data from multiple systems.","Trigger a single AWS Lambda function when an object is created in an Amazon S3 bucket."],answer:[0,1,3]},
+    {q:"What are some features of Amazon Simple Notification Service (Amazon SNS)? (Select TWO.)",type:"checkbox",options:["Recall of sent messages","Message delivery to a URL","Message delivery to an Amazon Simple Queue Service (Amazon SQS) queue","Providing strict message ordering with standard topics.","Guaranteed message delivery even when an endpoint isn't accessible"],answer:[1,2]},
+    {q:"Two different AWS Lambda functions must simultaneously process PDF files that are uploaded to an Amazon S3 bucket. The S3 event notification allows only one action when the PDF files are uploaded. Which solution provides the least complex way to process messages with both Lambda functions efficiently?",type:"radio",options:["Send the S3 event to Amazon MQ for distribution to both Lambda functions.","Upload two copies of each PDF file by using different object key prefixes.","Send the S3 event to an Amazon Simple Queue Service (Amazon SQS) queue that both Lambda functions poll.","Send the S3 event to an Amazon Simple Notification Service (Amazon SNS) topic that both Lambda functions subscribe to."],answer:[3]},
+    {q:"What is Amazon MQ?",type:"radio",options:["Application monitoring service","Data migration service","Message broker service","Identity broker service"],answer:[2]},
+    {q:"Which is a common use case for Amazon MQ?",type:"radio",options:["Connect a virtual private cloud (VPC) to an on-premises network.","Decouple components in a new cloud-native application.","Leverage an existing on-premises application that uses Apache ActiveMQ to communicate between microservices.","Upload a standalone static website to AWS."],answer:[2]}
+  ]},
+  { id:14, title:"Module 14", subtitle:"Serverless & Microservices", questions:[
+    {q:"A solutions architect wants to propose a microservice architecture on AWS to management. Which serverless computing benefits should they include in the proposal? (Select THREE.)",type:"checkbox",options:["Pay-for-value services","Full control over runtime environment","Predictable performance","Lessens amount of server maintenance","Continuous scaling","Built-in high availability"],answer:[0,4,5]},
+    {q:"A developer needs to create and deploy a simple web form to capture employee commute information for the company internal employee website. Which is a serverless solution for creating the simple web form?",type:"radio",options:["Host website assets in a container in an Amazon Elastic Container Service (Amazon ECS) cluster with EC2 instance nodes, use an Amazon DynamoDB table, and use server-side scripts to interact with the database.","Host website assets in a container in an Amazon Elastic Container Service (Amazon ECS) cluster with Fargate nodes, use an Amazon RDS database, and use server-side scripts to interact with the database.","Host static assets in an Amazon S3 bucket, use an Amazon RDS database, and use Amazon API Gateway and AWS Lambda functions to interact with the database.","Host static assets in an Amazon S3 bucket, use an Amazon DynamoDB table, and use Amazon API Gateway and AWS Lambda functions to interact with the database."],answer:[3]},
+    {q:"Why would a solutions architect recommend to use a microservice architecture? (Select TWO.)",type:"checkbox",options:["Solves a specific business problem","Independent from other components","HTTP(S) communication","Open-source code","Industry-standard interfaces"],answer:[0,1]},
+    {q:"Which scaling configuration does a team lead need to apply to accomplish Lambda function scaling?",type:"radio",options:["Configure the auto scaling parameter in the function configuration.","Launch functions in Auto Scaling groups.","Provision enough function instances to meet the maximum predicted load.","None because the AWS Lambda service scales functions automatically."],answer:[3]},
+    {q:"A solutions architect has to use a custom library in an architecture that uses Lambda functions as the compute option. Which Lambda feature should be used for optimal function deployments?",type:"radio",options:["Lambda triggers","Lambda function URLs","Lambda destinations","Lambda layers"],answer:[3]},
+    {q:"Which set of statements is true for software packaged as a container?",type:"radio",options:["Standardized, portable application code packages that contain code and code dependencies. A container is run by a container engine. A container includes a guest operating system.","Portable application code packages that contain code and code dependencies. A container is run by a hypervisor. A container includes a guest operating system.","Standardized, portable application code packages that contain code and code dependencies. A container is run by a container engine. A container does not include a guest operating system.","Portable application code packages that contain code and code dependencies. A container is run by a hypervisor. A container does not include a guest operating system."],answer:[2]},
+    {q:"Which is the most effective container deployment using Amazon Elastic Container Service (Amazon ECS) containers when refactoring a monolithic application to use a microservice architecture?",type:"radio",options:["Create services that each provide a distinct function of the application, and run each service in a separate container that Amazon ECS manages.","Port the application to a new image, and run it in a container that Amazon ECS manages.","Create services that each provide a distinct function of the application, and run multiple services in a single container that Amazon ECS manages.","Refactor the application and centralize common functions to create a smaller code footprint."],answer:[0]},
+    {q:"An environmental science organization wants to provide HTTPS read-only access to its sensor data Amazon DynamoDB database. The user usage pattern is intermittent with 68 percent idle time per month. Which solution is the most cost efficient with the least amount of operational maintenance?",type:"radio",options:["Create a microservices architecture by using Amazon Elastic Container Service (Amazon ECS) connecting to the DynamoDB sensor database.","Create a public interface by using Amazon API Gateway with Lambda functions accessing the DynamoDB sensor database.","Create web proxy servers on Amazon EC2 instances in an Auto Scaling group connecting to the DynamoDB sensor database, which is served by an Elastic Load Balancing load balancer.","Create user accounts in the organization's systems to allow direct access to the DynamoDB sensor database."],answer:[1]},
+    {q:"Which workflows are suitable to implement with AWS Step Functions when the goal is to implement the solution to reduce operational overhead? (Select THREE.)",type:"checkbox",options:["Implement manual approval in a security incident response workflow.","Coordinate multi-step analytics and machine learning workflows.","Send messages to multiple Amazon EC2 instances when a file is created or modified in an Amazon S3 bucket.","Update inventory and run a shipment workflow when a customer purchases an item on an e-commerce site.","Deploy different kinds of infrastructure that are based on environment variables.","Notify a group of email addresses when the costs for an AWS account exceed a threshold."],answer:[0,1,3]},
+    {q:"A developer wants to implement a manual approval step using an AWS Step Functions state machine. The manual approval state has to pause until a notification of approval or rejection is received from an approver email. Which should be implemented in the Step Functions state machine?",type:"radio",options:["A task or activity state with an activated wait for callback parameter","A task or activity state with automated callback parameters","A map state with an activated wait for callback parameter","A map state with automated callback parameters"],answer:[0]}
+  ]}
 ];
 
-// ═══════════════════════════════════════════════════════
-// STATE
-// ═══════════════════════════════════════════════════════
-let state = {
-  currentModule: 0,
-  answers: {},      // key: "mIdx-qIdx" → array of selected indices
-  submitted: {},    // key: "mIdx-qIdx" → true/false
-  timerInterval: null,
-  elapsed: 0,
-  started: false
-};
+// ── STATE ──
+let state = { currentModule:0, moduleQ:{}, answers:{}, submitted:{}, timerInterval:null, elapsed:0 };
+// moduleQ: { mi: currentQIndex } — remembers position per module
+const allQ = MODULES.flatMap((m,mi) => m.questions.map((q,qi) => ({mi,qi,q})));
+document.getElementById('total-q-count').textContent = allQ.length;
 
-// flatten all questions for count
-const allQuestions = MODULES.flatMap((m,mi) => m.questions.map((q,qi) => ({mi,qi,q})));
-document.getElementById('total-q-count').textContent = allQuestions.length;
-
-// ═══════════════════════════════════════════════════════
-// TIMER
-// ═══════════════════════════════════════════════════════
-function formatTime(secs) {
-  const m = Math.floor(secs/60).toString().padStart(2,'0');
-  const s = (secs%60).toString().padStart(2,'0');
-  return `${m}:${s}`;
-}
-function startTimer() {
-  state.elapsed = 0;
-  state.timerInterval = setInterval(() => {
+// ── TIMER ──
+const fmt = s => `${Math.floor(s/60).toString().padStart(2,'0')}:${(s%60).toString().padStart(2,'0')}`;
+function startTimer(){
+  state.elapsed=0;
+  state.timerInterval=setInterval(()=>{
     state.elapsed++;
-    const el = document.getElementById('timer');
-    if (el) {
-      el.textContent = formatTime(state.elapsed);
-      el.classList.toggle('urgent', state.elapsed > 3600);
-    }
-  }, 1000);
+    const el=document.getElementById('timer');
+    if(el){el.textContent=fmt(state.elapsed);el.classList.toggle('urgent',state.elapsed>3600);}
+  },1000);
 }
-function stopTimer() {
-  clearInterval(state.timerInterval);
+function stopTimer(){clearInterval(state.timerInterval);}
+
+// ── START ──
+function startQuiz(){
+  document.getElementById('start-page').style.display='none';
+  document.getElementById('quiz-page').style.display='block';
+  renderTabs(); renderQ(); startTimer();
 }
 
-// ═══════════════════════════════════════════════════════
-// RENDER
-// ═══════════════════════════════════════════════════════
-function startQuiz() {
-  document.getElementById('start-page').style.display = 'none';
-  document.getElementById('quiz-page').style.display = 'block';
-  renderModuleTabs();
-  renderModule(0);
-  startTimer();
-  state.started = true;
-}
-
-function renderModuleTabs() {
-  const container = document.getElementById('module-tabs');
-  container.innerHTML = MODULES.map((m,i) => {
-    let cls = 'tab-btn';
-    if (i === state.currentModule) cls += ' active';
-    else if (isModuleDone(i)) cls += ' done';
-    return `<button class="${cls}" onclick="switchModule(${i})">M${m.id}</button>`;
+// ── TABS ──
+function renderTabs(){
+  document.getElementById('module-tabs').innerHTML=MODULES.map((m,i)=>{
+    let c='tab-btn';
+    if(i===state.currentModule)c+=' active';
+    else if(isDone(i))c+=' done';
+    return `<button class="${c}" onclick="switchMod(${i})">M${m.id}</button>`;
   }).join('');
 }
+function isDone(mi){ return MODULES[mi].questions.every((_,qi)=>state.submitted[`${mi}-${qi}`]); }
+function switchMod(mi){ state.currentModule=mi; renderTabs(); renderQ(); window.scrollTo({top:0,behavior:'smooth'}); }
 
-function isModuleDone(mi) {
-  return MODULES[mi].questions.every((_,qi) => state.submitted[`${mi}-${qi}`]);
-}
+// ── RENDER QUESTION ──
+function renderQ(){
+  const mi=state.currentModule;
+  const qi=state.moduleQ[mi]||0;
+  const mod=MODULES[mi], q=mod.questions[qi], key=`${mi}-${qi}`;
+  const done=!!state.submitted[key], sel=state.answers[key]||[];
 
-function switchModule(mi) {
-  state.currentModule = mi;
-  renderModuleTabs();
-  renderModule(mi);
-  window.scrollTo({top:0, behavior:'smooth'});
-}
+  // progress
+  const answered=Object.keys(state.submitted).length;
+  document.getElementById('prog-label').textContent=`${answered} / ${allQ.length}`;
+  document.getElementById('prog-bar').style.width=`${(answered/allQ.length)*100}%`;
 
-function renderModule(mi) {
-  const mod = MODULES[mi];
-  const main = document.getElementById('quiz-main');
+  // global index
+  let gIdx=0; for(let i=0;i<mi;i++) gIdx+=MODULES[i].questions.length; gIdx+=qi+1;
 
-  // answered count for progress
-  const totalAnswered = Object.keys(state.submitted).length;
-  const totalQ = allQuestions.length;
-  document.getElementById('prog-label').textContent = `${totalAnswered} / ${totalQ}`;
-  document.getElementById('prog-bar').style.width = `${(totalAnswered/totalQ)*100}%`;
+  // card border
+  let cardCls='question-card';
+  if(done){ const ok=arrEq(sel.slice().sort((a,b)=>a-b),q.answer.slice().sort((a,b)=>a-b)); cardCls+=ok?' result-correct':' result-wrong'; }
 
-  let html = `
-    <div class="module-header">
-      <div class="module-title">▸ ${mod.title}</div>
-      <div class="module-subtitle">${mod.subtitle}</div>
-    </div>
-  `;
-
-  mod.questions.forEach((q, qi) => {
-    const key = `${mi}-${qi}`;
-    const isSubmitted = !!state.submitted[key];
-    const selectedAnswers = state.answers[key] || [];
-
-    let cardClass = 'question-card';
-    if (isSubmitted) {
-      const isCorrect = arraysEqual(selectedAnswers.sort(), q.answer.slice().sort());
-      cardClass += isCorrect ? ' answered-correct' : ' answered-wrong';
-    }
-
-    html += `<div class="${cardClass}" id="card-${key}">
-      <div class="q-header">
-        <div class="q-num">Q${qi+1}</div>
-        <div class="q-text">${q.q}</div>
-        <div class="q-type-badge">${q.type === 'checkbox' ? 'MULTI' : 'SINGLE'}</div>
-      </div>
-      <div class="options-list">`;
-
-    q.options.forEach((opt, oi) => {
-      const inputType = q.type;
-      const inputName = `q-${key}`;
-      const isSelected = selectedAnswers.includes(oi);
-      const isCorrectOpt = q.answer.includes(oi);
-
-      let labelClass = 'option-label';
-      if (isSubmitted) {
-        if (isCorrectOpt && isSelected) labelClass += ' selected-correct';
-        else if (isCorrectOpt && !isSelected) labelClass += ' correct-answer';
-        else if (!isCorrectOpt && isSelected) labelClass += ' wrong-selected';
-      }
-
-      const disabled = isSubmitted ? 'disabled' : '';
-      const checked = isSelected ? 'checked' : '';
-
-      html += `
-        <label class="${labelClass}">
-          <input type="${inputType}" name="${inputName}" value="${oi}" ${checked} ${disabled}
-            onchange="handleAnswer('${key}', ${oi}, '${inputType}')">
-          ${opt}
-        </label>`;
-    });
-
-    html += `</div><div class="q-footer">`;
-
-    if (!isSubmitted) {
-      html += `<button class="submit-btn" id="btn-${key}" onclick="submitAnswer('${key}', ${mi}, ${qi})">Check Answer</button>`;
-    } else {
-      const isCorrect = arraysEqual(selectedAnswers.sort(), q.answer.slice().sort());
-      const badgeClass = isCorrect ? 'correct' : 'wrong';
-      const badgeText = isCorrect ? '✓ Correct' : '✗ Incorrect';
-      html += `<button class="submit-btn submitted">Answered</button>
-               <span class="result-badge ${badgeClass}">${badgeText}</span>`;
-    }
-
-    html += `</div>`;
-
-    // Show explanation on wrong
-    if (isSubmitted && !arraysEqual(selectedAnswers.sort(), q.answer.slice().sort())) {
-      const correctText = q.answer.map(i => `<em>${q.options[i]}</em>`).join(', ');
-      html += `<div class="explanation"><strong>✓ Correct answer:</strong> ${correctText}</div>`;
-    }
-
-    html += `</div>`;
+  // options
+  let optsHtml='';
+  q.options.forEach((opt,oi)=>{
+    const isSel=sel.includes(oi), isAns=q.answer.includes(oi);
+    let lc='option-label';
+    if(!done&&isSel) lc+=' selected';
+    if(done){ lc+=' locked'; if(isAns&&isSel) lc+=' show-correct'; else if(!isAns&&isSel) lc+=' show-wrong'; else if(isAns&&!isSel) lc+=' show-missed'; }
+    optsHtml+=`<label class="${lc}"><input type="${q.type}" name="q${key}" value="${oi}" ${isSel?'checked':''} ${done?'disabled':''} onchange="pick('${key}',${oi},'${q.type}')">${opt}</label>`;
   });
 
-  main.innerHTML = html;
-}
-
-function handleAnswer(key, optIdx, type) {
-  if (state.submitted[key]) return;
-  if (!state.answers[key]) state.answers[key] = [];
-
-  if (type === 'radio') {
-    state.answers[key] = [optIdx];
-  } else {
-    const arr = state.answers[key];
-    const pos = arr.indexOf(optIdx);
-    if (pos === -1) arr.push(optIdx);
-    else arr.splice(pos, 1);
+  // explanation
+  let expHtml='';
+  if(done&&!arrEq(sel.slice().sort((a,b)=>a-b),q.answer.slice().sort((a,b)=>a-b))){
+    expHtml=`<div class="explanation"><div class="exp-title">✓ Correct answer</div>${q.answer.map(i=>`<em>${q.options[i]}</em>`).join('<br>')}</div>`;
   }
+
+  // footer
+  const allDone=Object.keys(state.submitted).length===allQ.length;
+  const isLast=qi===mod.questions.length-1;
+  const nextLabel=allDone?'See Results →':(isLast?'Next Module →':'Next →');
+  let footerHtml=`<div class="q-footer"><div class="footer-left"><button class="btn-nav" onclick="prev()" ${qi===0?'disabled':''}>← Back</button></div><div class="footer-right">`;
+  if(!done){
+    footerHtml+=`<button class="btn-check" id="btnck-${key}" onclick="check('${key}',${mi},${qi})">Check Answer</button>`;
+  } else {
+    const ok=arrEq(sel.slice().sort((a,b)=>a-b),q.answer.slice().sort((a,b)=>a-b));
+    footerHtml+=`<span class="result-badge ${ok?'correct':'wrong'}">${ok?'✓ Correct':'✗ Incorrect'}</span><button class="btn-next" onclick="next()">${nextLabel}</button>`;
+  }
+  footerHtml+=`</div></div>`;
+
+  document.getElementById('quiz-main').innerHTML=`
+    <div class="module-header"><div class="module-chip">${mod.title}</div><div class="module-name">${mod.subtitle}</div></div>
+    <div class="${cardCls}">
+      <div class="q-top">
+        <span class="q-counter">Question ${qi+1} of ${mod.questions.length} · #${gIdx} overall</span>
+        <span class="q-type-badge">${q.type==='checkbox'?'MULTI-SELECT':'SINGLE'}</span>
+      </div>
+      <div class="q-body"><div class="q-text">${q.q}</div></div>
+      <div class="options-list">${optsHtml}</div>
+      ${expHtml}
+      ${footerHtml}
+    </div>`;
 }
 
-function submitAnswer(key, mi, qi) {
-  const selected = state.answers[key] || [];
-  if (selected.length === 0) {
-    const btn = document.getElementById(`btn-${key}`);
-    if (btn) { btn.style.borderColor = 'var(--wrong)'; btn.style.color = 'var(--wrong)'; setTimeout(()=>{ btn.style.borderColor=''; btn.style.color=''; },600); }
+// ── INTERACTION ──
+function pick(key,oi,type){
+  if(state.submitted[key]) return;
+  if(!state.answers[key]) state.answers[key]=[];
+  if(type==='radio'){ state.answers[key]=[oi]; }
+  else { const a=state.answers[key],p=a.indexOf(oi); if(p===-1)a.push(oi);else a.splice(p,1); }
+  renderQ();
+}
+
+function check(key,mi,qi){
+  const sel=state.answers[key]||[];
+  if(sel.length===0){
+    const b=document.getElementById(`btnck-${key}`);
+    if(b){b.style.background='#dc2626';b.textContent='Please select an answer';setTimeout(()=>{b.style.background='';b.textContent='Check Answer';},900);}
     return;
   }
-  state.submitted[key] = true;
-  renderModule(mi);
+  state.submitted[key]=true; renderTabs(); renderQ();
+}
 
-  // check if all done
-  if (Object.keys(state.submitted).length === allQuestions.length) {
-    setTimeout(showScore, 600);
+function next(){
+  const mi=state.currentModule, mod=MODULES[mi];
+  const qi=state.moduleQ[mi]||0;
+  if(qi<mod.questions.length-1){ state.moduleQ[mi]=qi+1; renderQ(); }
+  else {
+    const allDone=Object.keys(state.submitted).length===allQ.length;
+    if(allDone){ showScore(); return; }
+    let nmi=mi+1;
+    while(nmi<MODULES.length&&isDone(nmi)) nmi++;
+    if(nmi<MODULES.length) switchMod(nmi); else showScore();
   }
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
-function arraysEqual(a, b) {
-  return a.length === b.length && a.every((v,i) => v === b[i]);
+function prev(){
+  const mi=state.currentModule;
+  const qi=state.moduleQ[mi]||0;
+  if(qi>0){ state.moduleQ[mi]=qi-1; renderQ(); window.scrollTo({top:0,behavior:'smooth'}); }
 }
 
-// ═══════════════════════════════════════════════════════
-// SCORE
-// ═══════════════════════════════════════════════════════
-function showScore() {
+function arrEq(a,b){ return a.length===b.length&&a.every((v,i)=>v===b[i]); }
+
+// ── SCORE ──
+function showScore(){
   stopTimer();
-  document.getElementById('quiz-page').style.display = 'none';
-  document.getElementById('score-page').style.display = 'block';
-
-  let correct = 0;
-  allQuestions.forEach(({mi,qi,q}) => {
-    const key = `${mi}-${qi}`;
-    const sel = (state.answers[key] || []).slice().sort();
-    const ans = q.answer.slice().sort();
-    if (arraysEqual(sel, ans)) correct++;
-  });
-
-  const total = allQuestions.length;
-  const pct = Math.round((correct/total)*100);
-  const wrong = total - correct;
-
-  document.getElementById('score-pct').textContent = `${pct}%`;
-  document.getElementById('score-fraction').textContent = `${correct} out of ${total} questions`;
-  document.getElementById('score-correct').textContent = correct;
-  document.getElementById('score-wrong').textContent = wrong;
-  document.getElementById('score-time').textContent = formatTime(state.elapsed);
-
-  let grade, gradeText;
-  if (pct >= 90) { grade = 'A'; gradeText = 'Excellent — AWS Ready! 🏆'; }
-  else if (pct >= 75) { grade = 'B'; gradeText = 'Good — Keep Practicing! 💪'; }
-  else if (pct >= 60) { grade = 'C'; gradeText = 'Fair — Review the Material 📖'; }
-  else { grade = 'D'; gradeText = 'Needs Work — Study More! 📚'; }
-
-  const el = document.getElementById('score-grade');
-  el.className = `score-grade ${grade}`;
-  el.textContent = gradeText;
-
-  window.scrollTo({top:0, behavior:'smooth'});
+  document.getElementById('quiz-page').style.display='none';
+  document.getElementById('score-page').style.display='block';
+  let correct=0;
+  allQ.forEach(({mi,qi,q})=>{ const k=`${mi}-${qi}`,sel=(state.answers[k]||[]).slice().sort((a,b)=>a-b); if(arrEq(sel,q.answer.slice().sort((a,b)=>a-b))) correct++; });
+  const total=allQ.length, pct=Math.round(correct/total*100);
+  document.getElementById('score-pct').textContent=`${pct}%`;
+  document.getElementById('score-fraction').textContent=`${correct} out of ${total} questions correct`;
+  document.getElementById('score-correct').textContent=correct;
+  document.getElementById('score-wrong').textContent=total-correct;
+  document.getElementById('score-time').textContent=fmt(state.elapsed);
+  let g,t; if(pct>=90){g='A';t='Excellent — AWS Ready! 🏆';}else if(pct>=75){g='B';t='Good — Keep Practicing! 💪';}else if(pct>=60){g='C';t='Fair — Review the Material 📖';}else{g='D';t='Needs Work — Study More! 📚';}
+  const el=document.getElementById('score-grade'); el.className=`score-grade ${g}`; el.textContent=t;
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
-function restartQuiz() {
-  state = { currentModule:0, answers:{}, submitted:{}, timerInterval:null, elapsed:0, started:false };
-  document.getElementById('score-page').style.display = 'none';
-  document.getElementById('start-page').style.display = 'block';
+function restartQuiz(){
+  stopTimer();
+  state={currentModule:0,moduleQ:{},answers:{},submitted:{},timerInterval:null,elapsed:0};
+  document.getElementById('score-page').style.display='none';
+  document.getElementById('start-page').style.display='block';
 }
 </script>
 </body>
