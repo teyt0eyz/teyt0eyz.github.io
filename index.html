@@ -758,12 +758,31 @@ const MODULES = [
 
 // ── STATE ──
 let quizModules = [];
-let state = { currentModule:0, moduleQ:{}, answers:{}, submitted:{}, timerInterval:null, elapsed:0 };
+let state = { currentModule:0, moduleQ:{}, answers:{}, submitted:{}, timerInterval:null, elapsed:0, shuffledOptions:{} };
 let selectMode = 'all';
 let selectedMods = new Set(MODULES.map((_,i)=>i));
 
 const fmt = s => `${Math.floor(s/60).toString().padStart(2,'0')}:${(s%60).toString().padStart(2,'0')}`;
 function arrEq(a,b){ return a.length===b.length&&a.every((v,i)=>v===b[i]); }
+
+// Fisher-Yates shuffle — returns a new shuffled array
+function shuffleArray(arr){
+  const a=[...arr]; for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a;
+}
+
+// Build shuffle maps for every question in quizModules
+// shuffledOptions[key] = array of original indices in shuffled display order
+// e.g. [2,0,3,1] means display position 0 → original opt 2, position 1 → original opt 0, etc.
+function buildShuffleMaps(){
+  const maps={};
+  quizModules.forEach((mod,mi)=>{
+    mod.questions.forEach((_,qi)=>{
+      const key=`${mi}-${qi}`;
+      maps[key]=shuffleArray(mod.questions[qi].options.map((_,i)=>i));
+    });
+  });
+  return maps;
+}
 
 // ── INIT START PAGE ──
 function initStartPage(){
@@ -824,7 +843,8 @@ function stopTimer(){clearInterval(state.timerInterval);}
 function startQuiz(){
   quizModules = selectMode==='all' ? MODULES : MODULES.filter((_,i)=>selectedMods.has(i));
   if(!quizModules.length) return;
-  state={currentModule:0,moduleQ:{},answers:{},submitted:{},timerInterval:null,elapsed:0};
+  const maps = buildShuffleMaps();
+  state={currentModule:0,moduleQ:{},answers:{},submitted:{},timerInterval:null,elapsed:0,shuffledOptions:maps};
   document.getElementById('start-page').style.display='none';
   document.getElementById('quiz-page').classList.add('active');
   renderTabs(); renderQ(); startTimer();
@@ -887,12 +907,15 @@ function renderQ(){
   if(done){ const ok=arrEq(sel.slice().sort((a,b)=>a-b),q.answer.slice().sort((a,b)=>a-b)); cardCls+=ok?' result-correct':' result-wrong'; }
 
   let optsHtml='';
-  q.options.forEach((opt,oi)=>{
-    const isSel=sel.includes(oi), isAns=q.answer.includes(oi);
+  // shuffleMap[displayPos] = originalIndex
+  const shuffleMap = (state.shuffledOptions&&state.shuffledOptions[key]) || q.options.map((_,i)=>i);
+  shuffleMap.forEach((origIdx, displayPos)=>{
+    const opt=q.options[origIdx];
+    const isSel=sel.includes(origIdx), isAns=q.answer.includes(origIdx);
     let lc='option-label';
     if(!done&&isSel) lc+=' selected';
     if(done){ lc+=' locked'; if(isAns&&isSel) lc+=' show-correct'; else if(!isAns&&isSel) lc+=' show-wrong'; else if(isAns&&!isSel) lc+=' show-missed'; }
-    optsHtml+=`<label class="${lc}"><input type="${q.type}" name="q${key}" value="${oi}" ${isSel?'checked':''} ${done?'disabled':''} onchange="pick('${key}',${oi},'${q.type}')">${opt}</label>`;
+    optsHtml+=`<label class="${lc}"><input type="${q.type}" name="q${key}" value="${origIdx}" ${isSel?'checked':''} ${done?'disabled':''} onchange="pick('${key}',${origIdx},'${q.type}')">${opt}</label>`;
   });
 
   document.getElementById('q-scroll').innerHTML=`
@@ -1066,8 +1089,10 @@ function renderReviewQuestions(mi){
     const resultLabel=!submitted?'— Not attempted':(isCorrect?'\u2713 Correct':'\u2717 Incorrect');
     const resultCls=!submitted?'rq-result':(isCorrect?'rq-result c':'rq-result w');
 
-    const opts=q.options.map((opt,oi)=>{
-      const isSel=(state.answers[k]||[]).includes(oi), isAns=q.answer.includes(oi);
+    const shuffleMap=(state.shuffledOptions&&state.shuffledOptions[k])||q.options.map((_,i)=>i);
+    const opts=shuffleMap.map((origIdx)=>{
+      const opt=q.options[origIdx];
+      const isSel=(state.answers[k]||[]).includes(origIdx), isAns=q.answer.includes(origIdx);
       let cls='rq-opt', icon='';
       if(submitted){
         if(isAns&&isSel){cls+=' correct';icon='\u2713';}
@@ -1091,7 +1116,7 @@ function renderReviewQuestions(mi){
 
 function restartQuiz(){
   stopTimer();
-  state={currentModule:0,moduleQ:{},answers:{},submitted:{},timerInterval:null,elapsed:0};
+  state={currentModule:0,moduleQ:{},answers:{},submitted:{},timerInterval:null,elapsed:0,shuffledOptions:{}};
   document.getElementById('score-page').style.display='none';
   document.getElementById('start-page').style.display='flex';
   updateStartStats();
