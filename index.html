@@ -437,6 +437,36 @@
   .mod-sel-action { font-size: 0.72rem; color: var(--accent); background: none; border: none; cursor: pointer; padding: 2px; text-decoration: underline; }
   .mod-sel-count { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--muted); text-align: center; margin-bottom: 6px; }
 
+  /* ── QUESTION ORDER TOGGLE ── */
+  .q-order-section {
+    margin-bottom: 16px;
+  }
+  .q-order-label {
+    font-size: 0.65rem; color: var(--muted); font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.07em;
+    margin-bottom: 7px; text-align: left;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .q-order-tabs {
+    display: flex; gap: 6px;
+  }
+  .q-order-btn {
+    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px;
+    padding: 9px 8px; border-radius: 9px;
+    border: 1.5px solid var(--border2);
+    background: var(--surface2); color: var(--text2);
+    cursor: pointer; transition: all 0.15s;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+  .q-order-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+  .q-order-btn.active {
+    border-color: var(--accent); background: var(--accent-light); color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(59,91,219,0.1);
+  }
+  .q-order-btn .qob-title { font-size: 0.8rem; font-weight: 700; }
+  .q-order-btn .qob-desc  { font-size: 0.62rem; color: var(--muted); text-align: center; line-height: 1.3; }
+  .q-order-btn.active .qob-desc { color: rgba(59,91,219,0.65); }
+
   /* ── FINISH BUTTON ── */
   .btn-finish {
     font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 500; font-size: 0.78rem;
@@ -548,6 +578,19 @@
       <div class="start-stat"><div class="start-stat-num" id="total-q-count">—</div><div class="start-stat-label">Questions</div></div>
       <div class="start-stat"><div class="start-stat-num" id="mod-count-display">12</div><div class="start-stat-label">Modules</div></div>
       <div class="start-stat"><div class="start-stat-num">∞</div><div class="start-stat-label">Attempts</div></div>
+    </div>
+    <div class="q-order-section">
+      <div class="q-order-label">Question Order</div>
+      <div class="q-order-tabs">
+        <button class="q-order-btn active" id="qob-fixed" onclick="setQOrder('fixed',this)">
+          <span class="qob-title">Fixed</span>
+          <span class="qob-desc">Original order · shuffle choices</span>
+        </button>
+        <button class="q-order-btn" id="qob-shuffle" onclick="setQOrder('shuffle',this)">
+          <span class="qob-title">Shuffle</span>
+          <span class="qob-desc">Random order · shuffle choices</span>
+        </button>
+      </div>
     </div>
     <button class="start-btn" id="start-btn" onclick="startQuiz()">Begin Test →</button>
   </div>
@@ -758,8 +801,9 @@ const MODULES = [
 
 // ── STATE ──
 let quizModules = [];
-let state = { currentModule:0, moduleQ:{}, answers:{}, submitted:{}, timerInterval:null, elapsed:0, shuffledOptions:{} };
+let state = { currentModule:0, moduleQ:{}, answers:{}, submitted:{}, timerInterval:null, elapsed:0, shuffledOptions:{}, questionOrderMap:{} };
 let selectMode = 'all';
+let questionOrder = 'fixed'; // 'fixed' | 'shuffle'
 let selectedMods = new Set(MODULES.map((_,i)=>i));
 
 const fmt = s => `${Math.floor(s/60).toString().padStart(2,'0')}:${(s%60).toString().padStart(2,'0')}`;
@@ -784,6 +828,18 @@ function buildShuffleMaps(){
   return maps;
 }
 
+// Build question order map per module
+// questionOrderMap[mi] = array of original question indices in display order
+// e.g. [3,0,2,1] means show q[3] first, q[0] second, etc.
+function buildQuestionOrderMaps(){
+  const maps={};
+  quizModules.forEach((mod,mi)=>{
+    const indices = mod.questions.map((_,i)=>i);
+    maps[mi] = questionOrder==='shuffle' ? shuffleArray(indices) : indices;
+  });
+  return maps;
+}
+
 // ── INIT START PAGE ──
 function initStartPage(){
   const grid = document.getElementById('mod-selector-grid');
@@ -792,6 +848,12 @@ function initStartPage(){
       M${m.id}<span>${m.subtitle.split(' ').slice(0,2).join(' ')}</span>
     </button>`).join('');
   updateStartStats();
+}
+
+function setQOrder(order, btn){
+  questionOrder = order;
+  document.querySelectorAll('.q-order-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
 }
 
 function setMode(mode, btn){
@@ -843,8 +905,16 @@ function stopTimer(){clearInterval(state.timerInterval);}
 function startQuiz(){
   quizModules = selectMode==='all' ? MODULES : MODULES.filter((_,i)=>selectedMods.has(i));
   if(!quizModules.length) return;
-  const maps = buildShuffleMaps();
-  state={currentModule:0,moduleQ:{},answers:{},submitted:{},timerInterval:null,elapsed:0,shuffledOptions:maps};
+  const orderMaps = buildQuestionOrderMaps();
+  // Build shuffledOptions using the same question order
+  const optMaps={};
+  quizModules.forEach((mod,mi)=>{
+    orderMaps[mi].forEach((origQi, displayPos)=>{
+      const key=`${mi}-${displayPos}`;
+      optMaps[key]=shuffleArray(mod.questions[origQi].options.map((_,i)=>i));
+    });
+  });
+  state={currentModule:0,moduleQ:{},answers:{},submitted:{},timerInterval:null,elapsed:0,shuffledOptions:optMaps,questionOrderMap:orderMaps};
   document.getElementById('start-page').style.display='none';
   document.getElementById('quiz-page').classList.add('active');
   renderTabs(); renderQ(); startTimer();
@@ -876,7 +946,11 @@ function switchMod(mi){ state.currentModule=mi; renderTabs(); renderQ(); const q
 function renderQ(){
   const mi=state.currentModule;
   const qi=state.moduleQ[mi]||0;
-  const mod=quizModules[mi], q=mod.questions[qi], key=`${mi}-${qi}`;
+  const mod=quizModules[mi];
+  // resolve original question index from display position
+  const orderMap=state.questionOrderMap&&state.questionOrderMap[mi];
+  const origQi = orderMap ? orderMap[qi] : qi;
+  const q=mod.questions[origQi], key=`${mi}-${qi}`;
   const done=!!state.submitted[key], sel=state.answers[key]||[];
 
   const totalQ=quizModules.reduce((s,m)=>s+m.questions.length,0);
@@ -885,11 +959,12 @@ function renderQ(){
   document.getElementById('prog-bar').style.width=`${(answered/totalQ)*100}%`;
 
   let modCorrect=0, modWrong=0;
-  mod.questions.forEach((_,i)=>{
-    const k=`${mi}-${i}`;
+  mod.questions.forEach((_,displayPos)=>{
+    const k=`${mi}-${displayPos}`;
     if(state.submitted[k]){
+      const oq=(orderMap?orderMap[displayPos]:displayPos);
       const s=(state.answers[k]||[]).slice().sort((a,b)=>a-b);
-      if(arrEq(s,mod.questions[i].answer.slice().sort((a,b)=>a-b))) modCorrect++; else modWrong++;
+      if(arrEq(s,mod.questions[oq].answer.slice().sort((a,b)=>a-b))) modCorrect++; else modWrong++;
     }
   });
   document.getElementById('ms-chip').textContent=mod.title;
@@ -992,10 +1067,14 @@ function showScore(){
   document.getElementById('score-page').style.display='block';
   const totalQ=quizModules.reduce((s,m)=>s+m.questions.length,0);
   let correct=0;
-  quizModules.forEach((mod,mi)=>{ mod.questions.forEach((q,qi)=>{
-    const k=`${mi}-${qi}`,sel=(state.answers[k]||[]).slice().sort((a,b)=>a-b);
-    if(arrEq(sel,q.answer.slice().sort((a,b)=>a-b))) correct++;
-  }); });
+  quizModules.forEach((mod,mi)=>{
+    const orderMap=state.questionOrderMap&&state.questionOrderMap[mi];
+    mod.questions.forEach((_,displayPos)=>{
+      const origQi=orderMap?orderMap[displayPos]:displayPos;
+      const k=`${mi}-${displayPos}`,sel=(state.answers[k]||[]).slice().sort((a,b)=>a-b);
+      if(arrEq(sel,mod.questions[origQi].answer.slice().sort((a,b)=>a-b))) correct++;
+    });
+  });
   const pct=totalQ>0?Math.round(correct/totalQ*100):0;
   document.getElementById('score-pct').textContent=`${pct}%`;
   document.getElementById('score-fraction').textContent=`${correct} / ${totalQ} correct`;
@@ -1009,10 +1088,15 @@ function showScore(){
   const timeStr=state.elapsed<60?`${state.elapsed}s`:`${mins}m${secs>0?' '+secs+'s':''}`;
   let cards='';
   quizModules.forEach((mod,mi)=>{
+    const orderMap=state.questionOrderMap&&state.questionOrderMap[mi];
     let mc=0,mw=0;
-    mod.questions.forEach((_,qi)=>{
-      const k=`${mi}-${qi}`;
-      if(state.submitted[k]){ const s=(state.answers[k]||[]).slice().sort((a,b)=>a-b); if(arrEq(s,mod.questions[qi].answer.slice().sort((a,b)=>a-b))) mc++; else mw++; }
+    mod.questions.forEach((_,displayPos)=>{
+      const k=`${mi}-${displayPos}`;
+      if(state.submitted[k]){
+        const origQi=orderMap?orderMap[displayPos]:displayPos;
+        const s=(state.answers[k]||[]).slice().sort((a,b)=>a-b);
+        if(arrEq(s,mod.questions[origQi].answer.slice().sort((a,b)=>a-b))) mc++; else mw++;
+      }
     });
     const mt=mod.questions.length, attempted=mc+mw, mp=mt>0?Math.round(mc/mt*100):0;
     cards+=`<div class="mod-card" onclick="openReview(${mi})" style="cursor:pointer;user-select:none">
@@ -1052,10 +1136,15 @@ function closeReview(){
 
 function renderReviewTabs(){
   const tabs=quizModules.map((mod,mi)=>{
+    const orderMap=state.questionOrderMap&&state.questionOrderMap[mi];
     let mc=0,mw=0;
-    mod.questions.forEach((_,qi)=>{
-      const k=`${mi}-${qi}`;
-      if(state.submitted[k]){ const s=(state.answers[k]||[]).slice().sort((a,b)=>a-b); if(arrEq(s,mod.questions[qi].answer.slice().sort((a,b)=>a-b))) mc++; else mw++; }
+    mod.questions.forEach((_,displayPos)=>{
+      const k=`${mi}-${displayPos}`;
+      if(state.submitted[k]){
+        const origQi=orderMap?orderMap[displayPos]:displayPos;
+        const s=(state.answers[k]||[]).slice().sort((a,b)=>a-b);
+        if(arrEq(s,mod.questions[origQi].answer.slice().sort((a,b)=>a-b))) mc++; else mw++;
+      }
     });
     const attempted=mc+mw;
     let cls='review-tab';
@@ -1074,15 +1163,19 @@ function switchReview(mi){
 
 function renderReviewQuestions(mi){
   const mod=quizModules[mi];
+  const orderMap=state.questionOrderMap&&state.questionOrderMap[mi];
   let mc=0,mw=0,na=0;
-  const html=mod.questions.map((q,qi)=>{
-    const k=`${mi}-${qi}`;
+  // iterate over display positions (0..n-1), resolve original question via orderMap
+  const html=mod.questions.map((_,displayPos)=>{
+    const origQi=orderMap?orderMap[displayPos]:displayPos;
+    const q=mod.questions[origQi];
+    const k=`${mi}-${displayPos}`;
     const submitted=!!state.submitted[k];
     const sel=(state.answers[k]||[]).slice().sort((a,b)=>a-b);
     const isCorrect=submitted&&arrEq(sel,q.answer.slice().sort((a,b)=>a-b));
     if(submitted){ if(isCorrect) mc++; else mw++; } else na++;
 
-    let gIdx=0; for(let i=0;i<mi;i++) gIdx+=quizModules[i].questions.length; gIdx+=qi+1;
+    let gIdx=0; for(let i=0;i<mi;i++) gIdx+=quizModules[i].questions.length; gIdx+=displayPos+1;
 
     const cardCls='review-q-card'+(submitted?(isCorrect?' was-correct':' was-wrong'):'');
     const topCls='rq-top'+(submitted?(isCorrect?' correct-bg':' wrong-bg'):'');
@@ -1116,7 +1209,7 @@ function renderReviewQuestions(mi){
 
 function restartQuiz(){
   stopTimer();
-  state={currentModule:0,moduleQ:{},answers:{},submitted:{},timerInterval:null,elapsed:0,shuffledOptions:{}};
+  state={currentModule:0,moduleQ:{},answers:{},submitted:{},timerInterval:null,elapsed:0,shuffledOptions:{},questionOrderMap:{}};
   document.getElementById('score-page').style.display='none';
   document.getElementById('start-page').style.display='flex';
   updateStartStats();
