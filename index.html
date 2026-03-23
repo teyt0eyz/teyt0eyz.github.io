@@ -407,6 +407,121 @@
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
 
+  /* ── STUDY GUIDE PAGE ── */
+  #study-page {
+    display: none;
+    min-height: 100vh; min-height: 100dvh;
+    flex-direction: column;
+  }
+  #study-page.active { display: flex; }
+  .study-header {
+    flex-shrink: 0;
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    padding: 12px 16px;
+    display: flex; align-items: center; gap: 12px;
+    box-shadow: var(--shadow-sm);
+  }
+  .btn-study-back {
+    font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.82rem;
+    padding: 7px 14px; border-radius: 8px;
+    border: 1.5px solid var(--border2);
+    background: var(--surface); color: var(--text2);
+    cursor: pointer; transition: all 0.12s; flex-shrink: 0;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .btn-study-back:hover { border-color: var(--accent); color: var(--accent); }
+  .study-header-title { font-weight: 700; font-size: 0.95rem; color: var(--text); }
+  .study-header-sub { font-size: 0.7rem; color: var(--muted); margin-top: 1px; }
+  .study-mod-tabs {
+    flex-shrink: 0;
+    display: flex; gap: 5px; flex-wrap: nowrap; overflow-x: auto;
+    padding: 8px 16px; background: var(--surface);
+    border-bottom: 1px solid var(--border); scrollbar-width: none;
+  }
+  .study-mod-tabs::-webkit-scrollbar { display: none; }
+  .study-tab {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 500;
+    padding: 5px 11px; border-radius: 6px; border: 1.5px solid var(--border2);
+    background: var(--surface2); color: var(--text2); cursor: pointer;
+    transition: all 0.15s; white-space: nowrap; flex-shrink: 0;
+  }
+  .study-tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .study-scroll {
+    flex: 1; overflow-y: auto; padding: 16px 16px 32px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .study-mod-banner {
+    background: linear-gradient(135deg, var(--accent) 0%, #5c7cfa 100%);
+    border-radius: 14px; padding: 16px 18px; margin-bottom: 14px; color: #fff;
+  }
+  .smb-label { font-family: 'JetBrains Mono', monospace; font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.75; margin-bottom: 4px; }
+  .smb-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 2px; }
+  .smb-sub { font-size: 0.75rem; opacity: 0.8; }
+  .svc-card {
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: 12px; margin-bottom: 10px;
+    box-shadow: var(--shadow-sm); overflow: hidden;
+  }
+  .svc-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 13px 16px; cursor: pointer; user-select: none;
+    transition: background 0.12s; gap: 10px;
+  }
+  .svc-header:hover { background: var(--accent-light); }
+  .svc-header-left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+  .svc-icon {
+    width: 36px; height: 36px; border-radius: 9px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
+  }
+  .svc-title-wrap { min-width: 0; }
+  .svc-name { font-weight: 700; font-size: 0.88rem; color: var(--text); }
+  .svc-tagline { font-size: 0.7rem; color: var(--muted); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .svc-chevron { font-size: 0.75rem; color: var(--muted); flex-shrink: 0; transition: transform 0.2s; }
+  .svc-card.open .svc-chevron { transform: rotate(90deg); }
+  .svc-card.open .svc-header { background: var(--accent-light); }
+  .svc-body {
+    display: none; padding: 0 16px 16px; border-top: 1px solid var(--border);
+    animation: fadeIn 0.15s ease;
+  }
+  .svc-card.open .svc-body { display: block; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(-4px)} to{opacity:1;transform:translateY(0)} }
+  .svc-desc { font-size: 0.83rem; line-height: 1.65; color: var(--text2); padding-top: 12px; margin-bottom: 10px; }
+  .svc-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
+  .svc-chip {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; font-weight: 500;
+    padding: 3px 8px; border-radius: 5px;
+    background: var(--accent-light); color: var(--accent); border: 1px solid #c5d0f7;
+  }
+  .svc-chip.green  { background: var(--correct-light); color: var(--correct); border-color: var(--correct-border); }
+  .svc-chip.orange { background: #fff3e0; color: #e67700; border-color: #ffd08a; }
+  .svc-chip.purple { background: #f3f0ff; color: #7048e8; border-color: #d0bfff; }
+  .svc-points { padding: 0; margin: 0; }
+  .svc-point {
+    display: flex; gap: 8px; align-items: flex-start;
+    font-size: 0.81rem; line-height: 1.55; color: var(--text2);
+    padding: 6px 0; border-bottom: 1px solid var(--border);
+  }
+  .svc-point:last-child { border-bottom: none; }
+  .svc-point-dot { color: var(--accent); font-size: 0.55rem; margin-top: 6px; flex-shrink: 0; }
+  .svc-point strong { color: var(--text); font-weight: 600; }
+  .svc-compare {
+    margin-top: 8px; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 0.75rem;
+  }
+  .svc-compare-row { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--border); }
+  .svc-compare-row:last-child { border-bottom: none; }
+  .svc-compare-cell { padding: 7px 10px; line-height: 1.45; color: var(--text2); }
+  .svc-compare-cell.head { background: var(--surface2); font-weight: 700; font-size: 0.7rem; color: var(--text); font-family: 'JetBrains Mono', monospace; }
+  .svc-compare-cell:first-child { border-right: 1px solid var(--border); }
+  .study-guide-btn {
+    font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.82rem;
+    padding: 10px 14px; border-radius: 10px; border: 1.5px solid var(--border2);
+    background: var(--surface2); color: var(--text2); cursor: pointer;
+    transition: all 0.15s; width: 100%; margin-bottom: 12px;
+    display: flex; align-items: center; justify-content: center; gap: 7px;
+  }
+  .study-guide-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+
+
   /* ── MODULE SELECTOR (start page) ── */
   .mode-tabs {
     display: flex; gap: 6px; margin-bottom: 20px;
@@ -592,7 +707,8 @@
         </button>
       </div>
     </div>
-    <button class="start-btn" id="start-btn" onclick="startQuiz()">Begin Test →</button>
+    <button class="study-guide-btn" onclick="openStudyGuide()">📖 &nbsp;Study Guide — อ่านสรุปก่อนสอบ</button>
+        <button class="start-btn" id="start-btn" onclick="startQuiz()">Begin Test →</button>
   </div>
 </div>
 
@@ -1214,6 +1330,341 @@ function restartQuiz(){
   document.getElementById('start-page').style.display='flex';
   updateStartStats();
 }
+
+// ═══════════════════════════════════════
+// STUDY GUIDE DATA & FUNCTIONS
+// ═══════════════════════════════════════
+const STUDY_MODULES = [
+  {
+    id: 2, label: "M2", title: "Module 2 — Cloud Architecture",
+    subtitle: "Well-Architected Framework & Design Principles",
+    services: [
+      { icon: "🏗️", color: "#eef2ff", name: "AWS Well-Architected Framework", tagline: "6 เสาหลักในการออกแบบระบบ Cloud ที่ดี",
+        desc: "กรอบแนวคิดของ AWS สำหรับออกแบบระบบที่มีคุณภาพ ประกอบด้วย 6 เสาหลัก ใช้เป็นแนวทางตัดสินใจในการออกแบบ Architecture",
+        chips: [["Reliability","green"],["Security",""],["Cost Optimization",""],["Operational Excellence",""],["Performance","orange"],["Sustainability","purple"]],
+        points: [["Operational Excellence","ปรับปรุงกระบวนการต่อเนื่อง ใช้ IaC (Infrastructure as Code) ไม่ใช่มือ"],["Security","ใช้ Security ทุก Layer, Least Privilege, เข้ารหัสข้อมูล"],["Reliability","ออกแบบให้ Recover อัตโนมัติ ไม่ต้องรอ Admin กด"],["Performance Efficiency","เลือก Resource ให้เหมาะกับ Workload"],["Cost Optimization","จ่ายเฉพาะที่ใช้ หยุด Resource เมื่อไม่ใช้งาน"],["Sustainability","ลด Carbon footprint ใช้ทรัพยากรอย่างมีประสิทธิภาพ"]]
+      },
+      { icon: "🌍", color: "#eef2ff", name: "AWS Region & Availability Zone", tagline: "โครงสร้างพื้นฐานทางภูมิศาสตร์ของ AWS",
+        desc: "Region คือพื้นที่ภูมิศาสตร์ที่มี Data Center หลายแห่ง แต่ละ Region มี AZ อย่างน้อย 3 แห่ง ใช้เลือกให้เหมาะกับ Latency, Compliance และ Resiliency",
+        chips: [["Region",""],["AZ",""],["Edge Location","orange"]],
+        points: [["เลือก Region","พิจารณา Compliance/กฎหมาย + Latency ต่ำ ไม่ใช่แค่ราคาถูก"],["เลือก AZ","ใช้หลาย AZ เพื่อป้องกัน Natural disaster และ System failure"],["Region vs AZ","Region คือ Geography ใหญ่, AZ คือ Data Center ย่อยภายใน Region"],["CloudFront Edge","ไม่ใช่ AZ ใช้สำหรับ Cache Content ใกล้ผู้ใช้"]]
+      },
+      { icon: "⚖️", color: "#edf9f0", name: "Amazon ELB — Elastic Load Balancing", tagline: "กระจาย Traffic ไปยัง Server หลายตัวอัตโนมัติ",
+        desc: "ELB รับ Traffic และกระจายไปยัง Target ให้สมดุล ไม่มีจุดล้มเหลวเดียว (Single Point of Failure) มี 3 ประเภทเลือกตาม Protocol",
+        chips: [["ALB — HTTP/HTTPS",""],["NLB — TCP/UDP","orange"],["GLB — Firewall","purple"]],
+        compare: [["Load Balancer","ใช้เมื่อ"],["Application LB (ALB)","Layer 7, Web App HTTP/HTTPS, Path-based routing"],["Network LB (NLB)","Layer 4, Custom Protocol/TCP port, Latency ต่ำมาก"],["Gateway LB (GLB)","Third-party Firewall/Security Appliance"],["Best Practice","Web tier ติดต่อ App tier ผ่าน ELB เท่านั้น ไม่ Direct"]]
+      },
+      { icon: "☁️", color: "#eef2ff", name: "Amazon CloudFront", tagline: "CDN — ส่ง Content จาก Edge ใกล้ผู้ใช้",
+        desc: "CloudFront เป็น CDN ที่ Cache Content ที่ Edge Location ทั่วโลก ทำให้เข้าถึงได้เร็ว ยังช่วยป้องกัน DDoS ด้วยการกระจาย Traffic",
+        chips: [["CDN",""],["Edge Location","orange"],["DDoS Protection","green"]],
+        points: [["Edge Location","Cache ที่ใกล้ผู้ใช้ที่สุด ลด Latency"],["Origin","ต้นทาง Content เช่น S3 หรือ EC2"],["ป้องกัน DDoS","กระจาย Traffic ผ่าน Edge ลด Load Origin"],["Best Practice","S3 เก็บ Static file + ส่งผ่าน CloudFront = ประหยัดและเร็ว"]]
+      }
+    ]
+  },
+  {
+    id: 3, label: "M3", title: "Module 3 — Security & IAM",
+    subtitle: "Identity, Access Management & Shared Responsibility",
+    services: [
+      { icon: "🔐", color: "#eef2ff", name: "AWS IAM — Identity & Access Management", tagline: "จัดการสิทธิ์การเข้าถึง AWS Resources",
+        desc: "IAM ช่วยควบคุมว่าใครสามารถทำอะไรกับ Resource ใดใน AWS ไม่มีค่าใช้จ่ายเพิ่ม",
+        chips: [["User",""],["Group",""],["Role","orange"],["Policy","purple"]],
+        points: [["User","บัญชีบุคคล มี Credential ถาวร"],["Group","กลุ่ม User ให้ Permission ทีเดียวหลายคน"],["Role","ให้ Credential ชั่วคราว ใช้กับ EC2, Lambda หรือ External Account"],["Policy","เอกสาร JSON ระบุ Allow/Deny Action บน Resource"],["Least Privilege","ให้สิทธิ์น้อยที่สุดเท่าที่จำเป็น — หลัก Security สำคัญ"],["Root Account","ใช้แค่ครั้งแรก จากนั้นสร้าง Admin User แทน เปิด MFA ด้วย"]]
+      },
+      { icon: "📜", color: "#f3f0ff", name: "IAM Policy — การประเมิน Policy", tagline: "Explicit Deny มีผลก่อนเสมอ",
+        desc: "IAM ตรวจ Explicit Deny ก่อน ถ้า Deny ปิดทันที ถ้าไม่มีทั้ง Allow/Deny จะ Deny by default (Implicit Deny)",
+        chips: [["Explicit Deny wins","green"],["Identity-based",""],["Resource-based","orange"]],
+        points: [["ลำดับ","1. Explicit DENY → 2. Explicit ALLOW → 3. Implicit DENY"],["Identity-based Policy","ผูกกับ User / Group / Role"],["Resource-based Policy","ผูกกับ Resource เช่น S3 Bucket Policy"],["Effect","Element ใน Policy บอกว่า Allow หรือ Deny"],["Statement","Element หลักครอบ Action, Resource, Condition, Effect"]]
+      },
+      { icon: "🤝", color: "#edf9f0", name: "Shared Responsibility Model", tagline: "AWS ดูแล OF the cloud, คุณดูแล IN the cloud",
+        desc: "AWS รับผิดชอบ Infrastructure ส่วนลูกค้ารับผิดชอบสิ่งที่อยู่บน Cloud",
+        chips: [["AWS ดูแล","green"],["คุณดูแล","orange"]],
+        compare: [["AWS รับผิดชอบ","คุณรับผิดชอบ"],["Physical Security ของ Data Center","User Data & การเข้ารหัส"],["Hardware & Infrastructure","Security Group & Firewall Rules"],["DB Patch (Managed Service)","OS Patch บน EC2"],["Network Infrastructure","IAM User & Permission"]]
+      }
+    ]
+  },
+  {
+    id: 4, label: "M4", title: "Module 4 — Amazon S3 & Storage",
+    subtitle: "Object Storage, Storage Classes & Transfer",
+    services: [
+      { icon: "🪣", color: "#eef2ff", name: "Amazon S3 — Simple Storage Service", tagline: "Object Storage ความจุไม่จำกัด เข้าถึงผ่าน Internet",
+        desc: "S3 เก็บ Object ใน Bucket ขยายได้ไม่จำกัด เหมาะกับ Static Website, Media, Backup ไม่เหมาะกับ DB หรือ Realtime update",
+        chips: [["Object Storage",""],["Static Web Hosting","green"],["Versioning","orange"]],
+        points: [["ใช้ได้กับ","HTML, Image, Video, Client-side script, Backup"],["ไม่เหมาะกับ","Server-side script, Dynamic HTML, Database Engine, Realtime data"],["Versioning","เก็บหลาย Version, Recover ไฟล์ที่ลบหรือ Overwrite ได้"],["Presigned URL","URL ชั่วคราวกำหนด Expire เหมาะส่งให้คนภายนอกเข้าถึงชั่วคราว"],["Multipart Upload","ไฟล์ใหญ่ >100MB แบ่งอัปโหลดหลายส่วน รองรับ Resume"],["Transfer Acceleration","ใช้ CloudFront Edge เร่ง Upload ข้ามทวีป"]]
+      },
+      { icon: "📂", color: "#fff3e0", name: "S3 Storage Classes", tagline: "เลือก Class ให้ตรงกับความถี่ เพื่อประหยัดต้นทุน",
+        desc: "ยิ่งเข้าถึงบ่อยต้องใช้ Class ราคาสูง แต่ Retrieval เร็ว ยิ่งเข้าน้อยราคาถูกลงแต่ช้าลง",
+        chips: [["Standard","green"],["IA — Infrequent Access","orange"],["Glacier","purple"]],
+        compare: [["Class","เหมาะกับ"],["Standard","เข้าถึงบ่อย (Daily)"],["Standard-IA","เข้าน้อย แต่ต้องการ Instant เมื่อใช้"],["One Zone-IA","Backup สำรอง สร้างใหม่ได้ง่าย ไม่สำคัญมาก"],["Intelligent-Tiering","ไม่รู้ Pattern ให้ AWS จัดการ"],["Glacier Instant Retrieval","Archive ต้องการ Instant"],["Glacier Deep Archive","Archive ไม่ค่อยแตะ 1-2 ครั้ง/ปี ราคาถูกที่สุด"]]
+      }
+    ]
+  },
+  {
+    id: 5, label: "M5", title: "Module 5 — Amazon EC2",
+    subtitle: "Virtual Machines, Storage & Pricing",
+    services: [
+      { icon: "💻", color: "#eef2ff", name: "Amazon EC2 — Elastic Compute Cloud", tagline: "Virtual Server ที่ควบคุมได้เต็มที่",
+        desc: "EC2 คือ Virtual Machine บน AWS เลือก OS, CPU, RAM, Storage ได้เอง เหมาะกับ Workload ที่ต้องการควบคุม OS หรือ Custom configuration",
+        chips: [["IaaS",""],["AMI","orange"],["Instance Types","green"]],
+        points: [["ทำไมเลือก EC2","ต้องการควบคุม OS เอง, รัน Workload ได้ทุกชนิด"],["Storage Optimized","High Read/Write บน Local Dataset เช่น Database"],["Memory Optimized","In-memory cache, Big Data Analytics"],["AMI","Template Launch Instance ใหม่ด้วย Config เดิม แชร์/ขายได้"],["User Data","Script รันตอน Launch ครั้งแรก by default"],["Instance Metadata","ข้อมูล Instance เช่น MAC Address ดึงผ่าน HTTP endpoint"]]
+      },
+      { icon: "💾", color: "#edf9f0", name: "Amazon EBS & EFS Storage", tagline: "Block Storage (EBS) และ Shared File System (EFS)",
+        desc: "EBS คือ Persistent Block Storage สำหรับ EC2 เหมือน Hard Drive ส่วน EFS คือ Shared NFS File System ที่ EC2 หลายตัวใช้ร่วมกันข้าม AZ ได้",
+        chips: [["EBS — Single Instance","orange"],["EFS — Multi Instance","green"],["FSx — Windows","purple"]],
+        compare: [["Storage","คุณลักษณะ"],["EBS (gp3)","Block Storage, Mount 1 Instance, General Purpose"],["EBS (io2)","High IOPS SSD, Transactional DB"],["EFS","Shared NFS, Multi-AZ, Auto Scale, Multi-Instance"],["FSx for Windows","Managed Windows File Server, Active Directory"]]
+      },
+      { icon: "💰", color: "#fff3e0", name: "EC2 Pricing Models", tagline: "เลือก Pricing ให้เหมาะกับ Workload ประหยัดสุด",
+        desc: "EC2 มีรูปแบบราคาหลายแบบ Spot ถูกที่สุดแต่ถูก Interrupt, Reserved ถูกสำหรับงานระยะยาว",
+        chips: [["On-Demand",""],["Spot — ถูกสุด","orange"],["Reserved — ยาวนาน","green"]],
+        compare: [["Pricing","เหมาะกับ"],["On-Demand","ทั่วไป ไม่ Commit จ่ายตามใช้จริง"],["Spot Instances","งานที่หยุดแล้วรันใหม่ได้ ราคาถูกสุด แต่ถูก Interrupt ได้"],["Reserved Instances","ใช้งานระยะยาว 1-3 ปี ประหยัดสูงสุด 72%"],["Dedicated Host","Server เฉพาะตัวสำหรับ License Compliance"],["Savings Plans","Flexible กว่า Reserved ใช้ได้หลาย Service"]]
+      }
+    ]
+  },
+  {
+    id: 6, label: "M6", title: "Module 6 — Databases",
+    subtitle: "RDS, DynamoDB, Aurora & Database Services",
+    services: [
+      { icon: "🗄️", color: "#eef2ff", name: "Amazon RDS — Relational Database", tagline: "Managed SQL Database AWS ดูแล Patch/Backup ให้",
+        desc: "RDS คือ Managed Relational Database AWS ดูแล Patching, Backup ให้ รองรับ MySQL, PostgreSQL, SQL Server, Oracle, Aurora",
+        chips: [["Multi-AZ HA","green"],["Read Replica",""],["SQL","orange"]],
+        points: [["AWS จัดการ","DB Patch, Backup, Failover บน Managed Service"],["คุณจัดการ","Data, Schema, Security Group, Query"],["Multi-AZ","HA อัตโนมัติ Failover ข้าม AZ เมื่อ Primary ล้ม"],["Read Replica","Scale Read ได้ ใช้ Region ต่างกันได้ (ไม่ใช่ HA)"],["HA ข้ามRegion","Multi-AZ DB Instance + Read Replica ต่าง Region"],["Secure","VPC, Security Group, Encryption at rest & in transit"]]
+      },
+      { icon: "⚡", color: "#edf9f0", name: "Amazon DynamoDB", tagline: "Serverless NoSQL เร็วและ Scale ได้ไม่จำกัด",
+        desc: "DynamoDB คือ Fully Managed NoSQL Serverless ใช้กับ Realtime Transaction, Gaming, IoT ที่ต้องการ Low Latency",
+        chips: [["NoSQL",""],["Serverless","green"],["Auto Scaling","orange"]],
+        compare: [["เลือก DynamoDB","เลือก RDS"],["Schema ไม่แน่นอน","ข้อมูล Structured, หลาย Table สัมพันธ์กัน"],["Read เยอะ Write น้อย","ต้องการ SQL Query ซับซ้อน"],["ต้องการ Scale ใหญ่","Transaction ที่ต้องการ ACID"]]
+      },
+      { icon: "🔗", color: "#f3f0ff", name: "Database Services อื่นๆ", tagline: "Neptune, Aurora, Redshift, DMS, SCT",
+        desc: "AWS มี Database เฉพาะทางหลายชนิด รู้จัก Use Case ของแต่ละตัวเพื่อตอบสอบ",
+        chips: [["Neptune — Graph",""],["Redshift — DW","orange"],["Aurora — SQL Fast","green"],["SCT+DMS — Migrate","purple"]],
+        compare: [["Service","ใช้กับ"],["Amazon Neptune","Graph DB — Fraud Detection, Social Network"],["Amazon Redshift","Data Warehouse — Business Intelligence"],["Amazon Aurora","MySQL/PostgreSQL ความเร็วสูง Managed"],["AWS SCT","แปลง Schema ก่อน Migrate (ทำก่อน DMS)"],["AWS DMS","Migrate Data ระหว่าง DB Engine"]]
+      }
+    ]
+  },
+  {
+    id: 7, label: "M7", title: "Module 7 — Networking (VPC)",
+    subtitle: "VPC, Subnets, Security Groups, Endpoints",
+    services: [
+      { icon: "🌐", color: "#eef2ff", name: "Amazon VPC — Virtual Private Cloud", tagline: "Network ส่วนตัวที่แยกจากโลกภายนอก",
+        desc: "VPC คือ Network เสมือนที่แยกออกมาเฉพาะตัวใน AWS คุณกำหนด CIDR, Subnet, Route Table, Internet Gateway ได้เอง",
+        chips: [["Public Subnet","green"],["Private Subnet","orange"],["CIDR",""]],
+        points: [["Public Subnet","มี Route ไป Internet Gateway, Instance มี Public IP"],["Private Subnet","ไม่มี Route ตรงสู่ Internet ต้องผ่าน NAT Gateway"],["NAT Gateway","ให้ Private Subnet ออก Internet แต่ Internet เข้าไม่ได้"],["Elastic IP","IP คงที่ ไม่เปลี่ยนแม้ Stop/Start Instance"],["Best Practice","แบ่ง CIDR ใหญ่กว่าความต้องการ, Reserve Space, แบ่งเท่าๆ ทุก AZ"]]
+      },
+      { icon: "🛡️", color: "#edf9f0", name: "Security Group & Network ACL", tagline: "Firewall 2 ชั้น ระดับ Instance และ Subnet",
+        desc: "Security Group เป็น Firewall Stateful ระดับ Instance ส่วน NACL เป็น Stateless ระดับ Subnet",
+        chips: [["SG — Stateful","green"],["NACL — Stateless","orange"],["Bastion Host","purple"]],
+        compare: [["Security Group","Network ACL"],["ระดับ Instance","ระดับ Subnet"],["Stateful (Return ผ่านอัตโนมัติ)","Stateless (ต้องเปิด In+Out เอง)"],["Allow เท่านั้น","มีทั้ง Allow และ Deny"]]
+      },
+      { icon: "🔌", color: "#fff3e0", name: "VPC Endpoints & Flow Logs", tagline: "เชื่อม Service โดยไม่ผ่าน Internet",
+        desc: "VPC Endpoint ให้ EC2 ใน Private Subnet เชื่อม S3/DynamoDB โดยไม่ออก Internet VPC Flow Logs บันทึก Traffic เข้า/ออก VPC",
+        chips: [["Gateway Endpoint — S3/DDB","green"],["Interface Endpoint","orange"],["Flow Logs","purple"]],
+        points: [["Gateway Endpoint","ใช้กับ S3 และ DynamoDB ฟรี ไม่มี Throughput Limit"],["Interface Endpoint","ใช้กับ Service อื่น มีค่าใช้จ่าย"],["VPC Flow Logs","ส่งไปได้ที่ S3, CloudWatch, Kinesis Data Firehose"]]
+      }
+    ]
+  },
+  {
+    id: 8, label: "M8", title: "Module 8 — Network Connectivity",
+    subtitle: "VPN, Direct Connect, Transit Gateway, Global Accelerator",
+    services: [
+      { icon: "🔒", color: "#eef2ff", name: "Site-to-Site VPN vs Direct Connect", tagline: "เชื่อม On-premises กับ AWS",
+        desc: "VPN ผ่าน Encrypted Internet รวดเร็วแต่ Bandwidth ไม่แน่นอน Direct Connect เป็น Physical Line เสถียรกว่าแต่ตั้งนาน",
+        chips: [["VPN — รวดเร็ว","orange"],["Direct Connect — เสถียร","green"],["VPN เป็น Backup","purple"]],
+        compare: [["Site-to-Site VPN","AWS Direct Connect"],["ผ่าน Encrypted Internet","Physical Private Line"],["ตั้งได้เร็ว (นาที-ชั่วโมง)","ตั้งช้า (สัปดาห์-เดือน)"],["Bandwidth ไม่แน่นอน","Consistent Bandwidth"],["ราคาถูกกว่า","ราคาสูงกว่า"],["ใช้เป็น Backup ของ Direct Connect","ใช้กับ Large Transfer / Compliance"]]
+      },
+      { icon: "🔄", color: "#edf9f0", name: "Transit Gateway & VPC Peering", tagline: "เชื่อม VPC หลายตัวเข้าหากัน",
+        desc: "VPC Peering เชื่อม 2 VPC โดยตรง Transit Gateway เชื่อม VPC เยอะๆ ผ่าน Hub กลาง Peering ไม่ Transitive",
+        chips: [["Transit Gateway — Hub",""],["VPC Peering — Direct","green"],["Peering ไม่ Transitive","orange"]],
+        points: [["VPC Peering","เชื่อม 2 VPC ง่ายที่สุด A-B, B-C แต่ A ติดต่อ C ไม่ได้"],["Transit Gateway","เชื่อม VPC เยอะๆ ผ่าน Hub ง่ายกว่า Mesh Peering"],["ข้ามRegion","ใช้ Transit Gateway Peering Attachment"],["Direct Connect Backup","ใช้ VPN เป็น Backup ประหยัดกว่า Direct Connect ที่ 2"]]
+      }
+    ]
+  },
+  {
+    id: 10, label: "M10", title: "Module 10 — Auto Scaling & LB",
+    subtitle: "EC2 Auto Scaling, RDS Scaling, Route 53",
+    services: [
+      { icon: "📈", color: "#eef2ff", name: "Amazon EC2 Auto Scaling", tagline: "เพิ่ม/ลด Instance อัตโนมัติตาม Demand",
+        desc: "Auto Scaling Group จัดการจำนวน EC2 Instance ให้เหมาะกับ Load อัตโนมัติ รองรับ Multi-AZ",
+        chips: [["Scheduled","orange"],["Target Tracking","green"],["Predictive","purple"]],
+        compare: [["Scaling Type","ใช้เมื่อ"],["Scheduled","รู้ Pattern ล่วงหน้า เช่น Weekend traffic เพิ่มสม่ำเสมอ"],["Target Tracking","รักษา Metric เช่น CPU 50% (ง่ายที่สุด)"],["Step Scaling","เพิ่ม/ลดเป็นขั้นตามขนาด Alarm"],["Predictive","ใช้ ML คาดการณ์และ Scale ล่วงหน้า"]]
+      },
+      { icon: "🗄️", color: "#edf9f0", name: "Database & Route 53 Scaling", tagline: "Scale DB และ DNS Routing Strategy",
+        desc: "RDS Scale Vertical = เปลี่ยน Size, Horizontal = Read Replica ส่วน Route 53 มี Routing หลายแบบสำหรับ HA",
+        chips: [["RDS Vertical",""],["Aurora Replica","green"],["Route 53 Failover","orange"]],
+        points: [["RDS Vertical","เปลี่ยน Instance Class/Size"],["RDS Read Replica","เพิ่ม Read Load ใช้ได้ข้าม Region"],["Aurora Auto Scaling","เพิ่ม Aurora Replica ผ่าน Auto Scaling"],["DynamoDB","ปรับ Throughput อัตโนมัติ"],["Failover Routing","เปลี่ยน Traffic ไป Region อื่นเมื่อ Primary Unhealthy"],["Geolocation + Failover","Route ตาม Location + Failover เมื่อ Unhealthy"]]
+      }
+    ]
+  },
+  {
+    id: 11, label: "M11", title: "Module 11 — Automation & IaC",
+    subtitle: "CloudFormation, CodeWhisperer, Quick Start",
+    services: [
+      { icon: "📋", color: "#eef2ff", name: "AWS CloudFormation", tagline: "Infrastructure as Code สร้าง Resource จาก Template",
+        desc: "CloudFormation ใช้ Template (JSON/YAML) สร้าง AWS Resource อัตโนมัติ ทำซ้ำได้เหมือนกันทุก Environment",
+        chips: [["Template → Stack",""],["Change Set","green"],["Drift Detection","orange"],["Conditions","purple"]],
+        points: [["Template","YAML/JSON ระบุ Resource ที่ต้องการ"],["Stack","ชุด Resource ที่สร้างจาก Template"],["Change Set","Preview การเปลี่ยนแปลงก่อน Apply จริง"],["Drift Detection","ตรวจสอบว่า Resource ถูกแก้ไขนอก CloudFormation หรือไม่"],["Conditions","กำหนด Resource ที่ต่างกันตาม Environment"],["Designer","Drag-and-drop GUI สร้าง Template แบบภาพ"]]
+      },
+      { icon: "🤖", color: "#f3f0ff", name: "AWS Quick Start & CodeWhisperer", tagline: "เร่ง Deployment และเขียน Code ด้วย AI",
+        desc: "Quick Start คือ Reference Architecture ตาม Best Practice ส่วน CodeWhisperer คือ AI Coding Assistant ช่วยเร่งงานและ Security scan",
+        chips: [["Quick Start — Best Practice","green"],["CodeWhisperer — AI","purple"],["IaC Benefits",""]],
+        points: [["Quick Start","Deploy ที่ซับซ้อนปลอดภัยตาม Best Practice รวดเร็ว ใช้กับ FSx for Windows"],["CodeWhisperer","AI แนะนำ Code ขณะพิมพ์ ช่วย Accelerate coding + Security scan"],["ทำไมใช้ Automation","Version Control, Deploy สม่ำเสมอ, Rollback ได้, ลด Manual Error"]]
+      }
+    ]
+  },
+  {
+    id: 12, label: "M12", title: "Module 12 — Caching",
+    subtitle: "CloudFront, ElastiCache, Caching Strategies",
+    services: [
+      { icon: "⚡", color: "#eef2ff", name: "Caching Concepts", tagline: "High-speed Layer ลด Latency และ DB Load",
+        desc: "Cache เก็บข้อมูลที่เข้าถึงบ่อยใน Storage เร็ว ลด Latency ลด Load DB เหมาะกับ Static Data ที่ไม่เปลี่ยนบ่อย",
+        chips: [["Static Data","green"],["Lazy Loading","orange"],["Write-through","purple"],["TTL",""]],
+        compare: [["Strategy","ใช้เมื่อ"],["Lazy Loading","โหลด Cache เมื่อ Miss — ข้อมูลอาจเก่าได้"],["Write-through","เขียน Cache ทุกครั้งที่เขียน DB — ข้อมูลตรงเสมอ — ใช้กับ Realtime"],["TTL","กำหนดเวลา Expire ลด Stale Data"]]
+      },
+      { icon: "🔥", color: "#fff3e0", name: "Amazon ElastiCache", tagline: "In-Memory Cache ลด DB Read Load",
+        desc: "ElastiCache เป็น Managed In-Memory Cache (Redis/Memcached) เก็บผลลัพธ์ Query ที่เรียกบ่อยไว้ใน RAM",
+        chips: [["Redis",""],["Memcached","orange"],["ลด DB Load","green"]],
+        points: [["Lazy Loading","อ่าน Cache ก่อน ถ้า Miss ค่อยอ่าน DB แล้วเขียนกลับ Cache"],["Write-through","เขียน Cache ทุกครั้งที่เขียน DB ข้อมูล Up-to-date เสมอ"],["Use Case","Session Store, Query Cache, Rate Limiting, Leaderboard"]]
+      }
+    ]
+  },
+  {
+    id: 13, label: "M13", title: "Module 13 — Decoupling",
+    subtitle: "SQS, SNS, Amazon MQ",
+    services: [
+      { icon: "📬", color: "#eef2ff", name: "Amazon SQS — Simple Queue Service", tagline: "Message Queue Decouple Component ด้วย Pull",
+        desc: "SQS คือ Managed Message Queue Producer ส่ง Message เข้า Queue Consumer Poll และ Process ช่วย Decouple System",
+        chips: [["Pull-based","orange"],["Standard Queue",""],["FIFO Queue","green"]],
+        compare: [["Feature","Standard / FIFO"],["Delivery","At-least-once / Exactly-once"],["ลำดับ","ไม่รับประกัน / รับประกัน FIFO"],["Throughput","ไม่จำกัด / จำกัด"],["Consumer","ต้อง Poll มาเอง (ทั้งคู่)"]]
+      },
+      { icon: "📢", color: "#edf9f0", name: "Amazon SNS — Simple Notification Service", tagline: "Pub/Sub Push ข้อความหลาย Subscriber พร้อมกัน",
+        desc: "SNS คือ Pub/Sub Service ส่ง 1 ครั้งไปยัง Subscriber หลายตัวพร้อมกัน รองรับ Email, SMS, Lambda, SQS, HTTP",
+        chips: [["Push-based",""],["Fan-out","orange"],["Email/SMS/Lambda","green"]],
+        points: [["Fan-out Pattern","SNS → หลาย SQS → Lambda หลายตัว Process พร้อมกัน"],["SQS vs SNS","SQS = Queue งาน Consumer Poll, SNS = Broadcast Push"],["2 Lambda ต้องการ 1 Event","S3 Event → SNS Topic → 2 Lambda Subscribe ดีที่สุด"]]
+      },
+      { icon: "🔀", color: "#fff3e0", name: "Amazon MQ", tagline: "Message Broker สำหรับ Migrate Legacy App",
+        desc: "Amazon MQ รองรับ Apache ActiveMQ/RabbitMQ ใช้เมื่อ Migrate Application เดิมที่ใช้ Standard Messaging Protocol",
+        chips: [["ActiveMQ",""],["Migrate Legacy","orange"],["ไม่ใช่ Cloud-native","purple"]],
+        points: [["เลือก MQ เมื่อ","Migrate App เดิมที่ใช้ ActiveMQ/RabbitMQ มาแล้ว"],["เลือก SQS/SNS เมื่อ","สร้าง App ใหม่บน AWS ตั้งแต่ต้น Cloud-native"]]
+      }
+    ]
+  },
+  {
+    id: 14, label: "M14", title: "Module 14 — Serverless",
+    subtitle: "Lambda, API Gateway, ECS, Step Functions",
+    services: [
+      { icon: "λ", color: "#eef2ff", name: "AWS Lambda", tagline: "รัน Code โดยไม่ต้องจัดการ Server เลย",
+        desc: "Lambda เป็น Serverless Compute รัน Code ตาม Event จ่ายเฉพาะเวลา Execute จริง Scale อัตโนมัติ",
+        chips: [["Serverless","green"],["Event-driven",""],["Auto Scale","orange"],["Lambda Layer","purple"]],
+        points: [["ข้อดี Serverless","จ่ายตามใช้, Scale อัตโนมัติ, HA ในตัว, ไม่ Manage Server"],["Lambda Layer","แชร์ Library/Dependency ระหว่าง Function ใช้กับ Custom Library"],["Lambda Scale","AWS Scale ให้อัตโนมัติ ไม่ต้อง Configure เลย"],["Serverless Web App","S3 + API Gateway + Lambda + DynamoDB = Full Serverless"]]
+      },
+      { icon: "🐳", color: "#edf9f0", name: "Amazon ECS & Containers", tagline: "จัดการ Docker Container ด้วย ECS",
+        desc: "ECS จัดการ Container Lifecycle รองรับ EC2 Nodes หรือ Fargate (Serverless) เหมาะกับ Microservice",
+        chips: [["EC2 Launch",""],["Fargate — Serverless","green"],["Microservice","orange"]],
+        compare: [["Container","Virtual Machine"],["ไม่มี Guest OS","มี Guest OS"],["รัน Container Engine","รัน Hypervisor"],["เบา เร็ว Portable","หนักกว่า Boot ช้ากว่า"],["Microservice Best Practice","แต่ละ Service แยก Container ECS จัดการ"]]
+      },
+      { icon: "🔄", color: "#fff3e0", name: "AWS Step Functions", tagline: "Orchestrate Workflow หลายขั้นตอน",
+        desc: "Step Functions สร้าง Workflow จาก State Machine ลด Operational Overhead ไม่ต้องเขียน Coordination Code",
+        chips: [["State Machine",""],["Manual Approval","orange"],["Reduce Overhead","green"]],
+        points: [["เหมาะกับ","Multi-step Analytics, ML Workflow, E-commerce Order, Security Incident"],["Manual Approval","Task State + waitForTaskToken — รอ Approval Email ก่อนดำเนินต่อ"],["ไม่เหมาะ","ส่ง Message หลาย EC2 (ใช้ SNS), Deploy IaC (ใช้ CloudFormation)"]]
+      }
+    ]
+  }
+];
+
+let studyModIdx = 0;
+
+function openStudyGuide() {
+  document.getElementById('start-page').style.display = 'none';
+  document.getElementById('study-page').classList.add('active');
+  studyModIdx = 0;
+  renderStudyTabs();
+  renderStudyContent(0);
+}
+
+function closeStudyGuide() {
+  document.getElementById('study-page').classList.remove('active');
+  document.getElementById('start-page').style.display = 'flex';
+}
+
+function renderStudyTabs() {
+  const container = document.getElementById('study-mod-tabs');
+  container.innerHTML = STUDY_MODULES.map((m, i) =>
+    `<button class="study-tab${i===studyModIdx?' active':''}" onclick="switchStudyMod(${i})">${m.label}</button>`
+  ).join('');
+}
+
+function switchStudyMod(i) {
+  studyModIdx = i;
+  renderStudyTabs();
+  renderStudyContent(i);
+  document.getElementById('study-scroll').scrollTop = 0;
+}
+
+function renderStudyContent(i) {
+  const mod = STUDY_MODULES[i];
+  let html = `<div class="study-mod-banner">
+    <div class="smb-label">${mod.label} · Study Guide</div>
+    <div class="smb-title">${mod.title}</div>
+    <div class="smb-sub">${mod.subtitle}</div>
+  </div>`;
+
+  mod.services.forEach((svc, si) => {
+    const id = 'svc-' + i + '-' + si;
+    const chipsHtml = (svc.chips||[]).map(([label,cls]) =>
+      `<span class="svc-chip ${cls||''}">${label}</span>`
+    ).join('');
+
+    let bodyContent = '';
+    if (svc.desc) bodyContent += `<div class="svc-desc">${svc.desc}</div>`;
+    if (svc.chips && svc.chips.length) bodyContent += `<div class="svc-chips">${chipsHtml}</div>`;
+
+    if (svc.compare) {
+      const rows = svc.compare.map((row, ri) =>
+        `<div class="svc-compare-row">${row.map(cell =>
+          `<div class="svc-compare-cell${ri===0?' head':''}">${cell}</div>`
+        ).join('')}</div>`
+      ).join('');
+      bodyContent += `<div class="svc-compare">${rows}</div>`;
+    } else if (svc.points) {
+      const pts = svc.points.map(([title, detail]) =>
+        `<div class="svc-point"><span class="svc-point-dot">▶</span><span><strong>${title}</strong> — ${detail}</span></div>`
+      ).join('');
+      bodyContent += `<div class="svc-points">${pts}</div>`;
+    }
+
+    html += `<div class="svc-card" id="${id}">
+      <div class="svc-header" onclick="toggleSvc('${id}')">
+        <div class="svc-header-left">
+          <div class="svc-icon" style="background:${svc.color}">${svc.icon}</div>
+          <div class="svc-title-wrap">
+            <div class="svc-name">${svc.name}</div>
+            <div class="svc-tagline">${svc.tagline}</div>
+          </div>
+        </div>
+        <div class="svc-chevron">▶</div>
+      </div>
+      <div class="svc-body">${bodyContent}</div>
+    </div>`;
+  });
+
+  document.getElementById('study-scroll').innerHTML = html;
+}
+
+function toggleSvc(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+
 </script>
+
+<div id="study-page">
+  <div class="study-header">
+    <button class="btn-study-back" onclick="closeStudyGuide()">← กลับ</button>
+    <div>
+      <div class="study-header-title">📖 Study Guide</div>
+      <div class="study-header-sub">สรุปบริการ AWS ที่ออกสอบ — กดเพื่อขยายดูรายละเอียด</div>
+    </div>
+  </div>
+  <div class="study-mod-tabs" id="study-mod-tabs"></div>
+  <div class="study-scroll" id="study-scroll"></div>
+</div>
+
 </body>
 </html>
